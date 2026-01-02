@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-primary: #1d1d1f;
+  --color-secondary: #86868b;
+  --color-accent: #0066cc;
+  --color-background: #fbfbfd;
+  --color-surface: #ffffff;
+}
+
+.dark {
+  --color-primary: #f5f5f7;
+  --color-secondary: #a1a1a6;
+  --color-accent: #2997ff;
+  --color-background: #000000;
+  --color-surface: #1d1d1f;
+}
+
+@theme {
+  --font-sans: "Sukhumvit Set", "Sukhumvit", 'Prompt', sans-serif;
+
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+}
+
+/* Custom utilities if needed */
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+  }
+}
