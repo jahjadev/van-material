@@ -16,7 +16,7 @@ export function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="border-t border-line-dark bg-near-black text-on-dark-2">
       <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(2,1fr)]">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div>
             <div className="flex items-baseline gap-1.5 font-bold">
               <span className="text-[20px] text-accent-light">VAN</span>
@@ -95,7 +95,7 @@ export function Footer({ lang }: { lang: Lang }) {
         <div className="mt-10 flex flex-col gap-3 border-t border-line-dark pt-6 text-[12px] md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {company.legalNameEn}.{" "}
-            {lang === "en" ? "Est. 1986." : `ก่อตั้ง พ.ศ. ${company.foundedYearBE}.`}{" "}
+            {lang === "en" ? `Est. ${company.foundedYearCE}.` : `ก่อตั้ง พ.ศ. ${company.foundedYearBE}.`}{" "}
             {lang === "en" ? "All rights reserved." : "สงวนลิขสิทธิ์"}
           </p>
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1">

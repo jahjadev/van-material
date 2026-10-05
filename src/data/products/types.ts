@@ -15,7 +15,8 @@
  * Numbers: `Property` values are published only when a public
  * Materion/Longsun page states them, and `source` holds that URL. If a grade
  * has no sourced value its `properties` is `[]` and `PropertyTable` renders
- * nothing (see global-constraints.md, controller ruling R7).
+ * nothing (see "Global Constraints" in docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md and .claude/skills/seo-aeo/SKILL.md §3;
+ * controller ruling R7).
  */
 
 export type Bi = { th: string; en: string };
@@ -60,7 +61,12 @@ export type Variant = { name: Bi; desc: Bi };
 export type ProductFamily = {
   /** URL segment, e.g. "beryllium-copper". */
   slug: string;
-  brand: "Materion" | "Longsun" | "VAN INTERTRADE";
+  /**
+   * The producer, only when the client's copy or a cited source names one.
+   * Omitted when no producer is known — never filled with the distributor's
+   * own name, which would be an unsourced "made by" claim.
+   */
+  brand?: "Materion" | "Longsun";
   /** Owned head term (ia.md), e.g. "Beryllium Copper". */
   keyword: string;
   /** Short name for breadcrumbs, cards and links. */

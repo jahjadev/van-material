@@ -4,7 +4,7 @@ import { priceFaq } from "./shared";
 /*
  * Standard copper alloys (JIS designations C5191, C5210, C1100). No brand
  * is named in the client's legacy copy and no datasheet was provided, so the
- * brand is VAN INTERTRADE and no numeric property values are published
+ * no `brand` is set (no producer is claimed) and no numeric property values are published
  * (no fetched Materion/Longsun source covers these grades). Copy sticks to
  * standard, qualitative facts about phosphor bronze and tough-pitch copper.
  *
@@ -152,7 +152,6 @@ const c1100: Grade = {
 
 export const standardCopperAlloys: ProductFamily = {
   slug: "standard-copper-alloys",
-  brand: "VAN INTERTRADE",
   keyword: "Standard Copper Alloys",
   name: { th: "Standard Copper Alloys (ทองแดงผสมมาตรฐาน)", en: "Standard Copper Alloys" },
   title: {

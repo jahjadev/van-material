@@ -3,14 +3,13 @@ import { priceFaq } from "./shared";
 
 /*
  * Chrome copper: no brand is named in the client's legacy copy and no
- * datasheet was provided, so the brand is VAN INTERTRADE, there are no grade
+ * datasheet was provided, so no `brand` is set (no producer is claimed), there are no grade
  * pages, and no numeric values are published — only standard, qualitative
  * engineering facts about Cu-Cr and Cu-Cr-Zr.
  */
 
 export const chromeCopper: ProductFamily = {
   slug: "chrome-copper",
-  brand: "VAN INTERTRADE",
   keyword: "Chrome Copper (CrCu / CrCuZr)",
   name: { th: "Chrome Copper (ทองแดงโครเมียม)", en: "Chrome Copper" },
   title: {

@@ -2,7 +2,9 @@
  * Canonical company facts. Edit here — every page reads from this file.
  * Values copied verbatim from VAN INTERTRADE's verified source of truth
  * (the sibling VAN repo's `src/data/company.ts`, itself sourced from
- * vaninter.com). Do not invent additions — see global-constraints.md.
+ * vaninter.com). Do not invent additions — see the "Global Constraints"
+ * section of docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md
+ * and .claude/skills/seo-aeo/SKILL.md §5.
  */
 
 export const company = {
@@ -32,6 +34,20 @@ export const company = {
       "Saphan Sung Sub-district, Saphan Sung District",
       "Bangkok 10240",
     ],
+    /**
+     * The same address split into schema.org PostalAddress fields (used by
+     * the Organization JSON-LD). Same facts as the lines above, not new ones.
+     */
+    postal: {
+      streetTh: "59/349-51 ซอยรามคำแหง 140 ถนนรามคำแหง",
+      streetEn: "59/349-51 Soi Ramkhamhaeng 140, Ramkhamhaeng Rd.",
+      localityTh: "แขวงสะพานสูง เขตสะพานสูง",
+      localityEn: "Saphan Sung Sub-district, Saphan Sung District",
+      regionTh: "กรุงเทพมหานคร",
+      regionEn: "Bangkok",
+      postalCode: "10240",
+      country: "TH",
+    },
     tels: ["+6627280150", "+66863038051"],
     telsDisplay: ["02-728-0150", "086-303-8051"],
     fax: "+6627280160",

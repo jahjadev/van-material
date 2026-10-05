@@ -45,7 +45,8 @@ export function productPageLd({
   description: string;
   path: string;
   image: string;
-  brand: string;
+  /** Producer; omitted from the Product node when the family names none. */
+  brand?: string;
   sku?: string;
   faqs: Faq[];
 }) {
@@ -95,7 +96,7 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         family={family}
         lang={lang}
         crumbs={crumbs}
-        eyebrow={family.brand === "VAN INTERTRADE" ? family.keyword : `${family.brand} · ${family.keyword}`}
+        eyebrow={family.brand ? `${family.brand} · ${family.keyword}` : family.keyword}
         h1={family.h1[lang]}
         rfqHref={rfqHref}
       >

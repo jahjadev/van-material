@@ -3,13 +3,12 @@ import { priceFaq } from "./shared";
 
 /*
  * Clad metal: layups from the client's legacy copy (Cu/Al/Cu, Ag/Cu, custom).
- * No brand is named there, so the brand is VAN INTERTRADE. No numeric values
+ * No producer is named there, so no `brand` is set. No numeric values
  * are published; no grade pages (variants only).
  */
 
 export const cladMetal: ProductFamily = {
   slug: "clad-metal",
-  brand: "VAN INTERTRADE",
   keyword: "Clad Metal",
   name: { th: "Clad Metal (โลหะประกบ)", en: "Clad Metal" },
   title: {
@@ -21,7 +20,7 @@ export const cladMetal: ProductFamily = {
     en: "Clad Metal: Cu/Al/Cu, Ag/Cu and Custom Layups",
   },
   summary: {
-    th: "Clad Metal (โลหะประกบ หรือโลหะหุ้ม) คือแผ่นหรือแถบที่ยึดโลหะต่างชนิดตั้งแต่สองชั้นขึ้นไปเข้าด้วยกันอย่างถาวร ให้ผิวแต่ละด้านทำหน้าที่ต่างกัน และใช้วัสดุราคาแพงเฉพาะตรงที่จำเป็น แวน อินเตอร์เทรด จัดหาโลหะประกบ Cu/Al/Cu, Ag/Cu และโครงสร้างชั้นตามแบบของลูกค้า",
+    th: "Clad Metal (โลหะประกบ) คือแผ่นหรือแถบที่ยึดโลหะต่างชนิดตั้งแต่สองชั้นขึ้นไปเข้าด้วยกันอย่างถาวร ให้ผิวแต่ละด้านทำหน้าที่ต่างกัน และใช้วัสดุราคาแพงเฉพาะตรงที่จำเป็น แวน อินเตอร์เทรด จัดหาโลหะประกบ Cu/Al/Cu, Ag/Cu และโครงสร้างชั้นตามแบบของลูกค้า",
     en: "Clad metal is sheet or strip in which two or more different metals are permanently bonded in layers, so each face can do a different job and the expensive metal goes only where it is needed. VAN INTERTRADE supplies Cu/Al/Cu, Ag/Cu and custom layups to customer drawings.",
   },
   description: {

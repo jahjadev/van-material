@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
-import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
+import { JsonLd, ORG_ID, breadcrumbLd } from "@/components/JsonLd";
 import { HOME, PageHero, RfqBand, type Crumb, type HeroImage } from "@/components/ProductParts";
 import { LocaleLink } from "@/components/LocaleLink";
 import { company } from "@/data/company";
 import { families } from "@/data/products";
-import { SITE_URL } from "@/lib/site";
 import { absUrl, HREFLANG, type Lang } from "@/lib/locale";
 
 /*
@@ -18,14 +17,14 @@ import { absUrl, HREFLANG, type Lang } from "@/lib/locale";
 
 export const aboutMeta: Record<Lang, { title: string; description: string }> = {
   th: {
-    title: "เกี่ยวกับ แวน อินเตอร์เทรด ก่อตั้ง พ.ศ. 2529",
+    title: `เกี่ยวกับ แวน อินเตอร์เทรด ก่อตั้ง พ.ศ. ${company.foundedYearBE}`,
     description:
-      "รู้จัก บริษัท แวน อินเตอร์เทรด จำกัด บริษัทในกรุงเทพฯ ก่อตั้ง พ.ศ. 2529 ปัจจุบันเป็นตัวแทนจำหน่าย Materion และผู้จัดหาโลหะผสมทองแดงและวัสดุแม่พิมพ์สำหรับอุตสาหกรรมไทย",
+      `รู้จัก ${company.legalNameTh} บริษัทในกรุงเทพฯ ก่อตั้ง พ.ศ. ${company.foundedYearBE} ปัจจุบันเป็นตัวแทนจำหน่าย Materion และผู้จัดหาโลหะผสมทองแดงและวัสดุแม่พิมพ์สำหรับอุตสาหกรรมไทย`,
   },
   en: {
-    title: "About VAN INTERTRADE, Bangkok, Est. 1986",
+    title: `About VAN INTERTRADE, Bangkok, Est. ${company.foundedYearCE}`,
     description:
-      "About VAN INTERTRADE Co., Ltd., a Bangkok company founded in 1986. Today it is a Materion distributor supplying copper alloys and mold materials to Thai industry.",
+      `About ${company.legalNameEn}, a Bangkok company founded in ${company.foundedYearCE}. Today it is a Materion distributor supplying copper alloys and mold materials to Thai industry.`,
   },
 };
 
@@ -78,7 +77,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
             url: absUrl("/about", lang),
             inLanguage: HREFLANG[lang],
             name: aboutMeta[lang].title,
-            mainEntity: { "@id": `${SITE_URL}/#organization` },
+            mainEntity: { "@id": ORG_ID },
           },
         ]}
       />

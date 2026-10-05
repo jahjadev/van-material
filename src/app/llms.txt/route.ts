@@ -5,6 +5,7 @@ import { allRoutes } from "@/lib/routes";
 import { families } from "@/data/products";
 import { industries } from "@/data/industries";
 import { articles } from "@/data/articles";
+import { ORG_ID, WEBSITE_ID } from "@/components/JsonLd";
 
 /**
  * `/llms.txt` — a plain-text brief for AI answer engines and crawlers that
@@ -23,7 +24,9 @@ const en = (path: string) => absUrl(path, "en");
 /** One line per product family, linking the family and its grade pages. */
 function productLineSections(): string[] {
   return families.map((f) => {
-    const head = `- [${f.name.en}](${en(`/${f.slug}`)}) (${f.brand}): ${f.description.en}`;
+    // Producer label only when the data names one — never the distributor.
+    const producer = f.brand ? ` (${f.brand})` : "";
+    const head = `- [${f.name.en}](${en(`/${f.slug}`)})${producer}: ${f.description.en}`;
     if (f.grades.length > 0) {
       const grades = f.grades
         .map((g) => {
@@ -125,9 +128,16 @@ function buildLlmsTxt(): string {
       `at the English tree.`,
   );
   lines.push(
-    "- Structured data (schema.org JSON-LD) is embedded on every page: " +
-      "Organization and WebSite site-wide, plus Product, Article, " +
-      "FAQPage, and BreadcrumbList where applicable.",
+    "- Structured data (schema.org JSON-LD) is embedded on every page. " +
+      `Site-wide: one Organization node, @id ${ORG_ID} — the same @id ` +
+      `the parent company uses on ${company.url}, because both sites ` +
+      "belong to one legal entity — with its address, geo location and a " +
+      "sales ContactPoint (Thai and English, office hours); and one WebSite " +
+      `node, @id ${WEBSITE_ID}, published by that Organization. Per page, ` +
+      "where applicable: BreadcrumbList, Product (product families and " +
+      "grades; brand only where a producer is named; no offers or prices), " +
+      "Article (knowledge pages; author and publisher are the Organization), " +
+      "FAQPage (identical to the FAQ text shown on the page), and AboutPage.",
   );
   lines.push(`- Full URL list: ${SITE_URL}/sitemap.xml`);
   lines.push(

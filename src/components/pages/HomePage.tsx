@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
-import { JsonLd, faqPageLd, organizationLd, websiteLd } from "@/components/JsonLd";
+import { JsonLd, faqPageLd } from "@/components/JsonLd";
 import { PageHero, RfqBand, type HeroImage } from "@/components/ProductParts";
 import { company } from "@/data/company";
 import { industries } from "@/data/industries";
@@ -20,12 +20,12 @@ export const homeMeta: Record<Lang, { title: string; description: string }> = {
   th: {
     title: "ตัวแทนจำหน่าย Materion ประเทศไทย โลหะผสมทองแดง",
     description:
-      "แวน อินเตอร์เทรด (ก่อตั้ง พ.ศ. 2529) ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX และ ToughMet สำหรับแม่พิมพ์และอุตสาหกรรม ขอใบเสนอราคาได้",
+      `แวน อินเตอร์เทรด (ก่อตั้ง พ.ศ. ${company.foundedYearBE}) ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX และ ToughMet สำหรับแม่พิมพ์และอุตสาหกรรม ขอใบเสนอราคาได้`,
   },
   en: {
     title: "Materion Distributor Thailand: Copper Alloys",
     description:
-      "VAN INTERTRADE (est. 1986), a Materion distributor in Thailand: beryllium copper, MoldMAX and ToughMet for molds and industry, plus contacts and clad metal.",
+      `VAN INTERTRADE (est. ${company.foundedYearCE}), a Materion distributor in Thailand: beryllium copper, MoldMAX and ToughMet for molds and industry, plus contacts and clad metal.`,
   },
 };
 
@@ -114,8 +114,8 @@ const why: { title: Bi; body: Bi }[] = [
   {
     title: { th: "ข้อมูลเทคนิคพร้อมแหล่งอ้างอิง", en: "Sourced technical data" },
     body: {
-      th: "ทุกค่าทางเทคนิคบนเว็บไซต์นี้ระบุแหล่งที่มาที่ผู้ผลิตเผยแพร่ ค่าที่ไม่มีแหล่งอ้างอิงจะไม่ถูกเผยแพร่",
-      en: "Every property value on this site links to the producer page it comes from; values without a source are not published.",
+      th: "ทุกค่าทางเทคนิคบนเว็บไซต์นี้ลิงก์ไปยังแหล่งที่มาที่เผยแพร่ค่านั้น ค่าที่ไม่มีแหล่งอ้างอิงจะไม่ถูกเผยแพร่",
+      en: "Every property value on this site links to its published source; values without a source are not published.",
     },
   },
   {
@@ -134,11 +134,8 @@ export function HomePage({ lang }: { lang: Lang }) {
   return (
     <>
       <JsonLd
-        data={[
-          organizationLd(lang),
-          websiteLd(lang),
-          faqPageLd(faqs.map((f) => ({ q: f.q[lang], a: f.a[lang] }))),
-        ]}
+        // Organization + WebSite are emitted site-wide by RootShell.
+        data={[faqPageLd(faqs.map((f) => ({ q: f.q[lang], a: f.a[lang] })))]}
       />
       <PageHero
         lang={lang}
@@ -170,7 +167,7 @@ export function HomePage({ lang }: { lang: Lang }) {
                   href={`/${f.slug}`}
                   className="group flex h-full flex-col rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
                 >
-                  {f.brand !== "VAN INTERTRADE" && (
+                  {f.brand && (
                     <span className="text-[12px] font-semibold uppercase tracking-wider text-accent">{f.brand}</span>
                   )}
                   <span className="mt-1 text-lg font-bold text-primary group-hover:text-accent">{f.name[lang]}</span>

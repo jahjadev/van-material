@@ -151,7 +151,8 @@ rendered site.
 - `pageMeta()` in `src/lib/seo.ts` builds title/description/canonical/OG/
   hreflang for every page — never hand-roll a `<head>`, never hardcode
   `/en` (use `LocaleLink` / `absUrl` from `src/lib/locale.ts`).
-- Company facts come from `src/data/company.ts` only (global-constraints.md)
+- Company facts come from `src/data/company.ts` only ("Global Constraints"
+  in `docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md`)
   — never invent an address, phone, hours, or founding year inline.
 
 ## 6. Title length and the `<title>` ≤ 65 rule
@@ -212,7 +213,19 @@ to get past this list:
   photography and the real logo before launch; don't let stock imagery
   ship as "final."
 
-## 9. Robots and llms.txt
+## 9. Structured data, robots and llms.txt
+
+**One entity.** VAN-MATERIAL and vaninter.com are the same legal company, so
+there is exactly one Organization node, `ORG_ID` =
+`${company.url}/#organization` (https://www.vaninter.com/#organization —
+the @id vaninter.com already uses), rendered site-wide by `RootShell` with
+the WebSite node (`${SITE_URL}/#website`). Every author/publisher/
+mainEntity reference uses `ORG_ID`. Address, geo and hours live on that
+Organization (`address`, `location`, `contactPoint`) — never add a second
+Organization or a LocalBusiness node with its own @id. Product `brand` is
+emitted only when `family.brand` names a producer (Materion/Longsun);
+families with no named producer have no `brand` at all.
+
 
 `src/app/robots.ts` explicitly allows `GPTBot`, `OAI-SearchBot`,
 `PerplexityBot`, `ClaudeBot`, and `Google-Extended` (AEO is a stated goal —

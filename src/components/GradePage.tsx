@@ -49,7 +49,7 @@ export function GradePage({
         family={family}
         lang={lang}
         crumbs={crumbs}
-        eyebrow={family.brand === "VAN INTERTRADE" ? family.keyword : `${family.brand} · ${family.keyword}`}
+        eyebrow={family.brand ? `${family.brand} · ${family.keyword}` : family.keyword}
         h1={grade.h1[lang]}
         rfqHref={rfqHref}
       >
