@@ -4,7 +4,28 @@
  * way); `LocaleLink` prefixes `/en` on the English tree.
  *
  * Every route below exists. `/privacy` is linked from the footer only.
+ * There is no `/industries` index page (ruling R19), so "Industries" is a
+ * menu of the industry pages, like "Products".
  */
+
+import { industryLabels } from "@/data/products/shared";
+
+/**
+ * Industry page slugs in nav order. Labels come from `industryLabels` (the
+ * same names the industry pages use). Kept as a slug list rather than
+ * importing `src/data/industries.ts` because `Nav` is a client component and
+ * must not pull every industry page body into the browser bundle (SKILL.md
+ * §7); `industries.ts` fails the build if this list and its own
+ * `industries` array ever differ.
+ */
+export const INDUSTRY_NAV_SLUGS = [
+  "plastic-mold",
+  "ev",
+  "oil-gas",
+  "aerospace",
+  "automotive",
+  "switchgear",
+] as const;
 
 export type NavLink = {
   href: string;
@@ -49,7 +70,7 @@ export const productLinks: NavLink[] = [
   },
   {
     href: "/clad-metal",
-    label: "โลหะหุ้ม (Clad Metal)",
+    label: "โลหะประกบ (Clad Metal)",
     labelEn: "Clad Metal",
   },
   {
@@ -59,13 +80,15 @@ export const productLinks: NavLink[] = [
   },
 ];
 
+export const industryLinks: NavLink[] = INDUSTRY_NAV_SLUGS.map((slug) => ({
+  href: `/industries/${slug}`,
+  label: industryLabels[slug].th,
+  labelEn: industryLabels[slug].en,
+}));
+
 export const mainNav: NavGroup[] = [
   { label: "สินค้า", labelEn: "Products", children: productLinks },
-  {
-    label: "อุตสาหกรรม",
-    labelEn: "Industries",
-    href: "/industries/plastic-mold",
-  },
+  { label: "อุตสาหกรรม", labelEn: "Industries", children: industryLinks },
   { label: "คลังความรู้", labelEn: "Knowledge", href: "/knowledge" },
   { label: "เกี่ยวกับเรา", labelEn: "About", href: "/about" },
   { label: "ติดต่อเรา", labelEn: "Contact", href: "/contact" },
@@ -78,14 +101,14 @@ export const footerGroups: { title: string; titleEn: string; links: NavLink[] }[
     links: productLinks,
   },
   {
+    title: "อุตสาหกรรม",
+    titleEn: "Industries",
+    links: industryLinks,
+  },
+  {
     title: "บริษัท",
     titleEn: "Company",
     links: [
-      {
-        href: "/industries/plastic-mold",
-        label: "อุตสาหกรรม",
-        labelEn: "Industries",
-      },
       { href: "/knowledge", label: "คลังความรู้", labelEn: "Knowledge" },
       { href: "/about", label: "เกี่ยวกับเรา", labelEn: "About" },
       { href: "/contact", label: "ติดต่อเรา", labelEn: "Contact" },

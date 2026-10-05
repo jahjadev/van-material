@@ -16,6 +16,7 @@
 
 import { families, getFamily, industryLabels, type Bi, type Faq, type ProductFamily } from "@/data/products";
 import { SRC } from "@/data/products/shared";
+import { INDUSTRY_NAV_SLUGS } from "@/data/nav";
 
 export type IndustrySection = { heading: Bi; paras: Bi[]; bullets?: { title: Bi; items: Bi[] } };
 
@@ -671,6 +672,14 @@ export function familiesFor(slug: string): ProductFamily[] {
  * names a derived family, and every linked grade exists. Throws during
  * `next build` (module evaluation) rather than shipping a broken link.
  */
+// The nav/footer "Industries" menu is a slug list (nav.ts, kept light for
+// the client bundle); it must list exactly these pages, in this order.
+if (INDUSTRY_NAV_SLUGS.join(",") !== industries.map((i) => i.slug).join(",")) {
+  throw new Error(
+    `nav.ts INDUSTRY_NAV_SLUGS (${INDUSTRY_NAV_SLUGS.join(",")}) must match industries.ts (${industries.map((i) => i.slug).join(",")})`,
+  );
+}
+
 for (const ind of industries) {
   const derived = new Set(familiesFor(ind.slug).map((f) => f.slug));
   const fitted = new Set(ind.fits.map((f) => f.family));
