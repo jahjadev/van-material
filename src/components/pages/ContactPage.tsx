@@ -2,7 +2,7 @@ import { Clock, Mail, MapPin, MessageCircle, Phone, Printer } from "lucide-react
 import type { ReactNode } from "react";
 import { JsonLd, breadcrumbLd, organizationLd } from "@/components/JsonLd";
 import { HOME, PageHero, type Crumb } from "@/components/ProductParts";
-import { RfqFormSlot } from "@/components/RfqFormSlot";
+import { RfqForm } from "@/components/RfqForm";
 import { company } from "@/data/company";
 import { SITE_URL } from "@/lib/site";
 import { absUrl, type Lang } from "@/lib/locale";
@@ -150,7 +150,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
             {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </h2>
           <div className="mt-5">
-            <RfqFormSlot lang={lang} />
+            <RfqForm lang={lang} />
           </div>
         </section>
       </div>

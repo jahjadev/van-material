@@ -51,6 +51,7 @@ const sections = (): Section[] => [
       { th: "อีเมล", en: "Email address" },
       { th: "หมายเลขโทรศัพท์", en: "Phone number" },
       { th: "สินค้าหรือเกรดที่สนใจ", en: "The product or grade you are interested in" },
+      { th: "รูปแบบและจำนวนที่ต้องการ (ถ้าระบุ)", en: "The form and quantity you want, if you give them" },
       { th: "ข้อความของคุณ", en: "Your message" },
     ],
   },
