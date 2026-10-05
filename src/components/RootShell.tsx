@@ -48,7 +48,7 @@ export function RootShell({
           <main id="main" className="flex-1">
             {children}
           </main>
-          <Footer />
+          <Footer lang={lang} />
         </LangProvider>
       </body>
     </html>

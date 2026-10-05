@@ -1,14 +1,16 @@
-"use client";
-
 import { MessageCircle, Phone, Mail, MapPin } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { footerGroups } from "@/data/nav";
 import { company } from "@/data/company";
-import { useLang } from "@/lib/prefs";
+import type { Lang } from "@/lib/locale";
 
-export function Footer() {
+/**
+ * Plain server component: `lang` is passed down from whichever route-group
+ * root layout rendered — no interactivity here, so no client context read
+ * (see ruling #6).
+ */
+export function Footer({ lang }: { lang: Lang }) {
   const { contact } = company;
-  const { lang } = useLang();
   const year = new Date().getFullYear();
 
   return (
@@ -70,13 +72,13 @@ export function Footer() {
           </div>
 
           {footerGroups.map((group) => (
-            <nav key={group.title} aria-label={lang === "en" ? group.titleEn : group.title}>
+            <nav key={group.titleEn} aria-label={lang === "en" ? group.titleEn : group.title}>
               <h2 className="text-[13px] font-semibold text-white">
                 {lang === "en" ? group.titleEn : group.title}
               </h2>
               <ul className="mt-4 space-y-2.5">
                 {group.links.map((l) => (
-                  <li key={l.href + l.label}>
+                  <li key={l.href}>
                     <LocaleLink
                       href={l.href}
                       className="text-[13px] leading-snug hover:text-white"
@@ -101,7 +103,7 @@ export function Footer() {
 
         <p className="mt-4 text-[12px]">
           <a
-            href="https://www.vaninter.com"
+            href={company.url}
             target="_blank"
             rel="noopener noreferrer"
             className="underline decoration-line-dark underline-offset-2 hover:text-white"

@@ -77,7 +77,7 @@ export function Nav() {
         aria-label={t("เมนูหลัก", "Main menu")}
         className="mx-auto flex h-14 max-w-[1200px] items-center justify-between px-4 md:px-6"
       >
-        <Logo />
+        <Logo lang={lang} />
 
         <ul ref={desktopNavRef} className="hidden items-center gap-1 lg:flex">
           {mainNav.map((group) =>
