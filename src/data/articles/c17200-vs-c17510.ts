@@ -79,7 +79,7 @@ export const c17200VsC17510: Article = {
       t: "p",
       text: {
         th: "C17200 มีรูปแบบให้เลือกมาก ตั้งแต่แถบ แท่งกลม แท่งแบน แผ่นหนา ลวด ท่อ ไปจนถึงชิ้นงานตีขึ้นรูปและรีดขึ้นรูป",
-        en: "C17200 comes in the widest range of forms: strip, rod, bar, plate, wire, tube, forgings and extrusions.",
+        en: "C17200 comes in a wide range of forms: strip, rod, bar, plate, wire, tube, forgings and extrusions.",
       },
     },
     { t: "h2", text: { th: "งานแบบไหนควรใช้ C17510?", en: "When should you use C17510?" } },

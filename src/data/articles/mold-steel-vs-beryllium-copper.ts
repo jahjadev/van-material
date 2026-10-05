@@ -28,16 +28,16 @@ export const moldSteelVsBerylliumCopper: Article = {
     en: "P-20 mold steel vs MoldMAX beryllium copper: hardness, thermal conductivity and strength from Materion's table, and what it means for cycle time.",
   },
   intro: {
-    th: "ทองแดงเบริลเลียมสำหรับแม่พิมพ์ระบายความร้อนได้ดีกว่าเหล็กทำแม่พิมพ์หลายเท่าโดยยังแข็งใกล้เคียงหรือแข็งกว่า ตารางของ Materion ระบุเหล็ก P-20 ที่การนำความร้อน 17 BTU/ft·hr·°F เทียบกับ 75 ของ MoldMAX HH และ 145 ของ PROtherm แม่พิมพ์จึงเย็นตัวเร็วขึ้นในจุดที่ใส่ทองแดงเบริลเลียม ซึ่ง Materion ระบุว่าช่วยให้รอบการผลิต (cycle time) สั้นลง",
-    en: "Beryllium copper mold alloys remove heat several times faster than mold steel while matching or beating its hardness: Materion's table lists P-20 steel at 17 BTU/ft·hr·°F of thermal conductivity against 75 for MoldMAX HH and 145 for PROtherm. The mold cools faster wherever the copper alloy is used, which Materion says shortens the cycle time.",
+    th: "ทองแดงเบริลเลียมสำหรับแม่พิมพ์ระบายความร้อนได้ดีกว่าเหล็กทำแม่พิมพ์หลายเท่า ตารางของ Materion ระบุเหล็ก P-20 ที่การนำความร้อน 17 BTU/ft·hr·°F เทียบกับ 75 ของ MoldMAX HH ซึ่งแข็งกว่า P-20 ด้วย และ 145 ของ PROtherm ซึ่งยอมแข็งน้อยกว่าเพื่อการนำความร้อนสูงสุดในเกรดที่เปรียบเทียบ แม่พิมพ์จึงเย็นตัวเร็วขึ้นในจุดที่ใส่ทองแดงเบริลเลียม ซึ่ง Materion ระบุว่าช่วยให้รอบการผลิต (cycle time) สั้นลง",
+    en: "Beryllium copper mold alloys remove heat several times faster than mold steel: Materion's table lists P-20 steel at 17 BTU/ft·hr·°F of thermal conductivity against 75 for MoldMAX HH, which is also harder than P-20, and 145 for PROtherm, which trades hardness for the highest thermal conductivity of the grades compared. The mold cools faster wherever the copper alloy is used, which Materion says shortens the cycle time.",
   },
   body: [
     { t: "h2", text: { th: "เหล็ก P-20 กับทองแดงเบริลเลียมต่างกันแค่ไหนในตัวเลข?", en: "How far apart are P-20 steel and beryllium copper in numbers?" } },
     {
       t: "p",
       text: {
-        th: "ต่างกันมากที่การนำความร้อน แต่ใกล้กันที่ความแข็งและความแข็งแรง ตารางด้านล่างคัดจากตาราง \"Compare MoldMAX alloys with other materials\" บนหน้า MoldMAX ของ Materion เฉพาะเหล็ก P-20 และสองเกรดที่เป็นทองแดงเบริลเลียม",
-        en: "They are far apart on thermal conductivity and close on hardness and strength. The table below is taken from the \"Compare MoldMAX alloys with other materials\" table on Materion's MoldMAX page, showing P-20 steel and the two grades that are beryllium copper.",
+        th: "ต่างกันมากที่การนำความร้อน แต่ใกล้กันที่ความแข็งและความแข็งแรง ตารางด้านล่างคัดจากตาราง \"Compare MoldMAX alloys with other materials\" บนหน้า MoldMAX ของ Materion เฉพาะเหล็ก P-20 และ MoldMAX สองเกรดที่เป็นทองแดงเบริลเลียมซึ่งมีในเว็บไซต์นี้",
+        en: "They are far apart on thermal conductivity and close on hardness and strength. The table below is taken from the \"Compare MoldMAX alloys with other materials\" table on Materion's MoldMAX page, showing P-20 steel and the two beryllium copper MoldMAX grades on this site.",
       },
     },
     {

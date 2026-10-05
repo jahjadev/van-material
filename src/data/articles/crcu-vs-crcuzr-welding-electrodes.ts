@@ -38,8 +38,8 @@ export const crcuVsCrcuzr: Article = {
     en: "CrCu (C18200) and CrCuZr (C18150) are RWMA Class 2 chrome coppers for spot-welding electrodes; zirconium adds softening resistance. How to choose.",
   },
   intro: {
-    th: "CrCu กับ CrCuZr ต่างกันที่ CrCuZr เติมเซอร์โคเนียมเพิ่ม ซึ่งทำให้ต้านการอ่อนตัวเมื่อร้อนได้ดีกว่า ส่วนการนำไฟฟ้าและความแข็งอยู่ในเกณฑ์เดียวกัน ทั้งสองเป็นวัสดุหัวเชื่อมจุด RWMA Class 2: CrCu คือ UNS C18200 และ CrCuZr คือ UNS C18150 ในงานเชื่อมเหล็กทั่วไปใช้แทนกันได้เกือบทั้งหมด ความต่างจะเห็นชัดในงานที่หัวเชื่อมร้อนจัดหรือร้อนสะสม",
-    en: "CrCu and CrCuZr differ in that CrCuZr adds zirconium, which gives it better resistance to softening at temperature, while conductivity and hardness sit in the same class. Both are RWMA Class 2 electrode materials: CrCu is UNS C18200 and CrCuZr is UNS C18150. For general steel welding they are largely interchangeable; the difference shows where the electrode runs very hot or heat builds up.",
+    th: "CrCu กับ CrCuZr ต่างกันที่ CrCuZr เติมเซอร์โคเนียมเพิ่ม ซึ่งทำให้ต้านการอ่อนตัวเมื่อร้อนได้ดีกว่า ส่วนการนำไฟฟ้าและความแข็งอยู่ในเกณฑ์เดียวกัน ทั้งสองเป็นวัสดุหัวเชื่อมจุด RWMA Class 2: CrCu คือ UNS C18200 และ CrCuZr คือ UNS C18150 ในงาน Class 2 ส่วนใหญ่ใช้แทนกันได้ ส่วน CrCuZr เหมาะกว่ากับเครื่องเชื่อม MFDC และงานเชื่อมเหล็กชุบสังกะสีความแข็งแรงสูง",
+    en: "CrCu and CrCuZr differ in that CrCuZr adds zirconium, which gives it better resistance to softening at temperature, while conductivity and hardness sit in the same class. Both are RWMA Class 2 electrode materials: CrCu is UNS C18200 and CrCuZr is UNS C18150. For most Class 2 work they are interchangeable; CrCuZr is the better fit for MFDC welders and high-strength galvanized steel.",
   },
   body: [
     { t: "h2", text: { th: "CrCu และ CrCuZr คืออะไร?", en: "What are CrCu and CrCuZr?" } },
@@ -101,8 +101,8 @@ export const crcuVsCrcuzr: Article = {
     {
       t: "p",
       text: {
-        th: "เลือก CrCu เมื่อเป็นงานเชื่อมจุดทั่วไปที่ต้องการความคุ้มค่า และเลือก CrCuZr เมื่อหัวเชื่อมร้อนจัด เช่นเชื่อมรอบสูง ใช้เครื่อง MFDC หรือเชื่อมเหล็กชุบสังกะสีความแข็งแรงสูง ALCAVIL ระบุว่าสองเกรดนี้ใช้แทนกันได้ในงาน Class 2 ส่วนใหญ่ ถ้าหัวเชื่อมเดิมเสื่อมเร็วเพราะบานหรืออ่อนตัว CrCuZr คือตัวเลือกแรกที่ควรลอง",
-        en: "Choose CrCu for general spot welding where value matters, and CrCuZr where the electrode runs hot: high-rate welding, MFDC machines, or high-strength galvanized steel. ALCAVIL says the two are interchangeable for most Class 2 work. If your current electrodes wear out early by mushrooming or softening, CrCuZr is the first thing to try.",
+        th: "เลือก CrCu เมื่อเป็นงานเชื่อมจุดทั่วไปที่ต้องการความคุ้มค่า และเลือก CrCuZr เมื่อใช้เครื่องเชื่อม MFDC หรือเชื่อมเหล็กชุบสังกะสีความแข็งแรงสูง ALCAVIL ระบุว่าสองเกรดนี้ใช้แทนกันได้ในงาน Class 2 ส่วนใหญ่ ถ้าหัวเชื่อมเดิมเสื่อมเร็วเพราะอ่อนตัว ความต้านทานการอ่อนตัวที่สูงกว่าของ CrCuZr คือเหตุผลที่ควรพิจารณา",
+        en: "Choose CrCu for general spot welding where value matters, and CrCuZr for MFDC welders or high-strength galvanized steel. ALCAVIL says the two are interchangeable for most Class 2 work. If your current electrodes wear out early by softening, CrCuZr's higher softening resistance is the reason to consider it.",
       },
     },
     {
@@ -141,8 +141,8 @@ export const crcuVsCrcuzr: Article = {
     {
       q: { th: "CrCu กับ CrCuZr ใช้แทนกันได้ไหม?", en: "Can CrCu and CrCuZr be used interchangeably?" },
       a: {
-        th: "ในงาน Class 2 ส่วนใหญ่ใช้แทนกันได้ ตามที่ ALCAVIL ระบุ แต่ถ้าหัวเชื่อมร้อนจัด เช่นใช้เครื่อง MFDC หรือเชื่อมเหล็กชุบสังกะสีความแข็งแรงสูง CrCuZr จะเหมาะกว่า",
-        en: "For most Class 2 work, yes, according to ALCAVIL. Where the electrode runs hot, such as on MFDC machines or high-strength galvanized steel, CrCuZr is the better fit.",
+        th: "ในงาน Class 2 ส่วนใหญ่ใช้แทนกันได้ ตามที่ ALCAVIL ระบุ แต่สำหรับเครื่องเชื่อม MFDC หรืองานเชื่อมเหล็กชุบสังกะสีความแข็งแรงสูง ALCAVIL ระบุว่า CrCuZr เหมาะกว่า",
+        en: "For most Class 2 work, yes, according to ALCAVIL. For MFDC welders or high-strength galvanized steel, ALCAVIL names CrCuZr as the better fit.",
       },
     },
     {

@@ -35,20 +35,20 @@ export const berylliumCopperSafety: Article = {
     en: "Is Beryllium Copper Safe? Machining and Handling per Materion's Guidance",
   },
   description: {
-    th: "ทองแดงเบริลเลียมในรูปชิ้นงานแข็งไม่มีความเสี่ยงทางสุขภาพทันที ความเสี่ยงอยู่ที่ฝุ่นและไอจากการกลึง เจียร เชื่อม สรุปแนวทางควบคุมจาก SDS ของ Materion",
-    en: "Solid beryllium copper carries no immediate health risk; the hazard is dust and fume from machining, grinding and welding. Controls summarized from Materion's SDS.",
+    th: "SDS ของ Materion ระบุว่าทองแดงเบริลเลียมในรูปชิ้นงานตามที่จัดส่งไม่มีความเสี่ยงทางการแพทย์ทันที อันตรายมาจากฝุ่นและไอจากการกลึง เจียร เชื่อม สรุปแนวทางควบคุมจาก SDS",
+    en: "Per Materion's SDS, solid beryllium copper as supplied carries no immediate medical risk; the hazard is dust and fume from processing. Controls from the SDS.",
   },
   intro: {
-    th: "ทองแดงเบริลเลียมในรูปชิ้นงานแข็งใช้งานได้อย่างปลอดภัย SDS ของ Materion ระบุว่าผลิตภัณฑ์เบริลเลียมในรูปชิ้นงานตามที่จัดส่ง \"ไม่มีความเสี่ยงทางการแพทย์ในทันที\" ความเสี่ยงเกิดเมื่อกระบวนการผลิตทำให้เกิดอนุภาค เช่น ฝุ่น ไอ หรือละออง แล้วผู้ปฏิบัติงานหายใจเข้าไป บทความนี้สรุปแนวทางจากเอกสารของ Materion เพื่อให้เห็นภาพรวม ไม่ใช่เอกสารแทน SDS ก่อนเริ่มงานจริงต้องอ่าน SDS ฉบับปัจจุบันที่ขอได้จากผู้จำหน่ายวัสดุ",
-    en: "Beryllium copper is safe to use as solid parts: Materion's SDS states that, as supplied, \"there is no immediate medical risk with beryllium products in article form\". The hazard arises when a process creates particles, such as dust, fume or mist, that workers can breathe in. This article summarizes Materion's guidance as an overview. It does not replace the SDS: before starting work, read the current SDS, which you can request from your material supplier.",
+    th: "ตาม SDS ของ Materion ทองแดงเบริลเลียมในรูปชิ้นงานแข็งตามที่จัดส่ง \"ไม่มีความเสี่ยงทางการแพทย์ในทันที\" อันตรายมาจากอนุภาค (ฝุ่น ไอ หรือละออง) ที่เกิดจากกระบวนการผลิต โดยหลักผ่านการหายใจเข้าไป และผ่านการสัมผัสทางผิวหนังด้วย บทความนี้สรุปแนวทางจากเอกสารของ Materion เพื่อให้เห็นภาพรวม ไม่ใช่เอกสารแทน SDS ก่อนเริ่มงานจริงต้องอ่าน SDS ฉบับปัจจุบันที่ขอได้จากผู้จำหน่ายวัสดุ",
+    en: "As supplied in solid form, beryllium copper carries no immediate medical risk, according to Materion's SDS: \"As supplied, there is no immediate medical risk with beryllium products in article form.\" The hazard comes from particulate (dust, fume or mist) created by processing, mainly by inhalation and also by skin contact. This article summarizes Materion's guidance as an overview. It does not replace the SDS: before starting work, read the current SDS, which you can request from your material supplier.",
   },
   body: [
     { t: "h2", text: { th: "ความเสี่ยงของทองแดงเบริลเลียมอยู่ตรงไหน?", en: "Where does the risk with beryllium copper come from?" } },
     {
       t: "p",
       text: {
-        th: "ความเสี่ยงอยู่ที่อนุภาคขนาดเล็กที่ลอยในอากาศ ไม่ใช่ตัวชิ้นงาน SDS ของ Materion ระบุว่าการสัมผัสเกิดได้เมื่อหลอม หล่อ อบชุบความร้อน ตัดด้วยวิธีขัดสี เชื่อม เจียร ขัดกระดาษทราย ขัดเงา กัด หรือทำให้ผิววัสดุร้อนหรือสึกในลักษณะที่เกิดอนุภาค SDS ระบุอันตรายของวัสดุไว้ดังนี้",
-        en: "The risk is fine airborne particles, not the part itself. Materion's SDS says exposure can occur when melting, casting, heat treating, abrasive cutting, welding, grinding, sanding, polishing, milling, or otherwise heating or abrading the surface in a way that generates particulate. The SDS lists the material's hazards as:",
+        th: "ความเสี่ยงหลักมาจากอนุภาคที่เกิดจากกระบวนการผลิต ไม่ได้มาจากการใช้งานชิ้นงานแข็งตามที่จัดส่ง SDS ของ Materion ระบุว่าการสัมผัสผ่านการหายใจ การกลืน และผิวหนัง เกิดได้เมื่อหลอม หล่อ จัดการขี้ตะกรัน (dross) กัดผิวด้วยกรด (pickling) ทำความสะอาดด้วยสารเคมี อบชุบความร้อน ตัดด้วยใบตัดแบบขัด (abrasive cutting) เชื่อม เจียร ขัดกระดาษทราย ขัดเงา กัด บด หรือทำให้ผิววัสดุร้อนหรือสึกในลักษณะที่เกิดอนุภาค SDS ระบุอันตรายของวัสดุไว้ดังนี้",
+        en: "The main risk comes from particulate created by processing, not from using solid parts as supplied. Materion's SDS says exposure by inhalation, ingestion and skin contact can occur when melting, casting, dross handling, pickling, chemical cleaning, heat treating, abrasive cutting, welding, grinding, sanding, polishing, milling, crushing, or otherwise heating or abrading the surface in a way that generates particulate. The SDS lists the material's hazards as:",
       },
     },
     {
@@ -108,8 +108,8 @@ export const berylliumCopperSafety: Article = {
     {
       t: "p",
       text: {
-        th: "ทุกเกรดที่มีเบริลเลียม SDS ฉบับเดียวกันนี้ครอบคลุมโลหะผสมรีดขึ้นรูปของ Materion หลายชนิด รวมถึง [C17200](/beryllium-copper/c17200), [C17510](/beryllium-copper/c17510), C17410, C17460 และ MoldMAX/PROtherm ดูเกรดทั้งหมดได้ที่หน้า [Beryllium Copper](/beryllium-copper)",
-        en: "Every beryllium-containing grade. This one SDS covers many Materion wrought alloys, including [C17200](/beryllium-copper/c17200), [C17510](/beryllium-copper/c17510), C17410, C17460 and MoldMAX/PROtherm. All grades are on the [beryllium copper](/beryllium-copper) page.",
+        th: "ครอบคลุมเกรดรีดขึ้นรูป (wrought) ที่ SDS ฉบับนี้ระบุ ได้แก่ [C17200](/beryllium-copper/c17200), [C17510](/beryllium-copper/c17510), C17410, C17460 และ MoldMAX/PROtherm ส่วนโลหะผสมแบบหล่อ (cast) มี SDS ของตัวเองแยกต่างหาก ให้ใช้ SDS ที่ตรงกับผลิตภัณฑ์เสมอ ดูเกรดทั้งหมดได้ที่หน้า [Beryllium Copper](/beryllium-copper)",
+        en: "It covers the wrought grades this SDS lists: [C17200](/beryllium-copper/c17200), [C17510](/beryllium-copper/c17510), C17410, C17460 and MoldMAX/PROtherm. Cast alloys have their own SDS, so always use the SDS that matches the product. All grades are on the [beryllium copper](/beryllium-copper) page.",
       },
     },
     { t: "h2", text: { th: "ต้องปฏิบัติตามกฎหมายหรือค่าขีดจำกัดใด?", en: "Which rules or exposure limits apply?" } },
@@ -139,8 +139,8 @@ export const berylliumCopperSafety: Article = {
     {
       q: { th: "กลึงทองแดงเบริลเลียมแบบแห้งได้ไหม?", en: "Can beryllium copper be machined dry?" },
       a: {
-        th: "SDS ของ Materion ระบุว่างานตัดเฉือนโดยทั่วไปทำภายใต้น้ำหล่อเย็นแบบท่วมเพื่อช่วยลดอนุภาคในอากาศ ร่วมกับการระบายอากาศเฉพาะจุด การเลือกวิธีทำงานใด ๆ ต้องประเมินตาม SDS และให้ผู้รับผิดชอบด้านความปลอดภัยกำหนด",
-        en: "Materion's SDS says machining is usually done under a liquid coolant flood to help reduce airborne particulate, together with local exhaust ventilation. Any method should be assessed against the SDS and set by your safety lead.",
+        th: "SDS ของ Materion ไม่ได้ให้แนวทางการกลึงแบบแห้ง แต่ระบุว่างานตัดเฉือนโดยทั่วไปทำภายใต้น้ำหล่อเย็นแบบท่วมเพื่อช่วยลดอนุภาคในอากาศ ร่วมกับการระบายอากาศเฉพาะจุด การเลือกวิธีทำงานใด ๆ ต้องประเมินตาม SDS และให้ผู้รับผิดชอบด้านความปลอดภัยกำหนด",
+        en: "Materion's SDS gives no guidance for dry machining; it says machining is usually done under a liquid coolant flood to help reduce airborne particulate, together with local exhaust ventilation. Any method should be assessed against the SDS and set by your safety lead.",
       },
     },
     {

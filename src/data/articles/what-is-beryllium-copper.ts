@@ -27,8 +27,8 @@ export const whatIsBerylliumCopper: Article = {
     en: "Beryllium copper (CuBe/BeCu) is an age-hardenable copper alloy with high strength and good conductivity. Its properties, grade classes, forms and uses, with sources.",
   },
   intro: {
-    th: "Beryllium Copper (ทองแดงเบริลเลียม หรือ CuBe/BeCu) คือโลหะผสมทองแดงที่เติมเบริลเลียมแล้วทำให้แข็งด้วยการบ่มแข็ง (precipitation age hardening) ผลคือวัสดุที่แข็งแรงระดับชิ้นส่วนรับแรง แต่ยังนำไฟฟ้าและความร้อนได้ดีกว่าโลหะผสมความแข็งแรงสูงส่วนใหญ่ บทความนี้สรุปว่าคุณสมบัติเหล่านี้มาจากไหน เกรดแบ่งอย่างไร และวิศวกรนิยมใช้ทำอะไร",
-    en: "Beryllium copper (CuBe or BeCu) is a copper alloy with a beryllium addition that is hardened by precipitation age hardening, giving a material strong enough for load-bearing parts that still conducts electricity and heat better than most high-strength alloys. This article covers where those properties come from, how the grades divide, and what engineers use it for.",
+    th: "Beryllium Copper (ทองแดงเบริลเลียม หรือ CuBe/BeCu) คือโลหะผสมทองแดงที่เติมเบริลเลียมแล้วทำให้แข็งด้วยการบ่มแข็ง (precipitation age hardening) ผลคือวัสดุที่แข็งแรงระดับชิ้นส่วนรับแรง แต่ยังนำไฟฟ้าและความร้อนได้สูงกว่าโลหะผสมทองแดงความแข็งแรงสูงชนิดอื่นอย่างชัดเจน บทความนี้สรุปว่าคุณสมบัติเหล่านี้มาจากไหน เกรดแบ่งอย่างไร และวิศวกรนิยมใช้ทำอะไร",
+    en: "Beryllium copper (CuBe or BeCu) is a copper alloy with a beryllium addition that is hardened by precipitation age hardening, giving a material strong enough for load-bearing parts with electrical and thermal conductivity considerably greater than other high-strength copper alloys. This article covers where those properties come from, how the grades divide, and what engineers use it for.",
   },
   body: [
     { t: "h2", text: { th: "ทำไม Beryllium Copper ถึงแข็งแรงแต่ยังนำไฟฟ้าได้?", en: "Why is beryllium copper strong and still conductive?" } },
@@ -50,8 +50,8 @@ export const whatIsBerylliumCopper: Article = {
     {
       t: "p",
       text: {
-        th: "Materion แบ่ง Beryllium Copper เป็นสองกลุ่มหลัก คือกลุ่มความแข็งแรงสูง (high strength) และกลุ่มนำไฟฟ้าสูง (high conductivity) ตัวแทนที่พบบ่อยที่สุดของแต่ละกลุ่มคือ [C17200 (Alloy 25)](/beryllium-copper/c17200) และ [C17510 (Alloy 3)](/beryllium-copper/c17510)",
-        en: "Materion divides beryllium copper into two classes: high strength and high conductivity. The most common representatives are [C17200 (Alloy 25)](/beryllium-copper/c17200) and [C17510 (Alloy 3)](/beryllium-copper/c17510).",
+        th: "Materion แบ่ง Beryllium Copper เป็นสองกลุ่มหลัก คือกลุ่มความแข็งแรงสูง (high strength) และกลุ่มนำไฟฟ้าสูง (high conductivity) เกรดตัวแทนของแต่ละกลุ่มคือ [C17200 (Alloy 25)](/beryllium-copper/c17200) และ [C17510 (Alloy 3)](/beryllium-copper/c17510)",
+        en: "Materion divides beryllium copper into two classes: high strength and high conductivity. Representative grades are [C17200 (Alloy 25)](/beryllium-copper/c17200) and [C17510 (Alloy 3)](/beryllium-copper/c17510).",
       },
     },
     {
