@@ -3,6 +3,7 @@ import { SITE_URL } from "@/lib/site";
 import { absUrl } from "@/lib/locale";
 import { allRoutes } from "@/lib/routes";
 import { families } from "@/data/products";
+import { industries } from "@/data/industries";
 
 /**
  * `/llms.txt` — a plain-text brief for AI answer engines and crawlers that
@@ -77,13 +78,21 @@ function buildLlmsTxt(): string {
   for (const section of productLineSections()) lines.push(section);
   lines.push("");
 
+  lines.push("## Industries");
+  lines.push("");
+  for (const ind of industries) {
+    lines.push(`- [${ind.name.en}](${en(`/industries/${ind.slug}`)}): ${ind.description.en}`);
+  }
+  lines.push("");
+
   lines.push("## Requesting a quote");
   lines.push("");
   lines.push(
     "VAN INTERTRADE sells by quotation; no list prices are published. " +
       `Contact the company by phone (${company.contact.telsDisplay[0]}), ` +
       `LINE (${company.contact.lineId}), or email ` +
-      `(${company.contact.email}) to request a quotation.`,
+      `(${company.contact.email}) to request a quotation. Contact page ` +
+      `with address, map and quote request: ${en("/contact")}`,
   );
   lines.push("");
 

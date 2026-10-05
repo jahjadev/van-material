@@ -98,7 +98,12 @@ export function Footer({ lang }: { lang: Lang }) {
             {lang === "en" ? "Est. 1986." : `ก่อตั้ง พ.ศ. ${company.foundedYearBE}.`}{" "}
             {lang === "en" ? "All rights reserved." : "สงวนลิขสิทธิ์"}
           </p>
-          <p>{lang === "en" ? contact.hoursEn : contact.hoursTh}</p>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>{lang === "en" ? contact.hoursEn : contact.hoursTh}</span>
+            <LocaleLink href="/privacy" className="underline decoration-line-dark underline-offset-2 hover:text-white">
+              {lang === "en" ? "Privacy notice" : "นโยบายความเป็นส่วนตัว"}
+            </LocaleLink>
+          </p>
         </div>
 
         <p className="mt-4 text-[12px]">

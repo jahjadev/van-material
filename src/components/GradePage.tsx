@@ -7,10 +7,9 @@ import {
   FormsAndApplications,
   ProductHero,
   RfqBand,
-  familyCrumbs,
-  productPageLd,
   type Crumb,
-} from "@/components/ProductFamilyPage";
+} from "@/components/ProductParts";
+import { familyCrumbs, productPageLd } from "@/components/ProductFamilyPage";
 import type { Grade, ProductFamily } from "@/data/products";
 import type { Lang } from "@/lib/locale";
 

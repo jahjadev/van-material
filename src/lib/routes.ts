@@ -12,10 +12,8 @@
  *
  *   // Task 3 (product families/grades): done — see `familyRoutes()` below.
  *
- *   // Task 4 (industries) — once `src/data/industries.ts` exists:
- *   // import { industries } from "@/data/industries";
- *   // const industryRoutes = (): RouteEntry[] =>
- *   //   industries.map((i) => ({ path: `/industries/${i.slug}` }));
+ *   // Task 4 (home, about, contact, privacy, industries): done — see
+ *   // `staticRoutes` and `industryRoutes()` below.
  *
  *   // Task 7 (knowledge articles) — once `src/data/knowledge.ts` exists:
  *   // import { articles } from "@/data/knowledge";
@@ -26,6 +24,7 @@
  */
 
 import { families } from "@/data/products";
+import { industries } from "@/data/industries";
 
 export type RouteEntry = {
   /** Locale-independent path, written the Thai (bare-path) way, e.g. `/about`. */
@@ -37,7 +36,12 @@ export type RouteEntry = {
 };
 
 /** Static pages that exist today. */
-const staticRoutes: RouteEntry[] = [{ path: "/" }];
+const staticRoutes: RouteEntry[] = [
+  { path: "/" },
+  { path: "/about" },
+  { path: "/contact" },
+  { path: "/privacy" },
+];
 
 /** Product family pages and the grade pages under them (Task 3). */
 const familyRoutes = (): RouteEntry[] =>
@@ -46,6 +50,10 @@ const familyRoutes = (): RouteEntry[] =>
     ...f.grades.map((g) => ({ path: `/${f.slug}/${g.slug}` })),
   ]);
 
+/** Industry pages (Task 4). */
+const industryRoutes = (): RouteEntry[] =>
+  industries.map((i) => ({ path: `/industries/${i.slug}` }));
+
 export function allRoutes(): RouteEntry[] {
-  return [...staticRoutes, ...familyRoutes()];
+  return [...staticRoutes, ...familyRoutes(), ...industryRoutes()];
 }

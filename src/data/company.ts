@@ -44,6 +44,12 @@ export const company = {
     lineUrl: "https://line.me/ti/p/%40vanintertrade",
     hoursTh: "จันทร์–ศุกร์ 08.30–17.30 น.",
     hoursEn: "Mon–Fri 08.30–17.30",
+    /** The same hours, structured for schema.org openingHoursSpecification. */
+    hoursSpec: {
+      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "08:30",
+      closes: "17:30",
+    },
     geo: { lat: 13.784706, lng: 100.686849 },
     mapsPlace: "VAN Intertrade Co., Ltd.",
   },

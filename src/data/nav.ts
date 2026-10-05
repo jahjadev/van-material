@@ -3,8 +3,8 @@
  * footer link groups. Hrefs are locale-independent (always written the Thai
  * way); `LocaleLink` prefixes `/en` on the English tree.
  *
- * Every route below other than `/`, `/about`, `/contact`, `/industries/...`
- * and `/knowledge` is built by a later task — they intentionally 404 for now.
+ * Every route below exists except `/knowledge` (Task 7), which 404s until
+ * that task lands. `/privacy` is linked from the footer only.
  */
 
 export type NavLink = {
