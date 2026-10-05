@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { LocaleLink } from "@/components/LocaleLink";
+
+// Covers both a direct 404 render and the `[...catchAll]` route's
+// `notFound()` call — without this, the layout's default metadata would
+// otherwise let a 404 page be indexed.
+export const metadata: Metadata = {
+  title: "ไม่พบหน้านี้",
+  robots: { index: false, follow: true },
+};
 
 export default function ThaiNotFound() {
   return (
