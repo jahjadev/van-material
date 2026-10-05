@@ -342,6 +342,23 @@ function auditPage(entry, status, html) {
     if (canonHref !== new URL(prodUrl).href) add("fail", "canonical-mismatch", path_, `canonical is "${canonical}", expected "${prodUrl}"`);
   }
 
+  // og:url — same self-URL requirement as canonical (R14), checked
+  // separately because Next renders it from `openGraph.url` in
+  // `pageMeta()`, a different code path than `alternates.canonical`, so a
+  // template regression could break one without the other.
+  const ogUrlTag = firstTag(head, /<meta[^>]+property="og:url"[^>]*>/i);
+  const ogUrl = ogUrlTag ? attr(ogUrlTag, "content") : null;
+  if (!ogUrl) add("fail", "og-url-missing", path_, "no og:url");
+  else {
+    let ogUrlHref;
+    try {
+      ogUrlHref = new URL(ogUrl).href;
+    } catch {
+      ogUrlHref = null;
+    }
+    if (ogUrlHref !== new URL(prodUrl).href) add("fail", "og-url-mismatch", path_, `og:url is "${ogUrl}", expected "${prodUrl}"`);
+  }
+
   // reciprocal hreflang, matching the sitemap's own alternates for this URL
   const hreflangTags = [...head.matchAll(/<link[^>]+rel="alternate"[^>]*>/gi)].map((m) => m[0]);
   const pageAlt = {};
