@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
-import { families } from "@/data/products";
 import { company } from "@/data/company";
-import { rfqSchema, resolveGradeLabel, stripCrlf, type RfqInput } from "@/lib/rfqSchema";
+import { createRfqSchema, stripCrlf, type RfqInput } from "@/lib/rfqSchema";
+import { resolveGradeLabel, resolveProductLabel, rfqProductOptions } from "@/lib/rfqOptions";
 import { clientIp, rateLimit } from "@/lib/rateLimit";
+
+const rfqProducts = rfqProductOptions();
+/** Server-side validation only needs the slim product/grade list, not the
+ * full `@/data/products` dataset (which only `rfqOptions.ts` imports). */
+const rfqSchema = createRfqSchema("en", rfqProducts);
 
 export const runtime = "nodejs";
 
@@ -206,14 +211,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, delivered: true });
   }
 
-  const family = families.find((f) => f.slug === data.product);
-  const productLabel = family ? family.name.en : data.product;
-  const gradeLabel = resolveGradeLabel(family, data.grade);
+  const productLabel = resolveProductLabel(rfqProducts, data.product);
+  const gradeLabel = resolveGradeLabel(rfqProducts, data.product, data.grade);
 
-  // Subject is built only from server-resolved labels (productLabel comes
-  // from `families`, not the request body) plus the submitter's name/company,
-  // both already CR/LF-rejected by the schema — `stripCrlf` is defense in
-  // depth, not the only guard.
+  // Subject is built only from server-resolved labels (productLabel/gradeLabel
+  // come from `rfqProducts`, not the request body) plus the submitter's
+  // name/company, both already CR/LF-rejected by the schema — `stripCrlf` is
+  // defense in depth, not the only guard.
   const subjectParts = [productLabel, gradeLabel].filter(Boolean).join(" ");
   const subject = stripCrlf(
     `RFQ: ${subjectParts}${data.company ? ` — ${data.company}` : ` — ${data.name}`}`,

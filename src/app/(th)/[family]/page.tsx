@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { ProductFamilyPage } from "@/components/ProductFamilyPage";
 import { families, getFamily } from "@/data/products";
 import { pageMeta } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
 
 const LANG = "th" as const;
 
@@ -24,7 +23,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: family.description[LANG],
     lang: LANG,
     path: `/${family.slug}`,
-    image: `${SITE_URL}${family.image.src}`,
   });
 }
 

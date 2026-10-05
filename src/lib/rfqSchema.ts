@@ -6,14 +6,18 @@
  * a silent honeypot) and adapted to this site's bilingual pages and its
  * product/grade data instead of a fixed service list.
  *
- * `product` and `grade` are validated against `families` here — never
- * trusted as free text — because both are interpolated into the email
- * Subject line in `src/app/api/rfq/route.ts`, and an unvalidated Subject is
- * a header-injection vector.
+ * `product` and `grade` are validated against a passed-in `RfqProductOption[]`
+ * — never trusted as free text — because both are interpolated into the
+ * email Subject line in `src/app/api/rfq/route.ts`, and an unvalidated
+ * Subject is a header-injection vector. This module deliberately does NOT
+ * import `@/data/products` itself (see `rfqOptions.ts`'s module comment):
+ * `RfqForm.tsx` imports `createRfqSchema` into the client bundle, so this
+ * file can only depend on the slim `RfqProductOption[]` shape, never the
+ * full product/grade dataset.
  */
 
 import { z } from "zod";
-import { families, type ProductFamily } from "@/data/products";
+import type { RfqProductOption } from "@/lib/rfqOptions";
 import type { Lang } from "@/lib/locale";
 
 const CRLF = /[\r\n]/;
@@ -23,57 +27,9 @@ export function stripCrlf(value: string): string {
   return value.replace(/[\r\n]+/g, " ").trim();
 }
 
-function slugifyVariantName(nameEn: string): string {
-  return nameEn
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-/** Known family slugs — the only values `product` may take. */
-export const PRODUCT_SLUGS: string[] = families.map((f) => f.slug);
-
-/** Sentinel grade value for "I'm not sure / other", valid for any product. */
-export const OTHER_GRADE = "other";
-
-export type GradeOption = { value: string; label: { th: string; en: string } };
-
-/**
- * Options for the grade `<select>`, dependent on the chosen product: the
- * family's grade codes (own pages), its list-only variant names, then the
- * trailing "other / not sure" choice. Used by `RfqForm` to render the
- * select and by the API route to validate + relabel the submitted value.
- */
-export function gradeOptionsFor(family: ProductFamily | undefined): GradeOption[] {
-  if (!family) return [];
-  const fromGrades: GradeOption[] = family.grades.map((g) => ({
-    value: g.code,
-    label: { th: g.code, en: g.code },
-  }));
-  const fromVariants: GradeOption[] = family.variants.map((v) => ({
-    value: slugifyVariantName(v.name.en),
-    label: v.name,
-  }));
-  return [
-    ...fromGrades,
-    ...fromVariants,
-    { value: OTHER_GRADE, label: { th: "อื่น ๆ / ไม่แน่ใจ", en: "Other / not sure" } },
-  ];
-}
-
-/** The submitted grade value's display label, for the email subject/body. */
-export function resolveGradeLabel(family: ProductFamily | undefined, grade: string): string {
-  if (!family || !grade) return "";
-  if (grade === OTHER_GRADE) return "Other / not sure";
-  const g = family.grades.find((x) => x.code === grade);
-  if (g) return g.code;
-  const v = family.variants.find((x) => slugifyVariantName(x.name.en) === grade);
-  if (v) return v.name.en;
-  return "";
-}
-
-function validGradeValues(family: ProductFamily | undefined): Set<string> {
-  return new Set(["", ...gradeOptionsFor(family).map((o) => o.value)]);
+function validGradeValues(products: RfqProductOption[], productSlug: string): Set<string> {
+  const product = products.find((p) => p.slug === productSlug);
+  return new Set(["", ...(product?.grades.map((o) => o.value) ?? [])]);
 }
 
 // Excludes whitespace and the characters that have no business in an email
@@ -140,9 +96,10 @@ const MESSAGES: Record<Lang, Messages> = {
   },
 };
 
-/** Build the zod schema with messages localized for `lang`. */
-export function createRfqSchema(lang: Lang) {
+/** Build the zod schema with messages localized for `lang`, validated against `products`. */
+export function createRfqSchema(lang: Lang, products: RfqProductOption[]) {
   const m = MESSAGES[lang];
+  const productSlugs = products.map((p) => p.slug);
   return z
     .object({
       name: z
@@ -165,7 +122,7 @@ export function createRfqSchema(lang: Lang) {
       product: z
         .string()
         .min(1, m.productRequired)
-        .refine((v) => PRODUCT_SLUGS.includes(v), m.productRequired),
+        .refine((v) => productSlugs.includes(v), m.productRequired),
       grade: z.string().max(100, m.gradeInvalid),
       form: z
         .string()
@@ -184,14 +141,10 @@ export function createRfqSchema(lang: Lang) {
       website: z.string().max(200),
     })
     .superRefine((data, ctx) => {
-      const family = families.find((f) => f.slug === data.product);
-      if (data.grade && !validGradeValues(family).has(data.grade)) {
+      if (data.grade && !validGradeValues(products, data.product).has(data.grade)) {
         ctx.addIssue({ code: "custom", path: ["grade"], message: m.gradeInvalid });
       }
     });
 }
 
 export type RfqInput = z.infer<ReturnType<typeof createRfqSchema>>;
-
-/** Default-language schema for callers that don't need localized messages (the API route). */
-export const rfqSchema = createRfqSchema("en");

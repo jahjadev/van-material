@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { IndustryPage } from "@/components/pages/IndustryPage";
 import { getIndustry, industries } from "@/data/industries";
 import { pageMeta } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
 
 const LANG = "en" as const;
 
@@ -24,7 +23,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: ind.description[LANG],
     lang: LANG,
     path: `/industries/${ind.slug}`,
-    image: `${SITE_URL}${ind.image.src}`,
   });
 }
 

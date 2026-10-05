@@ -4,6 +4,7 @@ import { JsonLd, breadcrumbLd, organizationLd } from "@/components/JsonLd";
 import { HOME, PageHero, type Crumb } from "@/components/ProductParts";
 import { RfqForm } from "@/components/RfqForm";
 import { company } from "@/data/company";
+import { rfqProductOptions } from "@/lib/rfqOptions";
 import { SITE_URL } from "@/lib/site";
 import { absUrl, type Lang } from "@/lib/locale";
 
@@ -150,7 +151,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
             {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </h2>
           <div className="mt-5">
-            <RfqForm lang={lang} />
+            <RfqForm lang={lang} products={rfqProductOptions()} />
           </div>
         </section>
       </div>

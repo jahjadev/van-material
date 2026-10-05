@@ -5,13 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useForm, type UseFormReturn, type UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, MessageCircle, Phone } from "lucide-react";
-import {
-  createRfqSchema,
-  gradeOptionsFor,
-  PRODUCT_SLUGS,
-  type RfqInput,
-} from "@/lib/rfqSchema";
-import { families } from "@/data/products";
+import { createRfqSchema, type RfqInput } from "@/lib/rfqSchema";
+import type { RfqProductOption } from "@/lib/rfqOptions";
 import { company } from "@/data/company";
 import { LocaleLink } from "@/components/LocaleLink";
 import type { Lang } from "@/lib/locale";
@@ -74,20 +69,26 @@ function FieldError({ id, message }: { id: string; message?: string }) {
  * and it has no visual fallback gap because it never renders anything
  * itself.
  */
-function PrefillFromParams({ setValue }: { setValue: UseFormSetValue<RfqInput> }) {
+function PrefillFromParams({
+  products,
+  setValue,
+}: {
+  products: RfqProductOption[];
+  setValue: UseFormSetValue<RfqInput>;
+}) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const p = searchParams.get("product");
-    const product = p && PRODUCT_SLUGS.includes(p) ? p : "";
+    const product = p && products.some((pr) => pr.slug === p) ? p : "";
     if (!product) return;
     setValue("product", product);
 
-    const family = families.find((f) => f.slug === product);
+    const found = products.find((pr) => pr.slug === product);
     const g = searchParams.get("grade");
-    const grade = g && family && gradeOptionsFor(family).some((o) => o.value === g) ? g : "";
+    const grade = g && found && found.grades.some((o) => o.value === g) ? g : "";
     if (grade) setValue("grade", grade);
-  }, [searchParams, setValue]);
+  }, [searchParams, setValue, products]);
 
   return null;
 }
@@ -145,11 +146,13 @@ function SuccessPanel({
 
 function RfqFormFields({
   lang,
+  products,
   form,
   status,
   setStatus,
 }: {
   lang: Lang;
+  products: RfqProductOption[];
   form: UseFormReturn<RfqInput>;
   status: Status;
   setStatus: (s: Status) => void;
@@ -168,8 +171,8 @@ function RfqFormFields({
   } = form;
 
   const product = watch("product");
-  const family = families.find((f) => f.slug === product);
-  const gradeOptions = useMemo(() => gradeOptionsFor(family), [family]);
+  const selected = products.find((p) => p.slug === product);
+  const gradeOptions = useMemo(() => selected?.grades ?? [], [selected]);
   const productField = register("product");
 
   async function onSubmit(data: RfqInput) {
@@ -317,9 +320,9 @@ function RfqFormFields({
             <option value="" disabled>
               {en ? "Select a product" : "เลือกสินค้า"}
             </option>
-            {families.map((f) => (
-              <option key={f.slug} value={f.slug}>
-                {f.name[lang]}
+            {products.map((p) => (
+              <option key={p.slug} value={p.slug}>
+                {p.name[lang]}
               </option>
             ))}
           </select>
@@ -331,7 +334,7 @@ function RfqFormFields({
             id="rfq-grade"
             {...register("grade")}
             className={fieldBase}
-            disabled={!family}
+            disabled={!selected}
             aria-invalid={!!errors.grade}
             aria-describedby={errors.grade ? "rfq-grade-error" : undefined}
           >
@@ -439,10 +442,10 @@ function RfqFormFields({
  * `<Suspense>`; it renders nothing, so there's no visual placeholder gap,
  * and `/contact` / `/en/contact` stay static.
  */
-export function RfqForm({ lang }: { lang: Lang }) {
+export function RfqForm({ lang, products }: { lang: Lang; products: RfqProductOption[] }) {
   const en = lang === "en";
   const c = company.contact;
-  const schema = useMemo(() => createRfqSchema(lang), [lang]);
+  const schema = useMemo(() => createRfqSchema(lang, products), [lang, products]);
   const form = useForm<RfqInput>({
     resolver: zodResolver(schema),
     defaultValues: EMPTY_VALUES,
@@ -460,7 +463,7 @@ export function RfqForm({ lang }: { lang: Lang }) {
   return (
     <div>
       <Suspense fallback={null}>
-        <PrefillFromParams setValue={form.setValue} />
+        <PrefillFromParams products={products} setValue={form.setValue} />
       </Suspense>
 
       {/* Persistent live region: this node stays mounted across every
@@ -488,7 +491,7 @@ export function RfqForm({ lang }: { lang: Lang }) {
       {status === "ok" ? (
         <SuccessPanel lang={lang} headingRef={successHeadingRef} onReset={() => setStatus("idle")} />
       ) : (
-        <RfqFormFields lang={lang} form={form} status={status} setStatus={setStatus} />
+        <RfqFormFields lang={lang} products={products} form={form} status={status} setStatus={setStatus} />
       )}
     </div>
   );

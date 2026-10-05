@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { GradePage } from "@/components/GradePage";
 import { families, getGrade } from "@/data/products";
 import { pageMeta } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
 
 const LANG = "en" as const;
 
@@ -28,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: grade.description[LANG],
     lang: LANG,
     path: `/${family.slug}/${grade.slug}`,
-    image: `${SITE_URL}${family.image.src}`,
   });
 }
 

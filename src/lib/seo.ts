@@ -11,38 +11,37 @@
  * tree does not reliably apply to both trees (verified against a build:
  * the English tree got "%s | VAN INTERTRADE", the Thai tree silently
  * didn't). Building the full title directly sidesteps that.
+ *
+ * No `openGraph.images` / `twitter.images` field here: every route in this
+ * app has its own `opengraph-image.tsx` + `twitter-image.tsx` (Task 6,
+ * `src/lib/ogCard.tsx`), and Next merges that file-convention image with
+ * whatever this function returns. Setting an image here too would put two
+ * `og:image` tags on every page. Model: `VAN/src/lib/seo.ts`, which has no
+ * `image` param for the same reason.
  */
 
 import type { Metadata } from "next";
 import { company } from "@/data/company";
-import { SITE_URL } from "./site";
 import { absUrl, HREFLANG, OG_LOCALE, type Lang } from "./locale";
 
 const BRAND_SUFFIX = "VAN INTERTRADE";
-
-/** Default OpenGraph/Twitter image when a page doesn't supply its own. */
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
 
 export function pageMeta({
   title,
   description,
   lang,
   path,
-  image,
 }: {
   title: string;
   description: string;
   lang: Lang;
   /** Locale-independent path, always written the Thai way (e.g. `/about`). */
   path: string;
-  /** Absolute image URL. Falls back to the site logo. */
-  image?: string;
 }): Metadata {
   const url = absUrl(path, lang);
   // `absolute` so this is used verbatim — see module comment on why this
   // doesn't rely on the root layouts' title template.
   const socialTitle = `${title} | ${BRAND_SUFFIX}`;
-  const ogImage = image ?? DEFAULT_OG_IMAGE;
 
   return {
     title: { absolute: socialTitle },
@@ -62,13 +61,11 @@ export function pageMeta({
       siteName: company.legalNameEn,
       title: socialTitle,
       description,
-      images: [{ url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: [ogImage],
     },
   };
 }
