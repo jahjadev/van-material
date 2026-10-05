@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, MessageCircle, Phone } from "lucide-react";
 import { createRfqSchema, type RfqInput } from "@/lib/rfqSchema";
 import type { RfqProductOption } from "@/lib/rfqOptions";
+import { classifyRfqResponse } from "@/lib/rfqOutcome";
 import { company } from "@/data/company";
 import { LocaleLink } from "@/components/LocaleLink";
 import type { Lang } from "@/lib/locale";
@@ -184,15 +185,22 @@ function RfqFormFields({
         body: JSON.stringify(data),
       });
 
-      if (res.status === 429) {
+      // Every branch of this decision lives in classifyRfqResponse (shared
+      // with scripts/test-rfq.mjs). Only a 2xx whose JSON says
+      // `delivered: true` counts as sent; anything else — a 5xx, an
+      // unparseable body, `delivered: false` or a missing field — is the
+      // "not sent" outcome and keeps every input filled in so the visitor
+      // can retry or copy their text instead of re-typing it.
+      const outcome = classifyRfqResponse(res.status, await res.text().catch(() => ""));
+
+      if (outcome.kind === "rateLimited") {
         setStatus("rateLimited");
         return;
       }
 
-      if (res.status === 422) {
-        const j: { field?: string } = await res.json().catch(() => ({}));
-        const target = (FIELD_NAMES as string[]).includes(j.field ?? "")
-          ? (j.field as keyof RfqInput)
+      if (outcome.kind === "invalid") {
+        const target = (FIELD_NAMES as string[]).includes(outcome.field ?? "")
+          ? (outcome.field as keyof RfqInput)
           : "message";
         setError(target, {
           type: "server",
@@ -203,22 +211,7 @@ function RfqFormFields({
         return;
       }
 
-      // Any other non-OK response (5xx, etc.) is a server-side failure, not
-      // a validation problem — same "not sent" outcome as a delivery
-      // failure the server itself caught, so it gets the same message and
-      // keeps every input filled in.
-      if (!res.ok) {
-        setStatus("undelivered");
-        return;
-      }
-
-      const result: { ok?: boolean; delivered?: boolean } = await res.json().catch(() => ({}));
-
-      // The API answers 200 even when email delivery fails, so the request
-      // only truly reached us when `delivered` is true. On a failed
-      // delivery, keep every input filled in so the visitor can retry or
-      // copy their text instead of re-typing it.
-      if (result.delivered === false) {
+      if (outcome.kind === "undelivered") {
         setStatus("undelivered");
         return;
       }

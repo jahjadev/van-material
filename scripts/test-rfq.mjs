@@ -20,17 +20,37 @@
  *      double guard: this must behave exactly like B (delivered:false, no
  *      `testMessage`), not like A.
  *
+ * Before any server starts, the form's own response classifier
+ * (src/lib/rfqOutcome.ts) is checked against a decision table, including
+ * responses a live server can't easily produce (an unparseable 200).
+ *
  * Run with `npm run test:rfq`. Requires a production build (`next build`);
  * this script builds one if `.next/BUILD_ID` is missing.
  */
 
 import { spawn, execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const root = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const nextBin = path.join(root, "node_modules", "next", "dist", "bin", "next");
+
+/**
+ * The form's own response classifier — the exact file RfqForm.tsx imports —
+ * transpiled with the project's TypeScript (a devDependency) and loaded as
+ * an ES module. Works on every Node version package.json allows, without
+ * relying on Node's type stripping. The file has no imports, so a
+ * single-file transpile is complete.
+ */
+const { classifyRfqResponse } = await (async () => {
+  const src = readFileSync(path.join(root, "src", "lib", "rfqOutcome.ts"), "utf8");
+  const js = ts.transpileModule(src, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  return import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
+})();
 
 let failures = 0;
 let passed = 0;
@@ -137,13 +157,16 @@ async function postRfq(port, ip, body) {
     headers: { "Content-Type": "application/json", "x-forwarded-for": ip },
     body: JSON.stringify(body),
   });
+  const text = await res.text();
   let json = null;
   try {
-    json = await res.json();
+    json = JSON.parse(text);
   } catch {
     /* no body */
   }
-  return { status: res.status, headers: res.headers, json };
+  // What the browser form would show for this exact response.
+  const outcome = classifyRfqResponse(res.status, text).kind;
+  return { status: res.status, headers: res.headers, json, outcome };
 }
 
 async function runJsonTransportSuite(port) {
@@ -152,9 +175,10 @@ async function runJsonTransportSuite(port) {
   // 1. Valid submission -> delivered:true, composed message contains the
   //    product/grade/fields with a header-injection-safe subject.
   {
-    const { status, json } = await postRfq(port, "10.0.1.1", basePayload());
+    const { status, json, outcome } = await postRfq(port, "10.0.1.1", basePayload());
     ok("valid submission returns 200", status === 200, `status=${status}`);
     ok("delivered:true", json?.ok === true && json?.delivered === true, JSON.stringify(json));
+    ok("form classifies it as sent", outcome === "ok", outcome);
     const msg = json?.testMessage ? JSON.parse(json.testMessage) : null;
     ok("message composed", !!msg, "no testMessage in response");
     if (msg) {
@@ -214,6 +238,7 @@ async function runJsonTransportSuite(port) {
     ok("first 5 requests from one IP succeed", first5.every((r) => r.status === 200), JSON.stringify(first5.map((r) => r.status)));
     ok("6th request -> 429", sixth.status === 429, `status=${sixth.status}`);
     ok("429 has Retry-After", !!sixth.headers.get("retry-after"), "missing header");
+    ok("form classifies the 429 as rate limited", sixth.outcome === "rateLimited", sixth.outcome);
   }
 
   // 7. The global send-rate bucket (60/hour) is only charged right before
@@ -246,13 +271,49 @@ async function runJsonTransportSuite(port) {
 
 async function runUnconfiguredSuite(port, label) {
   console.log(`\n${label} — delivered:false`);
-  const { status, json } = await postRfq(port, "10.0.2.1", basePayload());
+  const { status, json, outcome } = await postRfq(port, "10.0.2.1", basePayload());
   ok("valid submission returns 200", status === 200, `status=${status}`);
   ok("delivered:false when SMTP is unset", json?.ok === true && json?.delivered === false, JSON.stringify(json));
+  ok("form classifies it as NOT sent", outcome === "undelivered", outcome);
   ok("no testMessage leaked", json?.testMessage === undefined, JSON.stringify(json));
 }
 
+/**
+ * The form's decision table, with no server: only a 2xx whose JSON body says
+ * `delivered: true` may be shown as sent. Responses a real server is unlikely
+ * to produce (an unparseable 200 from a proxy/CDN error page, a body missing
+ * the field) are exactly the ones a live-server test can't reach, so they're
+ * pinned here.
+ */
+function runClassifierSuite() {
+  console.log("\nForm response classifier (src/lib/rfqOutcome.ts)");
+  const cases = [
+    [200, '{"ok":true,"delivered":true}', "ok", "200 delivered:true -> sent"],
+    [200, '{"ok":true,"delivered":false}', "undelivered", "200 delivered:false -> NOT sent"],
+    [200, "<html>proxy error</html>", "undelivered", "200 with unparseable body -> NOT sent"],
+    [200, "", "undelivered", "200 with empty body -> NOT sent"],
+    [200, "{}", "undelivered", "200 {} (no delivered field) -> NOT sent"],
+    [200, '{"ok":true}', "undelivered", "200 ok:true without delivered -> NOT sent"],
+    [200, '{"delivered":"true"}', "undelivered", "200 delivered:\"true\" (string) -> NOT sent"],
+    [200, "null", "undelivered", "200 null body -> NOT sent"],
+    [500, '{"ok":true,"delivered":true}', "undelivered", "500 even claiming delivered -> NOT sent"],
+    [502, "Bad Gateway", "undelivered", "502 -> NOT sent"],
+    [400, '{"ok":false,"error":"invalid_json"}', "undelivered", "400 -> NOT sent"],
+    [429, "", "rateLimited", "429 -> rate limited"],
+    [422, '{"ok":false,"field":"email"}', "invalid", "422 -> invalid"],
+  ];
+  for (const [status, body, want, label] of cases) {
+    const got = classifyRfqResponse(status, body).kind;
+    ok(label, got === want, `got ${got}`);
+  }
+  const f = classifyRfqResponse(422, '{"ok":false,"field":"email"}');
+  ok("422 keeps the field name", f.kind === "invalid" && f.field === "email", JSON.stringify(f));
+  const g = classifyRfqResponse(422, "garbage");
+  ok("422 with unparseable body -> invalid, no field", g.kind === "invalid" && g.field === undefined, JSON.stringify(g));
+}
+
 async function main() {
+  runClassifierSuite();
   ensureBuilt();
 
   const portA = 4175;
