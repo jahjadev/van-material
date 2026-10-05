@@ -1,12 +1,12 @@
 import { Clock, Mail, MapPin, MessageCircle, Phone, Printer } from "lucide-react";
 import type { ReactNode } from "react";
-import { JsonLd, breadcrumbLd, organizationLd } from "@/components/JsonLd";
+import { JsonLd, breadcrumbLd } from "@/components/JsonLd";
 import { HOME, PageHero, type Crumb } from "@/components/ProductParts";
 import { RfqForm } from "@/components/RfqForm";
+import { ClickToLoadMap } from "@/components/ClickToLoadMap";
 import { company } from "@/data/company";
 import { rfqProductOptions } from "@/lib/rfqOptions";
-import { SITE_URL } from "@/lib/site";
-import { absUrl, type Lang } from "@/lib/locale";
+import type { Lang } from "@/lib/locale";
 
 export const contactMeta: Record<Lang, { title: string; description: string }> = {
   th: {
@@ -20,35 +20,6 @@ export const contactMeta: Record<Lang, { title: string; description: string }> =
       "Contact VAN INTERTRADE in Saphan Sung, Bangkok for a quotation on copper alloys and mold materials. Phone 02-728-0150, LINE @vanintertrade, Mon–Fri 08.30–17.30.",
   },
 };
-
-/** LocalBusiness node for the Bangkok office, tied to the site Organization. */
-function localBusinessLd(lang: Lang) {
-  const c = company.contact;
-  return {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${SITE_URL}/#localbusiness`,
-    name: company.legalNameEn,
-    alternateName: company.legalNameTh,
-    url: SITE_URL,
-    image: `${SITE_URL}/logo.png`,
-    telephone: c.tels[0],
-    email: c.email,
-    address: organizationLd(lang).address,
-    geo: { "@type": "GeoCoordinates", latitude: c.geo.lat, longitude: c.geo.lng },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: c.hoursSpec.days,
-        opens: c.hoursSpec.opens,
-        closes: c.hoursSpec.closes,
-      },
-    ],
-    hasMap: `https://www.google.com/maps?q=${c.geo.lat},${c.geo.lng}`,
-    parentOrganization: { "@id": `${SITE_URL}/#organization` },
-    mainEntityOfPage: absUrl("/contact", lang),
-  };
-}
 
 function Row({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
   return (
@@ -73,7 +44,9 @@ export function ContactPage({ lang }: { lang: Lang }) {
 
   return (
     <>
-      <JsonLd data={[breadcrumbLd(crumbs, lang), localBusinessLd(lang)]} />
+      {/* Address, geo, hours and the sales contactPoint live on the site-wide
+          Organization node (RootShell) — no separate LocalBusiness node. */}
+      <JsonLd data={[breadcrumbLd(crumbs, lang)]} />
       <PageHero
         lang={lang}
         crumbs={crumbs}
@@ -128,12 +101,15 @@ export function ContactPage({ lang }: { lang: Lang }) {
             <h2 id="map-heading" className="text-xl font-bold text-primary md:text-2xl">
               {en ? "Map" : "แผนที่"}
             </h2>
-            <iframe
+            <ClickToLoadMap
               src={`https://www.google.com/maps?q=${c.geo.lat},${c.geo.lng}&output=embed`}
               title={en ? `Map of ${company.legalNameEn}, Bangkok` : `แผนที่ ${company.legalNameTh} กรุงเทพฯ`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="mt-5 aspect-[4/3] w-full rounded-xl border border-line"
+              buttonLabel={en ? "Show map" : "แสดงแผนที่"}
+              note={
+                en
+                  ? "The map loads from Google only when you press the button, and Google then receives your IP address and device information."
+                  : "แผนที่จะโหลดจาก Google เมื่อคุณกดปุ่มเท่านั้น และเมื่อโหลดแล้ว Google จะได้รับหมายเลข IP และข้อมูลอุปกรณ์ของคุณ"
+              }
             />
             <a
               href={`https://www.google.com/maps?q=${c.geo.lat},${c.geo.lng}`}

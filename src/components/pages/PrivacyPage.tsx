@@ -7,7 +7,11 @@ import type { Lang } from "@/lib/locale";
 /*
  * Short PDPA-style notice for the quote request form (Task 5). Plain and
  * factual: what is collected, why, who sees it, how to exercise rights.
- * Flagged in the Task 4 report for client / legal review before launch.
+ * The technical-data section mirrors the code: hosting (Vercel), the
+ * in-memory per-IP limiter in src/lib/rateLimit.ts (5 per 15 min, set in
+ * src/app/api/rfq/route.ts), and the click-to-load map (ClickToLoadMap).
+ * Change the text if any of those change. Still needs client / legal review
+ * before launch.
  */
 
 export const privacyMeta: Record<Lang, { title: string; description: string }> = {
@@ -56,6 +60,28 @@ const sections = (): Section[] => [
     ],
   },
   {
+    h: { th: "ข้อมูลทางเทคนิคเมื่อคุณใช้เว็บไซต์", en: "Technical data when you use the site" },
+    p: [
+      {
+        th: "เว็บไซต์นี้ให้บริการผ่านผู้ให้บริการโฮสติ้ง Vercel ซึ่งประมวลผลทุกคำขอที่เบราว์เซอร์ของคุณส่งมา รวมถึงหมายเลข IP และข้อมูลเบราว์เซอร์หรืออุปกรณ์ที่ส่งมาพร้อมคำขอ เพื่อส่งหน้าเว็บให้คุณ ตามนโยบายความเป็นส่วนตัวของ Vercel เว็บไซต์นี้ไม่ใช้คุกกี้ ไม่ใช้เครื่องมือวิเคราะห์ และไม่ใช้โฆษณาติดตามผู้ใช้",
+        en: "The site is served by our hosting provider, Vercel, which processes every request your browser makes, including your IP address and the browser or device details sent with it, in order to deliver the pages, under Vercel's own privacy policy. This site sets no cookies and uses no analytics or advertising trackers.",
+      },
+      {
+        th: "เมื่อคุณส่งแบบฟอร์มขอใบเสนอราคา เซิร์ฟเวอร์ใช้หมายเลข IP ของคุณชั่วคราวเพื่อจำกัดการส่งซ้ำ (ไม่เกิน 5 ครั้งต่อ 15 นาทีต่อ IP) และป้องกันการใช้งานในทางที่ผิด หมายเลข IP นี้อยู่ในหน่วยความจำของเซิร์ฟเวอร์เท่านั้น ใช้เฉพาะในช่วง 15 นาทีนั้น แล้วถือว่าหมดอายุและถูกล้างออกเมื่อเซิร์ฟเวอร์ทำความสะอาดหน่วยความจำหรือเริ่มทำงานใหม่ ไม่ถูกบันทึกลงฐานข้อมูลหรือบันทึกการทำงาน และไม่ถูกแนบไปกับอีเมลคำขอของคุณ",
+        en: "When you send the quote form, our server uses your IP address briefly to limit repeat submissions (at most 5 per IP in 15 minutes) and prevent abuse. It is held only in the server's memory, used only for that 15-minute window, then treated as expired and cleared when the server tidies its memory or restarts. It is not written to a database or log, and it is not added to the email of your request.",
+      },
+    ],
+  },
+  {
+    h: { th: "แผนที่ในหน้าติดต่อเรา", en: "The map on the contact page" },
+    p: [
+      {
+        th: "แผนที่ Google Maps ในหน้าติดต่อเราจะไม่โหลดจนกว่าคุณจะกดปุ่ม \"แสดงแผนที่\" เมื่อกดแล้ว เบราว์เซอร์ของคุณจะโหลดแผนที่จาก Google โดยตรง และส่งหมายเลข IP และข้อมูลอุปกรณ์ของคุณให้ Google ตามนโยบายความเป็นส่วนตัวของ Google หากไม่ต้องการ ให้ใช้ที่อยู่ที่แสดงไว้ หรือลิงก์ \"เปิดใน Google Maps\" แทน",
+        en: "The Google Maps map on the contact page does not load until you press \"Show map\". When you do, your browser loads the map directly from Google and shares your IP address and device information with Google under Google's privacy policy. If you prefer not to, use the address shown or the \"Open in Google Maps\" link instead.",
+      },
+    ],
+  },
+  {
     h: { th: "วัตถุประสงค์", en: "Why we use it" },
     p: [
       {
@@ -68,8 +94,8 @@ const sections = (): Section[] => [
     h: { th: "การเปิดเผยข้อมูล", en: "Who sees it" },
     p: [
       {
-        th: "ข้อมูลของคุณเข้าถึงได้เฉพาะพนักงานของเราที่ดูแลคำขอ และผู้ให้บริการที่ส่งอีเมลให้เรา เราไม่ขาย ไม่ให้เช่า และไม่แลกเปลี่ยนข้อมูลส่วนบุคคลของคุณกับบุคคลภายนอก",
-        en: "Only our staff who handle your request, and the service provider that delivers our email, can see it. We do not sell, rent or trade your personal data to anyone.",
+        th: "ข้อมูลของคุณเข้าถึงได้เฉพาะพนักงานของเราที่ดูแลคำขอ ผู้ให้บริการโฮสติ้งเว็บไซต์ (Vercel) ซึ่งประมวลผลคำขอระหว่างทาง และผู้ให้บริการที่ส่งอีเมลให้เรา เราไม่ขาย ไม่ให้เช่า และไม่แลกเปลี่ยนข้อมูลส่วนบุคคลของคุณกับบุคคลภายนอก",
+        en: "Only our staff who handle your request, our website hosting provider (Vercel), which processes the request in transit, and the service provider that delivers our email can see it. We do not sell, rent or trade your personal data to anyone.",
       },
     ],
   },
@@ -86,8 +112,8 @@ const sections = (): Section[] => [
     h: { th: "สิทธิของคุณ", en: "Your rights" },
     p: [
       {
-        th: `ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) คุณมีสิทธิขอเข้าถึง ขอแก้ไข ขอลบ หรือคัดค้านการใช้ข้อมูลของคุณ และถอนความยินยอมที่เคยให้ไว้ ส่งคำขอได้ที่อีเมล ${company.contact.email} หรือโทร ${company.contact.telsDisplay[0]} หากเห็นว่าเราไม่ปฏิบัติตามกฎหมาย คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC)`,
-        en: `Under Thailand's Personal Data Protection Act B.E. 2562 (2019) (PDPA) you can ask to access, correct or delete your data, object to its use, and withdraw any consent you gave. Send requests to ${company.contact.email} or call ${company.contact.telsDisplay[0]}. If you believe we have not followed the law, you can complain to the Office of the Personal Data Protection Committee (PDPC).`,
+        th: `ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) คุณมีสิทธิขอเข้าถึง ขอรับหรือขอให้โอนย้ายข้อมูลของคุณ ขอแก้ไข ขอลบ ขอให้ระงับการใช้ หรือคัดค้านการใช้ข้อมูลของคุณ และถอนความยินยอมที่เคยให้ไว้ ส่งคำขอได้ที่อีเมล ${company.contact.email} หรือโทร ${company.contact.telsDisplay[0]} หากเห็นว่าเราไม่ปฏิบัติตามกฎหมาย คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC)`,
+        en: `Under Thailand's Personal Data Protection Act B.E. 2562 (2019) (PDPA) you can ask to access your data, to receive it or have it transferred to another organisation (data portability), to correct or delete it, to restrict its use, to object to its use, and to withdraw any consent you gave. Send requests to ${company.contact.email} or call ${company.contact.telsDisplay[0]}. If you believe we have not followed the law, you can complain to the Office of the Personal Data Protection Committee (PDPC).`,
       },
     ],
   },
