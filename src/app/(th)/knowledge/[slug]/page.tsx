@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticlePage } from "@/components/ArticlePage";
-import { articles, getArticle } from "@/data/articles";
+import { articleLastmod, articles, getArticle } from "@/data/articles";
 import { pageMeta } from "@/lib/seo";
 
 const LANG = "th" as const;
@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: article.description[LANG],
     lang: LANG,
     path: `/knowledge/${article.slug}`,
+    article: { published: article.date, modified: articleLastmod(article) },
   });
 }
 

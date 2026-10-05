@@ -59,10 +59,10 @@ arrive. Set `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` (and read the note on
 
 ## Deployment
 
-Deployed on [Vercel](https://vercel.com/), domain
-`www.van-material.com` (`NEXT_PUBLIC_SITE_URL`, with the same value as the
+Deploy target: [Vercel](https://vercel.com/), `www.van-material.com` (not
+yet live). The domain is `NEXT_PUBLIC_SITE_URL`, with the same value as the
 fallback in `src/lib/site.ts` — that file is the only place a hostname may
-be hardcoded). Set the SMTP variables above in the Vercel project's
+be hardcoded. Set the SMTP variables above in the Vercel project's
 environment settings; never commit `.env.local`.
 
 ## CI

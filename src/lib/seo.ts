@@ -31,12 +31,20 @@ export function pageMeta({
   description,
   lang,
   path,
+  article,
 }: {
   title: string;
   description: string;
   lang: Lang;
   /** Locale-independent path, always written the Thai way (e.g. `/about`). */
   path: string;
+  /**
+   * Knowledge articles only: emits `og:type=article` plus
+   * `article:published_time` / `article:modified_time` (ISO dates, the
+   * same ones the page and its Article JSON-LD show). Every other page is
+   * `og:type=website`.
+   */
+  article?: { published: string; modified: string };
 }): Metadata {
   const url = absUrl(path, lang);
   // `absolute` so this is used verbatim — see module comment on why this
@@ -55,12 +63,18 @@ export function pageMeta({
       },
     },
     openGraph: {
-      type: "website",
       locale: OG_LOCALE[lang],
       url,
       siteName: company.legalNameEn,
       title: socialTitle,
       description,
+      ...(article
+        ? {
+            type: "article" as const,
+            publishedTime: article.published,
+            modifiedTime: article.modified,
+          }
+        : { type: "website" as const }),
     },
     twitter: {
       card: "summary_large_image",

@@ -1,7 +1,7 @@
 /**
  * Site-wide constants. `SITE_URL` is the ONLY place a hostname may appear —
  * every other file that needs the domain imports it from here (see
- * global-constraints.md).
+ * "Global Constraints" in docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md).
  *
  * The fallback domain was confirmed by the controller as van-material.com
  * (overriding the task brief's placeholder "example-pending" fallback).

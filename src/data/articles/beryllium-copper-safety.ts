@@ -36,7 +36,7 @@ export const berylliumCopperSafety: Article = {
   },
   description: {
     th: "SDS ของ Materion ระบุว่าทองแดงเบริลเลียมในรูปชิ้นงานตามที่จัดส่งไม่มีความเสี่ยงทางการแพทย์ทันที อันตรายมาจากฝุ่นและไอจากการกลึง เจียร เชื่อม สรุปแนวทางควบคุมจาก SDS",
-    en: "Per Materion's SDS, solid beryllium copper as supplied carries no immediate medical risk; the hazard is dust and fume from processing. Controls from the SDS.",
+    en: "Materion's SDS: solid beryllium copper as supplied has no immediate medical risk; the hazard is dust and fume from machining, grinding and welding. SDS controls.",
   },
   intro: {
     th: "ตาม SDS ของ Materion ทองแดงเบริลเลียมในรูปชิ้นงานแข็งตามที่จัดส่ง \"ไม่มีความเสี่ยงทางการแพทย์ในทันที\" อันตรายมาจากอนุภาค (ฝุ่น ไอ หรือละออง) ที่เกิดจากกระบวนการผลิต โดยหลักผ่านการหายใจเข้าไป และผ่านการสัมผัสทางผิวหนังด้วย บทความนี้สรุปแนวทางจากเอกสารของ Materion เพื่อให้เห็นภาพรวม ไม่ใช่เอกสารแทน SDS ก่อนเริ่มงานจริงต้องอ่าน SDS ฉบับปัจจุบันที่ขอได้จากผู้จำหน่ายวัสดุ",

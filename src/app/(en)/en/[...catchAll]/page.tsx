@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 
 /**
- * Catch-all for any English-tree path that doesn't match a real page. See
- * the sibling `(th)/[...catchAll]/page.tsx` for why this is needed: without
- * it, an unmatched `/en/...` URL falls back to Next's generic built-in 404
- * instead of this group's localized `not-found.tsx`.
+ * Catch-all for any English-tree path that doesn't match a real page, so
+ * `notFound()` resolves to this group's `not-found.tsx`. See the sibling
+ * `(th)/[...catchAll]/page.tsx` for what is actually served: HTTP 404 +
+ * `noindex` in Next's `__next_error__` HTML shell, with the localized
+ * not-found body delivered in the RSC payload rather than the static HTML.
  */
 export default function EnglishCatchAll() {
   notFound();

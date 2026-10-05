@@ -16,10 +16,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# Next 16 requires Node >= 20.9 (node_modules/next/package.json engines);
-# package.json pins the same floor.
+# CI runs Node 22 (LTS). Next 16's floor is Node >= 20.9
+# (node_modules/next/package.json engines), which package.json keeps as its
+# `engines` floor.
 env:
-  NODE_VERSION: 20
+  NODE_VERSION: 22
 
 jobs:
   build:

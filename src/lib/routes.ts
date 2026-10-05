@@ -29,7 +29,7 @@ export type RouteEntry = {
   path: string;
   /** ISO date string. Omit unless the route has a real, tracked change date
    *  (a build-time stamp applied to every route makes Google ignore lastmod
-   *  site-wide — see global-constraints.md / task-2-brief.md Step 3). */
+   *  site-wide — see Task 2 in docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md). */
   lastmod?: string;
 };
 

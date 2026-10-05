@@ -39,7 +39,7 @@ const STRICT = args.includes("--strict");
 const CONCURRENCY = 8;
 
 /**
- * The production host (R14 / global-constraints.md: the only place a
+ * The production host (R14 / "Global Constraints" in the launch plan: the only place a
  * hostname may be hardcoded is `src/lib/site.ts`; this is a second,
  * documented copy for the same reason `check-sitemap.mjs` used to carry
  * one — a plain Node script can't import the TS module directly). Every

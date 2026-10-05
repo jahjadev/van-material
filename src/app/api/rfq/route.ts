@@ -16,7 +16,7 @@ export const runtime = "nodejs";
  * inbox. Ported from the sibling VAN repo's `src/app/api/quote/route.ts`:
  * zod validation, a silent honeypot, per-IP + endpoint rate limiting, and
  * SMTP delivery via nodemailer. Turnstile and Resend are out of scope here
- * (see task-5-brief.md) — SMTP is the only transport.
+ * (see Task 5 in docs/superpowers/plans/2026-10-05-van-material-nextjs-seo-launch.md) — SMTP is the only transport.
  *
  * Set these (project env + `.env.local` for dev) to actually deliver mail —
  * see `.env.example` for the full explanation, including why
