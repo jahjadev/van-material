@@ -37,6 +37,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Claude Code harness runtime files (scheduled_tasks.lock, etc.) — everything
+# under .claude/ is ignored except committed skills (e.g. .claude/skills/
+# seo-aeo/SKILL.md), which are added explicitly by path.
+.claude/*
+!.claude/skills/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

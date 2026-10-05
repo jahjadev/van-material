@@ -15,7 +15,11 @@ export const whatIsBerylliumCopper: Article = {
   modified: "2026-10-05",
   image: "/images/product-cube.webp",
   title: {
-    th: "Beryllium Copper คืออะไร คุณสมบัติและการใช้งาน",
+    // A transliterated Thai lead ("เบริลเลียมคอปเปอร์"), not the bare
+    // English head term, so this informational title doesn't collide with
+    // /beryllium-copper's owned "Beryllium Copper" lead (seo-audit.mjs
+    // KEYWORD_OWNERS; see task-8-report.md for the finding this fixed).
+    th: "เบริลเลียมคอปเปอร์คืออะไร คุณสมบัติและการใช้งาน",
     en: "What Is Beryllium Copper? Properties and Uses",
   },
   h1: {

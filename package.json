@@ -2,12 +2,16 @@
   "name": "vanmaterial",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:rfq": "node scripts/test-rfq.mjs"
+    "test:rfq": "node scripts/test-rfq.mjs",
+    "seo:audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
