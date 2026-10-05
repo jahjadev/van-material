@@ -18,14 +18,14 @@ import { absUrl, HREFLANG, type Lang } from "@/lib/locale";
 
 export const aboutMeta: Record<Lang, { title: string; description: string }> = {
   th: {
-    title: "เกี่ยวกับ แวน อินเตอร์เทรด ตั้งแต่ พ.ศ. 2529",
+    title: "เกี่ยวกับ แวน อินเตอร์เทรด ก่อตั้ง พ.ศ. 2529",
     description:
-      "รู้จัก บริษัท แวน อินเตอร์เทรด จำกัด ก่อตั้ง พ.ศ. 2529 ในกรุงเทพฯ ตัวแทนจำหน่าย Materion และผู้จัดหาโลหะผสมทองแดงและวัสดุแม่พิมพ์สำหรับอุตสาหกรรมไทย",
+      "รู้จัก บริษัท แวน อินเตอร์เทรด จำกัด บริษัทในกรุงเทพฯ ก่อตั้ง พ.ศ. 2529 ปัจจุบันเป็นตัวแทนจำหน่าย Materion และผู้จัดหาโลหะผสมทองแดงและวัสดุแม่พิมพ์สำหรับอุตสาหกรรมไทย",
   },
   en: {
-    title: "About VAN INTERTRADE, Bangkok Since 1986",
+    title: "About VAN INTERTRADE, Bangkok, Est. 1986",
     description:
-      "About VAN INTERTRADE Co., Ltd.: founded in Bangkok in 1986, a Materion distributor supplying copper alloys and mold materials to Thai industry.",
+      "About VAN INTERTRADE Co., Ltd., a Bangkok company founded in 1986. Today it is a Materion distributor supplying copper alloys and mold materials to Thai industry.",
   },
 };
 
@@ -88,8 +88,8 @@ export function AboutPage({ lang }: { lang: Lang }) {
         eyebrow={en ? "About us" : "เกี่ยวกับเรา"}
         h1={
           en
-            ? `About VAN INTERTRADE: Copper Alloy Distributor Since ${company.foundedYearCE}`
-            : `เกี่ยวกับ แวน อินเตอร์เทรด: ผู้จัดจำหน่ายโลหะผสมทองแดง ตั้งแต่ พ.ศ. ${company.foundedYearBE}`
+            ? `About VAN INTERTRADE: A Bangkok Company Founded in ${company.foundedYearCE}`
+            : `เกี่ยวกับ แวน อินเตอร์เทรด: บริษัทในกรุงเทพฯ ก่อตั้งเมื่อ พ.ศ. ${company.foundedYearBE}`
         }
         image={heroImage}
       >
@@ -187,7 +187,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
         </section>
 
         <RfqBand
-          href="/contact"
+          href="/contact#rfq"
           lang={lang}
           subject=""
           title={en ? "Talk to us about your material" : "ปรึกษาเรื่องวัสดุกับเรา"}

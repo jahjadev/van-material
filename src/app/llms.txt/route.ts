@@ -42,10 +42,10 @@ function buildLlmsTxt(): string {
   lines.push(`# ${company.legalNameEn}`);
   lines.push("");
   lines.push(
-    `> ${company.legalNameEn} (Thai: ${company.legalNameTh}) is a Bangkok, ` +
-      `Thailand-based distributor of copper alloy and mold materials, ` +
-      `founded in ${company.foundedYearCE} (B.E. ${company.foundedYearBE}). ` +
-      `It supplies engineering-grade beryllium copper, mold alloys, and ` +
+    `> ${company.legalNameEn} (Thai: ${company.legalNameTh}) is a ` +
+      `company in Bangkok, Thailand, founded in ${company.foundedYearCE} ` +
+      `(B.E. ${company.foundedYearBE}). It distributes copper alloy and ` +
+      `mold materials, including Materion products. It supplies engineering-grade beryllium copper, mold alloys, and ` +
       `related copper materials to Thai industry, with pricing by ` +
       `quotation only.`,
   );

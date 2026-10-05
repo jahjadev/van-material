@@ -85,8 +85,8 @@ const sections = (): Section[] => [
     h: { th: "สิทธิของคุณ", en: "Your rights" },
     p: [
       {
-        th: `ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) คุณมีสิทธิขอเข้าถึง ขอแก้ไข ขอลบ หรือคัดค้านการใช้ข้อมูลของคุณ และถอนความยินยอมที่เคยให้ไว้ ส่งคำขอได้ที่อีเมล ${company.contact.email} หรือโทร ${company.contact.telsDisplay[0]} หากเห็นว่าเราไม่ปฏิบัติตามกฎหมาย คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล`,
-        en: `Under Thailand's Personal Data Protection Act B.E. 2562 (2019) (PDPA) you can ask to access, correct or delete your data, object to its use, and withdraw any consent you gave. Send requests to ${company.contact.email} or call ${company.contact.telsDisplay[0]}. If you believe we have not followed the law, you can complain to the Personal Data Protection Committee.`,
+        th: `ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) คุณมีสิทธิขอเข้าถึง ขอแก้ไข ขอลบ หรือคัดค้านการใช้ข้อมูลของคุณ และถอนความยินยอมที่เคยให้ไว้ ส่งคำขอได้ที่อีเมล ${company.contact.email} หรือโทร ${company.contact.telsDisplay[0]} หากเห็นว่าเราไม่ปฏิบัติตามกฎหมาย คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC)`,
+        en: `Under Thailand's Personal Data Protection Act B.E. 2562 (2019) (PDPA) you can ask to access, correct or delete your data, object to its use, and withdraw any consent you gave. Send requests to ${company.contact.email} or call ${company.contact.telsDisplay[0]}. If you believe we have not followed the law, you can complain to the Office of the Personal Data Protection Committee (PDPC).`,
       },
     ],
   },

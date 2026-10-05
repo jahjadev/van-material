@@ -93,7 +93,7 @@ const plasticMold: Industry = {
       },
       paras: [
         {
-          th: "Materion ระบุว่า MoldMAX แข็งแรงและทนสึกได้ระดับเหล็กเครื่องมือ แต่นำความร้อนได้สูงกว่าสูงสุดถึงสิบเท่า เมื่อใส่เป็น insert ในแม่พิมพ์เหล็ก MoldMAX จะดับจุดร้อน และลดหรือตัดความจำเป็นของช่องน้ำหล่อเย็นในจุดนั้น",
+          th: "Materion ระบุว่า MoldMAX แข็งแรงและทนสึกได้ระดับเหล็กเครื่องมือ แต่นำความร้อนได้ดีกว่าสูงสุดถึงสิบเท่า เมื่อใส่เป็น insert ในแม่พิมพ์เหล็ก MoldMAX จะดับจุดร้อน และลดหรือตัดความจำเป็นของช่องน้ำหล่อเย็นในจุดนั้น",
           en: "Materion states that MoldMAX alloys offer the strength and wear resistance of tool steels with thermal conductivity up to ten times greater. Used as inserts in steel molds, they cool hot spots and reduce or eliminate the need for cooling channels there.",
         },
         {
@@ -151,7 +151,7 @@ const plasticMold: Industry = {
         en: "Why use a copper alloy in a plastic injection mold?",
       },
       a: {
-        th: "เพราะนำความร้อนได้เร็วกว่าเหล็กทำแม่พิมพ์มาก Materion ระบุว่า MoldMAX แข็งแรงและทนสึกระดับเหล็กเครื่องมือ แต่นำความร้อนได้สูงกว่าสูงสุดถึงสิบเท่า insert ทองแดงจึงดับจุดร้อน ทำให้อุณหภูมิแม่พิมพ์สม่ำเสมอ และช่วยให้รอบการผลิตสั้นลง",
+        th: "เพราะนำความร้อนได้เร็วกว่าเหล็กทำแม่พิมพ์มาก Materion ระบุว่า MoldMAX แข็งแรงและทนสึกระดับเหล็กเครื่องมือ แต่นำความร้อนได้ดีกว่าสูงสุดถึงสิบเท่า insert ทองแดงจึงดับจุดร้อน ทำให้อุณหภูมิแม่พิมพ์สม่ำเสมอ และช่วยให้รอบการผลิตสั้นลง",
         en: "Because it moves heat much faster than tool steel. Materion states that MoldMAX alloys have the strength and wear resistance of tool steels with thermal conductivity up to ten times greater, so a copper insert cools hot spots, evens out mold temperature and helps shorten the cycle.",
       },
     },
@@ -436,8 +436,8 @@ const aerospace: Industry = {
       family: "beryllium-copper",
       grades: ["c17200"],
       why: {
-        th: "บูช แบริ่ง และชิ้นส่วนอากาศยานที่ต้องการความแข็งแรงสูงสุดในโลหะผสมทองแดง",
-        en: "Aerospace bushings, bearings and components that need the highest strength in a copper alloy.",
+        th: "บูช แบริ่ง และชิ้นส่วนอากาศยานที่ต้องการทองแดงเบริลเลียมเกรดที่แข็งแรงที่สุด",
+        en: "Aerospace bushings, bearings and components that need the highest-strength beryllium copper grade.",
       },
     },
   ],
@@ -513,8 +513,8 @@ const automotive: Industry = {
       family: "toughmet",
       grades: [],
       why: {
-        th: "แหวนกันรุนในเกียร์ยานยนต์ ซึ่งเป็นหนึ่งในงานที่ระบุไว้สำหรับ ToughMet",
-        en: "Automotive gearbox thrust washers, one of ToughMet's listed uses.",
+        th: "Materion ระบุการใช้ ToughMet ในชิ้นส่วนระบบส่งกำลัง ได้แก่ ปลอกนำวาล์ว (valve guide) และแบริ่งในเครื่องยนต์สันดาปภายใน และแบริ่งกับแหวนกันรุน (thrust washer) ในชุดเกียร์ทดรอบและเฟืองท้ายของรถยนต์ไฟฟ้าและไฮบริด",
+        en: "Materion lists ToughMet for powertrain parts: valve guides and bearings in internal combustion engines, and plain bearings and thrust washers in electric and hybrid vehicle gear reducers and differentials.",
       },
     },
     {

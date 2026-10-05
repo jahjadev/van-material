@@ -20,12 +20,12 @@ export const homeMeta: Record<Lang, { title: string; description: string }> = {
   th: {
     title: "ตัวแทนจำหน่าย Materion ประเทศไทย โลหะผสมทองแดง",
     description:
-      "แวน อินเตอร์เทรด ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX และ ToughMet สำหรับแม่พิมพ์และอุตสาหกรรม ตั้งแต่ พ.ศ. 2529 ขอใบเสนอราคาได้",
+      "แวน อินเตอร์เทรด (ก่อตั้ง พ.ศ. 2529) ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX และ ToughMet สำหรับแม่พิมพ์และอุตสาหกรรม ขอใบเสนอราคาได้",
   },
   en: {
     title: "Materion Distributor Thailand: Copper Alloys",
     description:
-      "VAN INTERTRADE, a Materion distributor in Thailand since 1986: beryllium copper, MoldMAX and ToughMet for molds and industry, plus contacts and clad metal.",
+      "VAN INTERTRADE (est. 1986), a Materion distributor in Thailand: beryllium copper, MoldMAX and ToughMet for molds and industry, plus contacts and clad metal.",
   },
 };
 
@@ -98,7 +98,7 @@ function homeFaqs(): Faq[] {
 
 const why: { title: Bi; body: Bi }[] = [
   {
-    title: { th: `ก่อตั้งตั้งแต่ พ.ศ. ${company.foundedYearBE}`, en: `In business since ${company.foundedYearCE}` },
+    title: { th: `ก่อตั้งเมื่อ พ.ศ. ${company.foundedYearBE}`, en: `Founded in ${company.foundedYearCE}` },
     body: {
       th: `${company.legalNameTh} ก่อตั้งในกรุงเทพฯ เมื่อ พ.ศ. ${company.foundedYearBE}`,
       en: `${company.legalNameEn} was founded in Bangkok in ${company.foundedYearCE}.`,
@@ -148,7 +148,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             ? "Materion Distributor in Thailand: Beryllium Copper, MoldMAX, ToughMet"
             : "ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX, ToughMet"
         }
-        rfqHref="/contact"
+        rfqHref="/contact#rfq"
         image={heroImage}
       >
         <p className="mt-5 text-[17px] leading-relaxed text-secondary">
@@ -226,7 +226,7 @@ export function HomePage({ lang }: { lang: Lang }) {
         <FaqList faqs={faqs} lang={lang} />
 
         <RfqBand
-          href="/contact"
+          href="/contact#rfq"
           lang={lang}
           subject=""
           title={en ? "Request a quotation" : "ขอใบเสนอราคา"}

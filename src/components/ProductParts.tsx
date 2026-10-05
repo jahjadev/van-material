@@ -124,12 +124,16 @@ export function ProductHero({
   );
 }
 
+/** Contact links land on the quote form: append `#rfq` unless an anchor is set. */
+export const rfqAnchor = (href: string) =>
+  href.startsWith("/contact") && !href.includes("#") ? `${href}#rfq` : href;
+
 export function RfqButtons({ href, lang }: { href: string; lang: Lang }) {
   const en = lang === "en";
   return (
     <div className="mt-7 flex flex-wrap gap-3">
       <LocaleLink
-        href={href}
+        href={rfqAnchor(href)}
         className="inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-white hover:bg-primary"
       >
         {en ? "Request a quote" : "ขอใบเสนอราคา"}
@@ -225,7 +229,7 @@ export function RfqBand({
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <LocaleLink
-          href={href}
+          href={rfqAnchor(href)}
           className="inline-flex min-h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-white hover:bg-accent-light"
         >
           {en ? "Request a quote" : "ขอใบเสนอราคา"}

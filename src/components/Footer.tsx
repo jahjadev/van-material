@@ -26,13 +26,13 @@ export function Footer({ lang }: { lang: Lang }) {
               {lang === "en" ? (
                 <>
                   {company.legalNameEn} — distributor of high-performance
-                  copper and mold alloys for Thai industry, serving customers
-                  since 1986.
+                  copper and mold alloys for Thai industry. Founded in{" "}
+                  {company.foundedYearCE}.
                 </>
               ) : (
                 <>
                   {company.legalNameTh} — ผู้จัดจำหน่ายโลหะผสมทองแดงและวัสดุแม่พิมพ์
-                  ประสิทธิภาพสูง สำหรับอุตสาหกรรมไทย ตั้งแต่ พ.ศ. {company.foundedYearBE}
+                  ประสิทธิภาพสูง สำหรับอุตสาหกรรมไทย บริษัทก่อตั้งเมื่อ พ.ศ. {company.foundedYearBE}
                 </>
               )}
             </p>
