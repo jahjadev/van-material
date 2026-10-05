@@ -2,6 +2,7 @@ import { company } from "@/data/company";
 import { SITE_URL } from "@/lib/site";
 import { absUrl } from "@/lib/locale";
 import { allRoutes } from "@/lib/routes";
+import { families } from "@/data/products";
 
 /**
  * `/llms.txt` — a plain-text brief for AI answer engines and crawlers that
@@ -9,45 +10,29 @@ import { allRoutes } from "@/lib/routes";
  * Written in English and generated from `company.ts` + `routes.ts` so it
  * can't drift out of sync with the site it describes.
  *
- * No product/grade/industry data modules exist yet (those land in Task 3+),
- * so the product lines below are prose describing the *planned* range from
- * ia.md — deliberately without links, since linking a URL that 404s is
- * worse for an answer engine than not mentioning it. Only paths present in
+ * Product lines are generated from `src/data/products` (Task 3), one line
+ * per family with links to its grade pages. Only paths present in
  * `allRoutes()` are linked.
  */
 export const dynamic = "force-static";
 
 const en = (path: string) => absUrl(path, "en");
 
-/**
- * Registration point for Task 3: once product-family/grade data modules
- * exist, append their sections here (and extend `allRoutes()` in
- * `src/lib/routes.ts` so the same pages show up in the sitemap too).
- *
- *   function productLineSections(): string[] {
- *     return materialFamilies.map((f) => `- [${f.nameEn}](${en(`/${f.slug}`)}): ...`);
- *   }
- */
+/** One line per product family, linking the family and its grade pages. */
 function productLineSections(): string[] {
-  // Prose only — no links yet, see module comment above.
-  return [
-    "- Beryllium Copper (Cu-Be alloys): rod, bar, plate, strip, wire, and " +
-      "tube stock, including grades C17200 (Alloy 25), C17300 (Alloy M25), " +
-      "C17510 (Alloy 3), and C17500 (Alloy 10).",
-    "- MoldMAX (mold-grade beryllium copper): high-conductivity inserts and " +
-      "cooling components for plastic injection and blow molds, including " +
-      "MoldMAX HH, MoldMAX XL, and Protherm grades.",
-    "- ToughMet (copper-nickel-tin alloy): high-strength, anti-galling " +
-      "bushings and wear components, including ToughMet 3 and ToughMet " +
-      "AT110.",
-    "- Chrome Copper (CrCu / CrCuZr): high-conductivity electrode material " +
-      "for resistance welding.",
-    "- Standard Copper Alloys: C5191, C5210, and C1100 phosphor bronze and " +
-      "commercial copper stock.",
-    "- Clad Metal and Silver Electrical Contacts: copper/aluminum/copper " +
-      "clad metal, and silver electrical contact rivets (AgNi, AgSnO2, " +
-      "bi-metal/tri-metal rivets).",
-  ];
+  return families.map((f) => {
+    const head = `- [${f.name.en}](${en(`/${f.slug}`)}) (${f.brand}): ${f.description.en}`;
+    if (f.grades.length > 0) {
+      const grades = f.grades
+        .map((g) => {
+          const alias = g.aliases[0] && !g.aliases[0].toLowerCase().includes(g.code.toLowerCase()) ? ` (${g.aliases[0]})` : "";
+          return `[${g.code}${alias}](${en(`/${f.slug}/${g.slug}`)})`;
+        })
+        .join(", ");
+      return `${head} Grades: ${grades}.`;
+    }
+    return `${head} Types: ${f.variants.map((v) => v.name.en).join("; ")}.`;
+  });
 }
 
 function buildLlmsTxt(): string {
@@ -84,7 +69,7 @@ function buildLlmsTxt(): string {
   lines.push("## Product lines");
   lines.push("");
   lines.push(
-    "Six copper alloy and mold material lines, distributed for industrial " +
+    `${families.length} copper alloy and mold material lines, distributed for industrial ` +
       "use (plastic mold, EV, oil & gas, aerospace, automotive, and " +
       "switchgear applications):",
   );

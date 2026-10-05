@@ -5,18 +5,12 @@
  *
  * Every new page MUST be registered here.
  *
- * Only routes that render a real 200 today are listed (just `/`). Later
+ * Only routes that render a real 200 today are listed. Later
  * tasks add their own route groups as the underlying data modules land —
  * extend `allRoutes()` by spreading a new array (e.g. `...familyRoutes()`),
  * don't hand-list paths elsewhere:
  *
- *   // Task 3 (product families/grades) — once `src/data/materials.ts` exists:
- *   // import { materialFamilies } from "@/data/materials";
- *   // const familyRoutes = (): RouteEntry[] =>
- *   //   materialFamilies.flatMap((f) => [
- *   //     { path: `/${f.slug}` },
- *   //     ...f.grades.map((g) => ({ path: `/${f.slug}/${g.slug}` })),
- *   //   ]);
+ *   // Task 3 (product families/grades): done — see `familyRoutes()` below.
  *
  *   // Task 4 (industries) — once `src/data/industries.ts` exists:
  *   // import { industries } from "@/data/industries";
@@ -31,6 +25,8 @@
  * Then: `return [...staticRoutes, ...familyRoutes(), ...industryRoutes(), ...articleRoutes()];`
  */
 
+import { families } from "@/data/products";
+
 export type RouteEntry = {
   /** Locale-independent path, written the Thai (bare-path) way, e.g. `/about`. */
   path: string;
@@ -43,6 +39,13 @@ export type RouteEntry = {
 /** Static pages that exist today. */
 const staticRoutes: RouteEntry[] = [{ path: "/" }];
 
+/** Product family pages and the grade pages under them (Task 3). */
+const familyRoutes = (): RouteEntry[] =>
+  families.flatMap((f) => [
+    { path: `/${f.slug}` },
+    ...f.grades.map((g) => ({ path: `/${f.slug}/${g.slug}` })),
+  ]);
+
 export function allRoutes(): RouteEntry[] {
-  return [...staticRoutes];
+  return [...staticRoutes, ...familyRoutes()];
 }
