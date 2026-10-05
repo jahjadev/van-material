@@ -1,0 +1,114 @@
+name: CI
+
+# Continuous integration for the VAN-MATERIAL site. Runs on every push and
+# pull request: install -> lint -> type-check -> build -> dependency audit
+# -> the rendered-site SEO/AEO/i18n gate (Task 8) -> the RFQ API test.
+# Keeps `main` always shippable.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same branch/PR.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# CI runs Node 22 (LTS). Next 16's floor is Node >= 20.9
+# (node_modules/next/package.json engines), which package.json keeps as its
+# `engines` floor.
+env:
+  NODE_VERSION: 22
+
+jobs:
+  build:
+    name: Lint, type-check & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      # `next build` also runs the TypeScript type-check, but running tsc
+      # explicitly above gives a clearer failure location.
+      - name: Build
+        run: npm run build
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # Fail only on HIGH/critical runtime vulnerabilities; moderate
+      # build-tool advisories don't block.
+      - name: Audit (production deps)
+        run: npm audit --omit=dev --audit-level=high
+
+  seo-and-rfq:
+    name: SEO/AEO audit + RFQ API test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # The audit reads the rendered site, never src/, so it needs a real
+      # server. Started in the background on the default port (3000) and
+      # stopped before test:rfq runs — test:rfq starts its own three
+      # `next start` instances on ports 4175-4177, so running both at once
+      # would be fine port-wise, but stopping this one first keeps the two
+      # gates from racing over the same .next build directory.
+      - name: Start production server
+        run: |
+          npx next start -p 3000 &>server.log &
+          echo $! > server.pid
+
+      - name: Wait for server
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/ > /dev/null; then
+              echo "server is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server did not become ready"; cat server.log; exit 1
+
+      - name: SEO/AEO/i18n audit
+        run: npm run seo:audit
+
+      - name: Stop production server
+        if: always()
+        run: kill "$(cat server.pid)"
+
+      - name: RFQ API test
+        run: npm run test:rfq

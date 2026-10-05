@@ -1,0 +1,31 @@
+# vaninter.com material page <title> values, for the cross-domain
+# cannibalization check in scripts/seo-audit.mjs.
+#
+# vanmaterial.com (this site) and vaninter.com are sibling properties run by
+# the same client. seo-audit.mjs fails if any van-material.com page's
+# <title> is byte-identical to one of these — two sites ranking for the
+# exact same title string is Google-visible duplication even though the
+# bodies differ.
+#
+# Fetched once with Node (never curl — see VAN/.claude/skills/seo-aeo/SKILL.md
+# §8 on why Thai URLs must not go through a shell) on 2026-10-05, from the six
+# slugs confirmed in VAN/src/data/materialDetails.ts (beryllium-copper,
+# chrome-copper, clad-metal, electrical-contacts, toughmet, moldmax). One
+# title per line, blank lines and lines starting with # are ignored.
+# Regenerate with: node scripts/seo-audit.mjs --fetch-vaninter
+#
+# Thai (bare path /materials/<slug>):
+ทองแดงเบริลเลียม (Beryllium Copper) | VAN INTERTRADE
+ทองแดงโครเมียม (Chromium Copper) | VAN INTERTRADE
+โลหะประกบ (Clad Metal) | VAN INTERTRADE
+หน้าสัมผัสไฟฟ้าเงิน (Silver Electrical Contacts) | VAN INTERTRADE
+ToughMet (ToughMet (Cu-Ni-Sn)) | VAN INTERTRADE
+Moldmax (Moldmax (Mold-grade BeCu)) | VAN INTERTRADE
+#
+# English (/en/materials/<slug>):
+Beryllium Copper (BeCu) | VAN INTERTRADE
+Chromium Copper (CrCu) | VAN INTERTRADE
+Clad Metal (Clad Metal) | VAN INTERTRADE
+Silver Electrical Contacts (Ag) | VAN INTERTRADE
+ToughMet (Cu-Ni-Sn) (ToughMet) | VAN INTERTRADE
+Moldmax (Mold-grade BeCu) (Moldmax) | VAN INTERTRADE
