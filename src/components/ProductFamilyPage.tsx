@@ -2,6 +2,8 @@ import { ArrowRight } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
 import { PropertyTable } from "@/components/PropertyTable";
+import { RelatedArticles } from "@/components/ArticlePage";
+import { articlesForTopic } from "@/data/articles";
 import {
   JsonLd,
   breadcrumbLd,
@@ -186,6 +188,8 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         )}
 
         <FaqList faqs={family.faqs} lang={lang} />
+
+        <RelatedArticles items={articlesForTopic(family.slug)} lang={lang} />
 
         <RfqBand href={rfqHref} lang={lang} subject={family.keyword} />
       </div>

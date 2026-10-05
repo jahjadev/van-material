@@ -4,6 +4,7 @@ import { absUrl } from "@/lib/locale";
 import { allRoutes } from "@/lib/routes";
 import { families } from "@/data/products";
 import { industries } from "@/data/industries";
+import { articles } from "@/data/articles";
 
 /**
  * `/llms.txt` — a plain-text brief for AI answer engines and crawlers that
@@ -82,6 +83,17 @@ function buildLlmsTxt(): string {
   lines.push("");
   for (const ind of industries) {
     lines.push(`- [${ind.name.en}](${en(`/industries/${ind.slug}`)}): ${ind.description.en}`);
+  }
+  lines.push("");
+
+  lines.push("## Knowledge");
+  lines.push("");
+  lines.push(
+    `Explainer articles that answer common buyer and engineer questions, each citing its sources (index: ${en("/knowledge")}):`,
+  );
+  lines.push("");
+  for (const a of articles) {
+    lines.push(`- [${a.title.en}](${en(`/knowledge/${a.slug}`)}): ${a.description.en}`);
   }
   lines.push("");
 

@@ -134,7 +134,11 @@ export const faqPageLd = (faqs: { q: string; a: string }[]) => ({
   })),
 });
 
-/** Article node for a knowledge-base entry. */
+/**
+ * Article node for a knowledge-base entry. Author and publisher are both the
+ * site Organization (same `@id` as `organizationLd`): the articles are
+ * written by the company, not a named person.
+ */
 export const articleLd = (
   a: {
     title: string;
@@ -152,8 +156,15 @@ export const articleLd = (
   description: a.description,
   image: a.image,
   url: absUrl(a.path, lang),
+  mainEntityOfPage: absUrl(a.path, lang),
   inLanguage: HREFLANG[lang],
   datePublished: a.date,
   dateModified: a.modified ?? a.date,
+  author: {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: company.legalNameEn,
+    url: SITE_URL,
+  },
   publisher: { "@id": `${SITE_URL}/#organization` },
 });

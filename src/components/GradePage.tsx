@@ -2,6 +2,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
 import { PropertyTable } from "@/components/PropertyTable";
+import { RelatedArticles } from "@/components/ArticlePage";
+import { articlesForGrade } from "@/data/articles";
 import { JsonLd } from "@/components/JsonLd";
 import {
   FormsAndApplications,
@@ -97,6 +99,8 @@ export function GradePage({
         </section>
 
         <FaqList faqs={grade.faqs} lang={lang} />
+
+        <RelatedArticles items={articlesForGrade(family.slug, grade.slug)} lang={lang} />
 
         <RfqBand href={rfqHref} lang={lang} subject={grade.code} />
       </div>

@@ -15,16 +15,14 @@
  *   // Task 4 (home, about, contact, privacy, industries): done — see
  *   // `staticRoutes` and `industryRoutes()` below.
  *
- *   // Task 7 (knowledge articles) — once `src/data/knowledge.ts` exists:
- *   // import { articles } from "@/data/knowledge";
- *   // const articleRoutes = (): RouteEntry[] =>
- *   //   articles.map((a) => ({ path: `/knowledge/${a.slug}`, lastmod: a.modified ?? a.date }));
+ *   // Task 7 (knowledge articles): done — see `knowledgeRoutes()` below.
  *
  * Then: `return [...staticRoutes, ...familyRoutes(), ...industryRoutes(), ...articleRoutes()];`
  */
 
 import { families } from "@/data/products";
 import { industries } from "@/data/industries";
+import { articleLastmod, articles } from "@/data/articles";
 
 export type RouteEntry = {
   /** Locale-independent path, written the Thai (bare-path) way, e.g. `/about`. */
@@ -54,6 +52,19 @@ const familyRoutes = (): RouteEntry[] =>
 const industryRoutes = (): RouteEntry[] =>
   industries.map((i) => ({ path: `/industries/${i.slug}` }));
 
+/**
+ * Knowledge index + one route per article (Task 7). Articles carry a real
+ * content date, so they get `lastmod = modified ?? date`; the index takes
+ * the newest of them (it changes exactly when an article is added/updated).
+ */
+const knowledgeRoutes = (): RouteEntry[] => {
+  const dates = articles.map(articleLastmod).sort();
+  return [
+    { path: "/knowledge", ...(dates.length ? { lastmod: dates[dates.length - 1] } : {}) },
+    ...articles.map((a) => ({ path: `/knowledge/${a.slug}`, lastmod: articleLastmod(a) })),
+  ];
+};
+
 export function allRoutes(): RouteEntry[] {
-  return [...staticRoutes, ...familyRoutes(), ...industryRoutes()];
+  return [...staticRoutes, ...familyRoutes(), ...industryRoutes(), ...knowledgeRoutes()];
 }
