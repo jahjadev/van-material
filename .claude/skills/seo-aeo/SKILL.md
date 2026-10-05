@@ -191,18 +191,17 @@ descriptive tail first, not the term that makes the page findable.
 These block some content/claims from being added; don't invent an answer
 to get past this list:
 
-- **MoldMAX / EDRO branding and usage rights.** Confirm with the client (or
-  Materion) what's permitted before publishing any MoldMAX/EDRO trademark
-  usage beyond naming the alloy, and before using any Materion-owned
-  imagery.
+- **MoldMAX rights — answered 2026-10-05:** the client confirms VAN holds
+  MoldMAX distribution rights in Thailand. Still never write "exclusive",
+  "sole" or "only", and confirm before using any Materion-owned imagery.
 - **Datasheets and stock.** No list prices, no MOQ, no stock/lead-time
   promises are published anywhere (`priceFaq()` in
   `src/data/products/shared.ts` explains why and routes to a quote instead)
   — confirm with the client before adding any of these.
-- **Sales/contact email.** `company.contact.email` is `van@vaninter.com`
-  (current site), but vaninter.com's own contact form posts to
-  `info@vaninter.com` — confirmed by the client before changing
-  `src/data/company.ts`.
+- **Sales/contact email — answered 2026-10-05:** `van@vaninter.com`
+  (`company.contact.email`, default RFQ inbox).
+- **Datasheets:** the client has PDF datasheets and will supply them; add
+  sourced property values (with the PDF as `source`) when they arrive.
 - **Materion-authorized-distributor-since year.** `company.materion.since`
   is `null` by design (`src/data/company.ts`) — leave any "authorized
   since <year>" copy out until the client provides a real year; the field

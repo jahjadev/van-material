@@ -52,9 +52,7 @@ export const company = {
     telsDisplay: ["02-728-0150", "086-303-8051"],
     fax: "+6627280160",
     faxDisplay: "02-728-0160",
-    // pending client confirmation (van@ vs info@) — current site shows
-    // van@vaninter.com; vaninter.com's own contact form posts to
-    // info@vaninter.com. Keep van@ until the client confirms.
+    // Sales/RFQ inbox, confirmed by the client 2026-10-05.
     email: "van@vaninter.com",
     lineId: "@vanintertrade",
     lineUrl: "https://line.me/ti/p/%40vanintertrade",
