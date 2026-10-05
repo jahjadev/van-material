@@ -28,7 +28,7 @@ export const runtime = "nodejs";
  * carry redacted values and error reasons only.
  */
 
-const TO_EMAIL = process.env.RFQ_TO_EMAIL ?? company.contact.email;
+const TO_EMAIL = process.env.RFQ_TO_EMAIL || company.contact.email;
 
 /** Over SMTP, From defaults to the authenticating mailbox (SMTP_USER). */
 function fromEmail(smtpUser: string) {
@@ -39,6 +39,31 @@ function fromEmail(smtpUser: string) {
 function redactEmail(email: string) {
   const at = email.indexOf("@");
   return at > 0 ? `${email.slice(0, 1)}***@${email.slice(at + 1)}` : "***";
+}
+
+/**
+ * Whether the test-only jsonTransport path is active. Double-guarded on
+ * purpose: `RFQ_TEST_JSON_TRANSPORT=1` alone used to be enough, which meant
+ * a stray copy of that one variable in a real deployment would silently
+ * stop delivering real leads — the route would still answer
+ * `{ok:true, delivered:true}` (so nothing downstream would notice) while
+ * actually only composing a message in memory, and would echo that message
+ * (including the real `To` inbox) back in the HTTP response.
+ *
+ * Both of these must hold:
+ *  - `VERCEL_ENV` is unset — refuses to activate on any real Vercel
+ *    deployment (Production, Preview, anything), where that var is always
+ *    set by the platform.
+ *  - `RFQ_TEST_ALLOW=1` is also set — a second, differently-named switch
+ *    that only `scripts/test-rfq.mjs` sets, so one leftover env var can't
+ *    trigger this on its own.
+ */
+function testModeActive(): boolean {
+  return (
+    process.env.RFQ_TEST_JSON_TRANSPORT === "1" &&
+    !process.env.VERCEL_ENV &&
+    process.env.RFQ_TEST_ALLOW === "1"
+  );
 }
 
 function bodyText(data: RfqInput, productLabel: string, gradeLabel: string) {
@@ -76,13 +101,13 @@ function bodyHtml(data: RfqInput, productLabel: string, gradeLabel: string) {
   ].join("\n");
 }
 
-async function sendMail(data: RfqInput, subject: string, text: string, html: string) {
+async function sendMail(data: RfqInput, subject: string, text: string, html: string, testMode: boolean) {
   const nodemailer = (await import("nodemailer")).default;
 
-  // Test-only switch (never set in production): exercises this exact
-  // function and the real transport API without opening a network
-  // connection. See scripts/test-rfq.mjs.
-  if (process.env.RFQ_TEST_JSON_TRANSPORT === "1") {
+  // Test-only switch, gated by `testModeActive()` (never true in a real
+  // deployment): exercises this exact function and the real transport API
+  // without opening a network connection. See scripts/test-rfq.mjs.
+  if (testMode) {
     const transport = nodemailer.createTransport({ jsonTransport: true });
     const info = await transport.sendMail({
       from: fromEmail("test@example.com"),
@@ -150,11 +175,12 @@ export async function POST(req: Request) {
   const ip = rateLimit(callerIp, PER_IP_LIMIT, PER_IP_WINDOW_MS);
   if (!ip.ok) return tooMany(ip.retryAfter);
 
-  const global = rateLimit("__all__", GLOBAL_LIMIT, GLOBAL_WINDOW_MS);
-  if (!global.ok) {
-    console.warn("[rfq] global rate limit hit — shedding requests");
-    return tooMany(global.retryAfter);
-  }
+  // The global ceiling is charged later, right before the actual send
+  // attempt — not here. Charging it this early would let a flood of
+  // garbage (unparseable bodies, failed validation, honeypot hits, all of
+  // which rotate IPs to dodge the per-IP limit) burn the whole endpoint's
+  // hourly quota and lock out genuine leads without ever composing an
+  // email.
 
   let body: unknown;
   try {
@@ -199,7 +225,29 @@ export async function POST(req: Request) {
   const hasSmtp = Boolean(
     process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS,
   );
-  const testMode = process.env.RFQ_TEST_JSON_TRANSPORT === "1";
+  const testMode = testModeActive();
+
+  if (process.env.RFQ_TEST_JSON_TRANSPORT === "1" && !testMode) {
+    // Someone set the test-only variable without the second explicit
+    // guard (or this is a real Vercel deployment) — refuse to activate it
+    // and fall straight through to the ordinary "not configured" path
+    // below, exactly as if RFQ_TEST_JSON_TRANSPORT had never been set.
+    console.error(
+      "[rfq] RFQ_TEST_JSON_TRANSPORT is set but the test-mode guard did not pass " +
+        "(requires RFQ_TEST_ALLOW=1 and no VERCEL_ENV) — ignoring it. " +
+        "This variable must never be set in a real deployment.",
+    );
+  }
+
+  if (testMode) {
+    // This must be impossible to reach in a real deployment — see
+    // `testModeActive()`. Loud on purpose: this code path never sends a
+    // real email, so anyone who sees this log line in a place that should
+    // be delivering real leads needs to notice immediately.
+    console.error(
+      "[rfq] TEST MODE ACTIVE (RFQ_TEST_JSON_TRANSPORT) — no real email will be sent for this request.",
+    );
+  }
 
   if (!hasSmtp && !testMode) {
     console.warn(
@@ -211,11 +259,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, delivered: false });
   }
 
+  // Charge the whole-endpoint ceiling only now, immediately before the
+  // actual send attempt — see the comment near the per-IP check above.
+  const global = rateLimit("__all__", GLOBAL_LIMIT, GLOBAL_WINDOW_MS);
+  if (!global.ok) {
+    console.warn("[rfq] global rate limit hit — shedding requests");
+    return tooMany(global.retryAfter);
+  }
+
   try {
-    const testMessage = await sendMail(data, subject, text, html);
+    const testMessage = await sendMail(data, subject, text, html, testMode);
     return NextResponse.json({
       ok: true,
       delivered: true,
+      // Never echoed unless the double guard above passed — the real
+      // destination inbox (`to`) is part of this payload.
       ...(testMode ? { testMessage } : {}),
     });
   } catch (err) {

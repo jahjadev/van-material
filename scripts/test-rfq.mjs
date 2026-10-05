@@ -2,18 +2,23 @@
 /**
  * Exercises the real `/api/rfq` route (controller ruling R9) against a
  * built, running server — not a unit test with the route's internals
- * mocked out. Two server instances are started in turn, each with a
- * different environment, because "is SMTP configured" is read from
- * `process.env` at request time:
+ * mocked out. Three server instances are started in turn, each with a
+ * different environment, because "is SMTP configured" / "is test mode
+ * active" is read from `process.env` at request time:
  *
- *   A. RFQ_TEST_JSON_TRANSPORT=1 — nodemailer's jsonTransport composes the
- *      real message (subject/text/html) without opening a network
- *      connection, and the route includes it in the response as
- *      `testMessage` (test-mode-only field, see api/rfq/route.ts). Covers
- *      delivered:true, the honeypot's silent no-op, 422s, CR/LF rejection,
- *      and the per-IP 429.
- *   B. No SMTP_* and no RFQ_TEST_JSON_TRANSPORT set at all — the real
+ *   A. RFQ_TEST_JSON_TRANSPORT=1 AND RFQ_TEST_ALLOW=1 (both required —
+ *      see `testModeActive()` in api/rfq/route.ts) — nodemailer's
+ *      jsonTransport composes the real message (subject/text/html)
+ *      without opening a network connection, and the route includes it in
+ *      the response as `testMessage` (test-mode-only field). Covers
+ *      delivered:true, the honeypot's silent no-op (and that it never
+ *      charges the global send-rate bucket), 422s, CR/LF rejection, and the
+ *      per-IP 429.
+ *   B. No SMTP_*, no RFQ_TEST_JSON_TRANSPORT, no RFQ_TEST_ALLOW — the real
  *      "nothing configured" path. Covers delivered:false.
+ *   C. RFQ_TEST_JSON_TRANSPORT=1 WITHOUT RFQ_TEST_ALLOW — proves the
+ *      double guard: this must behave exactly like B (delivered:false, no
+ *      `testMessage`), not like A.
  *
  * Run with `npm run test:rfq`. Requires a production build (`next build`);
  * this script builds one if `.next/BUILD_ID` is missing.
@@ -57,6 +62,10 @@ function startServer(port, envOverrides) {
     "SMTP_TLS_INSECURE",
     "RFQ_TO_EMAIL",
     "RFQ_TEST_JSON_TRANSPORT",
+    "RFQ_TEST_ALLOW",
+    // The test-mode guard refuses to activate on a real Vercel deployment;
+    // strip it too so a developer's shell can't accidentally simulate one.
+    "VERCEL_ENV",
   ]) {
     delete cleanEnv[k];
   }
@@ -206,20 +215,48 @@ async function runJsonTransportSuite(port) {
     ok("6th request -> 429", sixth.status === 429, `status=${sixth.status}`);
     ok("429 has Retry-After", !!sixth.headers.get("retry-after"), "missing header");
   }
+
+  // 7. The global send-rate bucket (60/hour) is only charged right before
+  //    an actual send attempt, not for garbage/honeypot traffic — so a
+  //    flood of honeypot hits (each from a distinct IP, to stay clear of
+  //    the per-IP limit) can't exhaust it and lock out a real lead. Send
+  //    more than GLOBAL_LIMIT (60) honeypot requests, then confirm one
+  //    genuine request right after still succeeds.
+  {
+    const floodCount = 70;
+    const floodResults = [];
+    for (let i = 0; i < floodCount; i++) {
+      floodResults.push(
+        await postRfq(port, `10.0.3.${i}`, { ...basePayload(), website: "http://spam.example" }),
+      );
+    }
+    ok(
+      `${floodCount} honeypot requests all succeed (never rate-limited)`,
+      floodResults.every((r) => r.status === 200),
+      JSON.stringify(floodResults.map((r) => r.status)),
+    );
+    const { status, json } = await postRfq(port, "10.0.3.200", basePayload());
+    ok(
+      "a real send right after a honeypot flood still succeeds",
+      status === 200 && json?.delivered === true,
+      `status=${status} ${JSON.stringify(json)}`,
+    );
+  }
 }
 
-async function runUnconfiguredSuite(port) {
-  console.log("\nServer B (no SMTP configured) — delivered:false");
+async function runUnconfiguredSuite(port, label) {
+  console.log(`\n${label} — delivered:false`);
   const { status, json } = await postRfq(port, "10.0.2.1", basePayload());
   ok("valid submission returns 200", status === 200, `status=${status}`);
   ok("delivered:false when SMTP is unset", json?.ok === true && json?.delivered === false, JSON.stringify(json));
+  ok("no testMessage leaked", json?.testMessage === undefined, JSON.stringify(json));
 }
 
 async function main() {
   ensureBuilt();
 
   const portA = 4175;
-  const serverA = startServer(portA, { RFQ_TEST_JSON_TRANSPORT: "1" });
+  const serverA = startServer(portA, { RFQ_TEST_JSON_TRANSPORT: "1", RFQ_TEST_ALLOW: "1" });
   try {
     await serverA.ready;
     await runJsonTransportSuite(portA);
@@ -231,9 +268,24 @@ async function main() {
   const serverB = startServer(portB, {});
   try {
     await serverB.ready;
-    await runUnconfiguredSuite(portB);
+    await runUnconfiguredSuite(portB, "Server B (no SMTP configured)");
   } finally {
     await stopServer(serverB.child);
+  }
+
+  // Server C: RFQ_TEST_JSON_TRANSPORT=1 WITHOUT RFQ_TEST_ALLOW — the guard
+  // must refuse to activate test mode, so this must behave exactly like
+  // Server B (not like Server A).
+  const portC = 4177;
+  const serverC = startServer(portC, { RFQ_TEST_JSON_TRANSPORT: "1" });
+  try {
+    await serverC.ready;
+    await runUnconfiguredSuite(
+      portC,
+      "Server C (RFQ_TEST_JSON_TRANSPORT=1 but no RFQ_TEST_ALLOW — guard must refuse)",
+    );
+  } finally {
+    await stopServer(serverC.child);
   }
 
   console.log(`\n${passed} passed, ${failures} failed`);

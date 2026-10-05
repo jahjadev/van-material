@@ -76,7 +76,10 @@ function validGradeValues(family: ProductFamily | undefined): Set<string> {
   return new Set(["", ...gradeOptionsFor(family).map((o) => o.value)]);
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Excludes whitespace and the characters that have no business in an email
+// address and are classic header/SMTP-injection or quoting tricks
+// (`,` `<` `>` `"`), on top of requiring the usual local@domain.tld shape.
+const EMAIL_RE = /^[^\s@,"<>]+@[^\s@,"<>]+\.[^\s@,"<>]+$/;
 const PHONE_RE = /^[0-9+\-\s()]+$/;
 
 type Messages = {
@@ -84,6 +87,7 @@ type Messages = {
   nameTooLong: string;
   nameInvalid: string;
   companyTooLong: string;
+  companyInvalid: string;
   emailInvalid: string;
   emailTooLong: string;
   phoneRequired: string;
@@ -103,6 +107,7 @@ const MESSAGES: Record<Lang, Messages> = {
     nameTooLong: "ชื่อยาวเกินไป",
     nameInvalid: "ชื่อไม่ถูกต้อง",
     companyTooLong: "ชื่อบริษัทยาวเกินไป",
+    companyInvalid: "ชื่อบริษัทไม่ถูกต้อง",
     emailInvalid: "อีเมลไม่ถูกต้อง",
     emailTooLong: "อีเมลยาวเกินไป",
     phoneRequired: "กรุณากรอกเบอร์โทรให้ถูกต้อง",
@@ -120,6 +125,7 @@ const MESSAGES: Record<Lang, Messages> = {
     nameTooLong: "Name is too long",
     nameInvalid: "Name is not valid",
     companyTooLong: "Company name is too long",
+    companyInvalid: "Company name is not valid",
     emailInvalid: "Email is not valid",
     emailTooLong: "Email is too long",
     phoneRequired: "Please enter a valid phone number",
@@ -148,8 +154,8 @@ export function createRfqSchema(lang: Lang) {
       company: z
         .string()
         .max(200, m.companyTooLong)
-        // `company` also reaches the Subject — same reason.
-        .refine((v) => !CRLF.test(v), m.companyTooLong),
+        // `company` also reaches the Subject — same reason as `name`.
+        .refine((v) => !CRLF.test(v), m.companyInvalid),
       email: z.string().min(1, m.emailInvalid).max(254, m.emailTooLong).refine((v) => EMAIL_RE.test(v), m.emailInvalid),
       phone: z
         .string()

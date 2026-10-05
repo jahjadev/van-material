@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormReturn, type UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, MessageCircle, Phone } from "lucide-react";
 import {
@@ -19,7 +19,22 @@ import type { Lang } from "@/lib/locale";
 const fieldBase =
   "w-full rounded-md border border-line bg-surface px-4 py-3 text-[15px] text-primary placeholder:text-secondary/70 focus-visible:border-accent focus-visible:outline-none";
 
-type Status = "idle" | "sending" | "ok" | "error" | "undelivered" | "rateLimited";
+type Status = "idle" | "sending" | "ok" | "undelivered" | "rateLimited";
+
+const EMPTY_VALUES: RfqInput = {
+  name: "",
+  company: "",
+  email: "",
+  phone: "",
+  product: "",
+  grade: "",
+  form: "",
+  quantity: "",
+  message: "",
+  website: "",
+};
+
+const FIELD_NAMES = Object.keys(EMPTY_VALUES) as (keyof RfqInput)[];
 
 function Label({
   htmlFor,
@@ -48,72 +63,114 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 }
 
 /**
- * The real RFQ form, split from the `RfqForm` export so the part that calls
- * `useSearchParams` (to prefill `?product=&grade=` from the "Request a
- * quote" links on product pages) sits behind a `<Suspense>` boundary. That
- * keeps `/contact` and `/en/contact` static: Next.js client-side-renders
- * only the subtree inside the boundary, and the rest of the page still
- * prerenders (see node_modules/next/dist/docs .../use-search-params.md,
- * "Behavior > Prerendering").
+ * Reads `?product=&grade=` (as sent by the "Request a quote" links on
+ * product pages) and pushes them into the already-mounted form via
+ * `setValue`. Deliberately the *only* thing in this tree that calls
+ * `useSearchParams`, and deliberately renders nothing: everything else —
+ * the real, visible, unprefilled form — lives outside this `<Suspense>`
+ * boundary so it prerenders as static HTML. Only this tiny child is
+ * client-side-rendered (see node_modules/next/dist/docs/01-app/03-api-
+ * reference/04-functions/use-search-params.md, "Behavior > Prerendering"),
+ * and it has no visual fallback gap because it never renders anything
+ * itself.
  */
-function RfqFormInner({ lang }: { lang: Lang }) {
-  const en = lang === "en";
-  const c = company.contact;
+function PrefillFromParams({ setValue }: { setValue: UseFormSetValue<RfqInput> }) {
   const searchParams = useSearchParams();
 
-  const initialProduct = useMemo(() => {
+  useEffect(() => {
     const p = searchParams.get("product");
-    return p && PRODUCT_SLUGS.includes(p) ? p : "";
-  }, [searchParams]);
+    const product = p && PRODUCT_SLUGS.includes(p) ? p : "";
+    if (!product) return;
+    setValue("product", product);
 
-  const initialFamily = families.find((f) => f.slug === initialProduct);
-
-  const initialGrade = useMemo(() => {
+    const family = families.find((f) => f.slug === product);
     const g = searchParams.get("grade");
-    if (!g || !initialFamily) return "";
-    return gradeOptionsFor(initialFamily).some((o) => o.value === g) ? g : "";
-  }, [searchParams, initialFamily]);
+    const grade = g && family && gradeOptionsFor(family).some((o) => o.value === g) ? g : "";
+    if (grade) setValue("grade", grade);
+  }, [searchParams, setValue]);
 
-  const schema = useMemo(() => createRfqSchema(lang), [lang]);
-  const [status, setStatus] = useState<Status>("idle");
+  return null;
+}
 
+function SuccessPanel({
+  lang,
+  headingRef,
+  onReset,
+}: {
+  lang: Lang;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+  onReset: () => void;
+}) {
+  const en = lang === "en";
+  const c = company.contact;
+  return (
+    <div className="rounded-2xl border border-line bg-surface p-6 text-center md:p-8">
+      <CheckCircle2 className="mx-auto size-10 text-accent" aria-hidden />
+      {/* tabIndex=-1 lets this take focus programmatically (below) without
+          joining the normal Tab order. Moving focus here is what reliably
+          announces the outcome to assistive tech — more reliable than
+          hoping a newly-inserted live region gets picked up. */}
+      <h3 ref={headingRef} tabIndex={-1} className="mt-4 text-lg font-bold text-primary outline-none">
+        {en ? "We've received your request" : "ได้รับคำขอของคุณแล้ว"}
+      </h3>
+      <p className="mx-auto mt-2 max-w-md leading-relaxed text-secondary">
+        {en
+          ? `Our team will get back to you as soon as possible during business hours (${c.hoursEn}). For anything urgent, call or message us on LINE right away.`
+          : `ทีมงานจะติดต่อกลับโดยเร็วที่สุดในเวลาทำการ (${c.hoursTh}) หากต้องการติดต่อด่วน โทรหรือทักไลน์ได้ทันที`}
+      </p>
+      <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href={`tel:${c.tels[0]}`}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
+        >
+          <Phone className="size-4" aria-hidden />
+          {c.telsDisplay[0]}
+        </a>
+        <a
+          href={c.lineUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
+        >
+          <MessageCircle className="size-4" aria-hidden />
+          LINE {c.lineId}
+        </a>
+      </div>
+      <button type="button" className="mt-6 text-sm font-medium text-accent hover:underline" onClick={onReset}>
+        {en ? "Send another request" : "ส่งคำขอใหม่อีกครั้ง"}
+      </button>
+    </div>
+  );
+}
+
+function RfqFormFields({
+  lang,
+  form,
+  status,
+  setStatus,
+}: {
+  lang: Lang;
+  form: UseFormReturn<RfqInput>;
+  status: Status;
+  setStatus: (s: Status) => void;
+}) {
+  const en = lang === "en";
+  const c = company.contact;
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    setError,
+    setFocus,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<RfqInput>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      product: initialProduct,
-      grade: initialGrade,
-      form: "",
-      quantity: "",
-      message: "",
-      website: "",
-    },
-  });
+  } = form;
 
   const product = watch("product");
   const family = families.find((f) => f.slug === product);
   const gradeOptions = useMemo(() => gradeOptionsFor(family), [family]);
-
-  // Reset the grade whenever the visitor picks a *different* product than
-  // the one already selected — but not on mount, so a prefilled
-  // `?product=&grade=` pair survives.
-  const prevProductRef = useRef(initialProduct);
-  useEffect(() => {
-    if (product !== prevProductRef.current) {
-      setValue("grade", "");
-      prevProductRef.current = product;
-    }
-  }, [product, setValue]);
+  const productField = register("product");
 
   async function onSubmit(data: RfqInput) {
     setStatus("sending");
@@ -128,15 +185,31 @@ function RfqFormInner({ lang }: { lang: Lang }) {
         setStatus("rateLimited");
         return;
       }
-      if (!res.ok && res.status !== 422) throw new Error("request failed");
+
       if (res.status === 422) {
-        setStatus("error");
+        const j: { field?: string } = await res.json().catch(() => ({}));
+        const target = (FIELD_NAMES as string[]).includes(j.field ?? "")
+          ? (j.field as keyof RfqInput)
+          : "message";
+        setError(target, {
+          type: "server",
+          message: en ? "Please check this field and try again." : "กรุณาตรวจสอบข้อมูลนี้อีกครั้ง",
+        });
+        setFocus(target);
+        setStatus("idle");
         return;
       }
 
-      const result: { ok?: boolean; delivered?: boolean } = await res
-        .json()
-        .catch(() => ({}));
+      // Any other non-OK response (5xx, etc.) is a server-side failure, not
+      // a validation problem — same "not sent" outcome as a delivery
+      // failure the server itself caught, so it gets the same message and
+      // keeps every input filled in.
+      if (!res.ok) {
+        setStatus("undelivered");
+        return;
+      }
+
+      const result: { ok?: boolean; delivered?: boolean } = await res.json().catch(() => ({}));
 
       // The API answers 200 even when email delivery fails, so the request
       // only truly reached us when `delivered` is true. On a failed
@@ -150,49 +223,10 @@ function RfqFormInner({ lang }: { lang: Lang }) {
       setStatus("ok");
       reset();
     } catch {
-      setStatus("error");
+      // A network error means the request may never have reached the
+      // server at all — same "not sent" outcome, inputs kept.
+      setStatus("undelivered");
     }
-  }
-
-  if (status === "ok") {
-    return (
-      <div className="rounded-2xl border border-line bg-surface p-6 text-center md:p-8" role="status" aria-live="polite">
-        <CheckCircle2 className="mx-auto size-10 text-accent" aria-hidden />
-        <h3 className="mt-4 text-lg font-bold text-primary">
-          {en ? "We've received your request" : "ได้รับคำขอของคุณแล้ว"}
-        </h3>
-        <p className="mx-auto mt-2 max-w-md leading-relaxed text-secondary">
-          {en
-            ? `Our team will get back to you as soon as possible during business hours (${c.hoursEn}). For anything urgent, call or message us on LINE right away.`
-            : `ทีมงานจะติดต่อกลับโดยเร็วที่สุดในเวลาทำการ (${c.hoursTh}) หากต้องการติดต่อด่วน โทรหรือทักไลน์ได้ทันที`}
-        </p>
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href={`tel:${c.tels[0]}`}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
-          >
-            <Phone className="size-4" aria-hidden />
-            {c.telsDisplay[0]}
-          </a>
-          <a
-            href={c.lineUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
-          >
-            <MessageCircle className="size-4" aria-hidden />
-            LINE {c.lineId}
-          </a>
-        </div>
-        <button
-          type="button"
-          className="mt-6 text-sm font-medium text-accent hover:underline"
-          onClick={() => setStatus("idle")}
-        >
-          {en ? "Send another request" : "ส่งคำขอใหม่อีกครั้ง"}
-        </button>
-      </div>
-    );
   }
 
   return (
@@ -266,7 +300,16 @@ function RfqFormInner({ lang }: { lang: Lang }) {
           </Label>
           <select
             id="rfq-product"
-            {...register("product")}
+            {...productField}
+            onChange={(e) => {
+              productField.onChange(e);
+              // A genuine product change invalidates any grade already
+              // chosen for the old product. `PrefillFromParams` sets both
+              // fields via `setValue`, which does not fire this handler
+              // (no real `change` event), so the initial `?product=&grade=`
+              // prefill is unaffected.
+              setValue("grade", "");
+            }}
             className={fieldBase}
             aria-invalid={!!errors.product}
             aria-describedby={errors.product ? "rfq-product-error" : undefined}
@@ -355,36 +398,7 @@ function RfqFormInner({ lang }: { lang: Lang }) {
           silently drops the submission instead of 422-ing it (see
           api/rfq/route.ts) — see rfqSchema.ts for why. */}
       <div style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }} aria-hidden="true">
-        <input
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          {...register("website")}
-        />
-      </div>
-
-      <div aria-live="polite">
-        {status === "error" && (
-          <p role="alert" className="rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
-            {en
-              ? `Something went wrong while sending. Please try again, or reach us by phone/LINE below.`
-              : `เกิดข้อผิดพลาดในการส่ง กรุณาลองใหม่ หรือติดต่อเราทางโทรศัพท์/LINE ด้านล่าง`}
-          </p>
-        )}
-        {status === "rateLimited" && (
-          <p role="alert" className="rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
-            {en
-              ? `You've sent several requests in a short time. Please wait a moment and try again, or contact us directly: call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
-              : `คุณส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่ หรือติดต่อโดยตรง โทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
-          </p>
-        )}
-        {status === "undelivered" && (
-          <p role="alert" className="rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
-            {en
-              ? `Your request was NOT sent. Please call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
-              : `คำขอของคุณยังไม่ถูกส่ง กรุณาโทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
-          </p>
-        )}
+        <input type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -417,11 +431,65 @@ function RfqFormInner({ lang }: { lang: Lang }) {
   );
 }
 
-/** Public export — wraps the search-params-reading form in `<Suspense>`. */
+/**
+ * RFQ ("request a quote") form. The form itself (`RfqFormFields`) and the
+ * success panel are plain, static-friendly markup — no dynamic API calls —
+ * so they prerender as real HTML. Only `PrefillFromParams`, which reads
+ * `?product=&grade=` via `useSearchParams`, is isolated behind
+ * `<Suspense>`; it renders nothing, so there's no visual placeholder gap,
+ * and `/contact` / `/en/contact` stay static.
+ */
 export function RfqForm({ lang }: { lang: Lang }) {
+  const en = lang === "en";
+  const c = company.contact;
+  const schema = useMemo(() => createRfqSchema(lang), [lang]);
+  const form = useForm<RfqInput>({
+    resolver: zodResolver(schema),
+    defaultValues: EMPTY_VALUES,
+  });
+  const [status, setStatus] = useState<Status>("idle");
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Moving focus to the success heading is the reliable way to get
+  // assistive tech to announce the outcome — more reliable than hoping a
+  // newly-inserted live region gets picked up.
+  useEffect(() => {
+    if (status === "ok") successHeadingRef.current?.focus();
+  }, [status]);
+
   return (
-    <Suspense fallback={<div className="h-[560px]" aria-hidden />}>
-      <RfqFormInner lang={lang} />
-    </Suspense>
+    <div>
+      <Suspense fallback={null}>
+        <PrefillFromParams setValue={form.setValue} />
+      </Suspense>
+
+      {/* Persistent live region: this node stays mounted across every
+          status transition (it's a sibling of the form/success views, not
+          nested inside either), so assistive tech reliably announces a
+          rate-limit or non-delivery notice instead of missing it because
+          the whole subtree it used to live in got replaced. */}
+      <div aria-live="polite" role="status">
+        {status === "rateLimited" && (
+          <p className="mb-5 rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
+            {en
+              ? `You've sent several requests in a short time. Please wait a moment and try again, or contact us directly: call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
+              : `คุณส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่ หรือติดต่อโดยตรง โทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
+          </p>
+        )}
+        {status === "undelivered" && (
+          <p className="mb-5 rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
+            {en
+              ? `Your request was NOT sent. Please call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
+              : `คำขอของคุณยังไม่ถูกส่ง กรุณาโทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
+          </p>
+        )}
+      </div>
+
+      {status === "ok" ? (
+        <SuccessPanel lang={lang} headingRef={successHeadingRef} onReset={() => setStatus("idle")} />
+      ) : (
+        <RfqFormFields lang={lang} form={form} status={status} setStatus={setStatus} />
+      )}
+    </div>
   );
 }

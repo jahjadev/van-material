@@ -17,11 +17,27 @@ type Hit = { count: number; resetAt: number };
 
 const buckets = new Map<string, Hit>();
 
+/**
+ * Hard ceiling on the number of distinct keys tracked at once. Without this,
+ * a flood of requests each spoofing a different `x-forwarded-for` value
+ * (cheap for an attacker who isn't behind the trusted proxy) could grow the
+ * map without bound and exhaust memory, even though each individual key
+ * never exceeds its own limit.
+ */
+const MAX_BUCKETS = 5000;
+
 /** Drop expired buckets so the map can't grow without bound. */
 function sweep(now: number) {
   for (const [key, hit] of buckets) {
     if (hit.resetAt <= now) buckets.delete(key);
   }
+}
+
+/** Evict the oldest-inserted bucket (Map preserves insertion order) when full. */
+function evictOldestIfFull() {
+  if (buckets.size < MAX_BUCKETS) return;
+  const oldestKey = buckets.keys().next().value;
+  if (oldestKey !== undefined) buckets.delete(oldestKey);
 }
 
 export type RateLimitResult = {
@@ -43,6 +59,7 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
   const hit = buckets.get(key);
 
   if (!hit || hit.resetAt <= now) {
+    evictOldestIfFull();
     buckets.set(key, { count: 1, resetAt: now + windowMs });
     return { ok: true, retryAfter: 0 };
   }
@@ -57,14 +74,24 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
 }
 
 /**
- * Caller IP as seen through the proxy in front of the app. `x-forwarded-for`
- * is spoofable in general, but a correctly configured proxy overwrites it at
- * the edge, so the left-most entry is the real client there. Falls back to a
- * shared bucket when absent, which fails closed-ish: unknown callers share
- * one limit rather than bypassing it.
+ * Caller IP as seen through the proxy in front of the app.
+ *
+ * Trust assumption: this app is deployed behind Vercel's edge proxy, which
+ * sets `x-vercel-forwarded-for` to the real client IP and will not forward a
+ * client-supplied value under that header name — so it's checked first.
+ * `x-real-ip` is a weaker, older signal some proxies set and is tried next.
+ * `x-forwarded-for`'s left-most entry is only trustworthy when a trusted
+ * proxy is guaranteed to overwrite (not merely append to) it, which isn't
+ * true of every environment this could run in, so it's the last resort.
+ * Falls back to a shared bucket when none are present, which fails
+ * closed-ish: unknown callers share one limit rather than bypassing it.
  */
 export function clientIp(req: Request): string {
+  const vercelForwarded = req.headers.get("x-vercel-forwarded-for");
+  if (vercelForwarded) return vercelForwarded.split(",")[0]!.trim();
+  const realIp = req.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
   const forwarded = req.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip")?.trim() || "unknown";
+  return "unknown";
 }
