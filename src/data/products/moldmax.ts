@@ -4,17 +4,19 @@ import { L, priceFaq, SRC } from "./shared";
 /*
  * All MoldMAX facts and numbers come from Materion's MoldMAX page
  * (SRC.moldmax), including its "Compare MoldMAX alloys with other materials"
- * table. Units are kept as Materion prints them (ksi, BTU/ft·hr·°F); the
- * hardness column is "Rockwell Hardness" with non-C values marked (e.g.
- * "B88"), so the plain numbers are read as Rockwell C.
+ * table. Units are kept as Materion prints them (ksi, BTU/ft·hr·°F). The
+ * table's hardness column is headed only "Rockwell Hardness" and states no
+ * scale, so hardness is published as a bare Rockwell number with no scale.
+ * ("B88" on that page is part of the product name "Alumold B88", not a
+ * Rockwell B reading.)
  *
  * Note: not every MoldMAX grade is beryllium copper — Materion lists
  * MoldMAX V as Cu-Ni-Si-Cr and MoldMAX XL as Cu-Ni-Sn.
  */
 
-function moldmaxProps(hrc: string, tc: string, ys: string, ts: string, cte: string): Property[] {
+function moldmaxProps(rockwell: string, tc: string, ys: string, ts: string, cte: string): Property[] {
   return [
-    { label: L.hardness, value: hrc, unit: "HRC", source: SRC.moldmax },
+    { label: L.rockwell, value: rockwell, source: SRC.moldmax },
     { label: L.thermCond, value: tc, unit: "BTU/ft·hr·°F", source: SRC.moldmax },
     { label: L.yield, value: ys, unit: "ksi", source: SRC.moldmax },
     { label: L.tensile, value: ts, unit: "ksi", source: SRC.moldmax },
@@ -23,8 +25,8 @@ function moldmaxProps(hrc: string, tc: string, ys: string, ts: string, cte: stri
 }
 
 const note: Bi = {
-  th: "ค่าทั่วไปจากตารางเปรียบเทียบของ Materion (ตารางเดียวกันระบุเหล็ก P-20 ไว้ที่ 30 HRC และการนำความร้อน 17 BTU/ft·hr·°F) ตรวจสอบกับ datasheet ก่อนออกแบบ",
-  en: "Typical values from Materion's comparison table (the same table lists P-20 tool steel at 30 HRC and 17 BTU/ft·hr·°F). Confirm against the datasheet before design.",
+  th: "ค่าทั่วไปจากตารางเปรียบเทียบของ Materion (ตารางเดียวกันระบุเหล็ก P-20 ไว้ที่ความแข็ง Rockwell 30 และการนำความร้อน 17 BTU/ft·hr·°F ตารางไม่ได้ระบุสเกลของค่าความแข็ง) ตรวจสอบกับ datasheet ก่อนออกแบบ",
+  en: "Typical values from Materion's comparison table (the same table lists P-20 tool steel at Rockwell hardness 30 and 17 BTU/ft·hr·°F; the table does not state the Rockwell scale). Confirm against the datasheet before design.",
 };
 
 // Materion's MoldMAX page doesn't list product forms, so none are claimed;
@@ -34,7 +36,7 @@ const moldmaxForms: Bi[] = [];
 const hh: Grade = {
   slug: "moldmax-hh",
   code: "MoldMAX HH",
-  aliases: ["MoldMAX HH alloy", "Materion MoldMAX HH"],
+  aliases: [],
   title: {
     th: "MoldMAX HH ทองแดงเบริลเลียมแม่พิมพ์ ความแข็งสูง",
     en: "MoldMAX HH Beryllium Copper Mold Alloy",
@@ -52,7 +54,7 @@ const hh: Grade = {
     en: "MoldMAX HH is a premium beryllium copper mold alloy that, according to Materion, matches standard tool steels in hardness and strength while conducting heat four to six times better. It suits core and cavity inserts that must resist wear and pull heat out of the part quickly.",
   },
   description: {
-    th: "MoldMAX HH ทองแดงเบริลเลียมสำหรับ insert แม่พิมพ์ ความแข็ง 40 HRC ตามตาราง Materion นำความร้อนสูงกว่าเหล็ก ดูค่าเทียบและขอใบเสนอราคา",
+    th: "MoldMAX HH ทองแดงเบริลเลียมสำหรับ insert แม่พิมพ์ แข็งระดับเหล็กเครื่องมือ นำความร้อนสูงกว่าเหล็ก ดูค่าเทียบและขอใบเสนอราคา",
     en: "MoldMAX HH beryllium copper for mold inserts: tool-steel hardness, far higher thermal conductivity, Materion comparison data and a quote from VAN INTERTRADE.",
   },
   properties: moldmaxProps("40", "75", "145", "170", "9.7"),
@@ -67,8 +69,8 @@ const hh: Grade = {
     {
       q: { th: "MoldMAX HH แข็งแค่ไหน?", en: "How hard is MoldMAX HH?" },
       a: {
-        th: "ตารางเปรียบเทียบของ Materion ระบุ MoldMAX HH ไว้ที่ 40 HRC เทียบกับ 30 HRC ของเหล็ก P-20",
-        en: "Materion's comparison table lists MoldMAX HH at 40 HRC, against 30 HRC for P-20 tool steel.",
+        th: "ตารางเปรียบเทียบของ Materion ระบุความแข็ง Rockwell ของ MoldMAX HH ไว้ที่ 40 เทียบกับ 30 ของเหล็ก P-20 (ตารางไม่ได้ระบุสเกล)",
+        en: "Materion's comparison table lists MoldMAX HH at a Rockwell hardness of 40, against 30 for P-20 tool steel (the table does not state the scale).",
       },
     },
     {
@@ -85,7 +87,7 @@ const hh: Grade = {
 const v: Grade = {
   slug: "moldmax-v",
   code: "MoldMAX V",
-  aliases: ["MoldMAX V alloy", "Materion MoldMAX V"],
+  aliases: [],
   title: {
     th: "MoldMAX V โลหะผสม Cu-Ni-Si-Cr สำหรับแม่พิมพ์",
     en: "MoldMAX V Cu-Ni-Si-Cr Mold Alloy",
@@ -124,8 +126,8 @@ const v: Grade = {
     {
       q: { th: "MoldMAX V ต่างจาก MoldMAX HH อย่างไร?", en: "How does MoldMAX V compare with MoldMAX HH?" },
       a: {
-        th: "ตามตาราง Materion MoldMAX V นำความร้อนสูงกว่า (92 เทียบกับ 75 BTU/ft·hr·°F) แต่แข็งน้อยกว่า (28 เทียบกับ 40 HRC)",
-        en: "In Materion's table MoldMAX V conducts more heat (92 vs 75 BTU/ft·hr·°F) but is softer (28 vs 40 HRC).",
+        th: "ตามตาราง Materion MoldMAX V นำความร้อนสูงกว่า (92 เทียบกับ 75 BTU/ft·hr·°F) แต่แข็งน้อยกว่า (ความแข็ง Rockwell 28 เทียบกับ 40)",
+        en: "In Materion's table MoldMAX V conducts more heat (92 vs 75 BTU/ft·hr·°F) but is softer (Rockwell hardness 28 vs 40).",
       },
     },
     priceFaq({ th: "MoldMAX V", en: "MoldMAX V" }),
@@ -135,7 +137,7 @@ const v: Grade = {
 const xl: Grade = {
   slug: "moldmax-xl",
   code: "MoldMAX XL",
-  aliases: ["MoldMAX XL alloy", "Materion MoldMAX XL"],
+  aliases: [],
   title: {
     th: "MoldMAX XL โลหะผสม Cu-Ni-Sn สำหรับแม่พิมพ์",
     en: "MoldMAX XL Cu-Ni-Sn Mold Alloy",
@@ -178,7 +180,7 @@ const xl: Grade = {
 const protherm: Grade = {
   slug: "protherm",
   code: "PROtherm",
-  aliases: ["PROTHERM", "Materion PROtherm"],
+  aliases: [],
   title: {
     th: "PROtherm BeCu นำความร้อนสูงสำหรับแม่พิมพ์",
     en: "PROtherm High-Conductivity BeCu Mold Alloy",
@@ -188,8 +190,8 @@ const protherm: Grade = {
     en: "PROtherm High-Conductivity Beryllium Copper Mold Alloy",
   },
   tagline: {
-    th: "เกรดนำความร้อนสูงสุดในกลุ่ม MoldMAX สำหรับจุดที่ต้องระบายความร้อนมาก",
-    en: "The highest-conductivity grade in the MoldMAX line, for heat-critical spots.",
+    th: "นำความร้อนสูงสุดในสี่เกรดที่เปรียบเทียบ สำหรับจุดที่ต้องระบายความร้อนมาก",
+    en: "The highest thermal conductivity of the four grades compared, for heat-critical spots.",
   },
   summary: {
     th: "PROtherm คือทองแดงเบริลเลียมนำความร้อนสูงที่มีความแข็งแรงดี Materion ระบุว่าเป็นโลหะผสมที่นำความร้อนสูงที่สุดในบรรดาโลหะผสมที่มีความต้านทานแรงดึงเกิน 100,000 psi จึงเหมาะกับจุดในแม่พิมพ์ที่ระบายความร้อนยากที่สุด",
@@ -211,8 +213,8 @@ const protherm: Grade = {
     {
       q: { th: "ควรเลือก PROtherm หรือ MoldMAX HH?", en: "Should I choose PROtherm or MoldMAX HH?" },
       a: {
-        th: "เลือก PROtherm เมื่อการระบายความร้อนสำคัญที่สุด (145 BTU/ft·hr·°F ตามตาราง Materion) และเลือก MoldMAX HH เมื่อต้องการความแข็งสูงกว่า (40 HRC เทียบกับ 20 HRC)",
-        en: "Choose PROtherm when heat removal comes first (145 BTU/ft·hr·°F in Materion's table) and MoldMAX HH when you need more hardness (40 HRC against 20 HRC).",
+        th: "เลือก PROtherm เมื่อการระบายความร้อนสำคัญที่สุด (145 BTU/ft·hr·°F ตามตาราง Materion) และเลือก MoldMAX HH เมื่อต้องการความแข็งสูงกว่า (ความแข็ง Rockwell 40 เทียบกับ 20)",
+        en: "Choose PROtherm when heat removal comes first (145 BTU/ft·hr·°F in Materion's table) and MoldMAX HH when you need more hardness (Rockwell hardness 40 against 20).",
       },
     },
     priceFaq({ th: "PROtherm", en: "PROtherm" }),

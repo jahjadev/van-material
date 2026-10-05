@@ -8,6 +8,10 @@ import { L, priceFaq, SRC } from "./shared";
  * (C17510) or Alloy 174 (C17410) along with the high strength of Alloy 25
  * (C17200)" and "Mill hardened Alloy 390 strip (UNS C17460)".
  *
+ * "Nonmagnetic" is sourced from Materion's magnetic-properties article
+ * (SRC.becuMagnetic). "Non-sparking" is not stated as a property on any
+ * fetched page, so it is not claimed.
+ *
  * The beryllium-content range from the brief (0.2–2%) is NOT published: no
  * fetched Materion page states it.
  */
@@ -209,7 +213,7 @@ const c17460: Grade = {
     en: "C17460 Beryllium Copper (Alloy 390)",
   },
   h1: {
-    th: "C17460 Beryllium Copper (Alloy 390) แถบชุบแข็งจากโรงงาน",
+    th: "C17460 Beryllium Copper (Alloy 390) แถบบ่มแข็งจากโรงงาน",
     en: "C17460 Beryllium Copper (Alloy 390) Strip",
   },
   tagline: {
@@ -217,7 +221,7 @@ const c17460: Grade = {
     en: "Mill-hardened strip combining high conductivity with high strength.",
   },
   summary: {
-    th: "C17460 (Materion Alloy 390) คือแถบเบริลเลียมคอปเปอร์ที่ชุบแข็งมาจากโรงงาน (mill hardened) ซึ่ง Materion ออกแบบให้นำไฟฟ้าได้ระดับเดียวกับ Alloy 3 หรือ Alloy 174 แต่แข็งแรงใกล้เคียง Alloy 25 พร้อมทนการคลายความเค้นได้ดี จึงเหมาะกับคอนแทคขนาดเล็กที่ต้องการความน่าเชื่อถือสูง",
+    th: "C17460 (Materion Alloy 390) คือแถบเบริลเลียมคอปเปอร์ที่บ่มแข็งจากโรงงาน (mill hardened) ซึ่ง Materion ออกแบบให้นำไฟฟ้าได้ระดับเดียวกับ Alloy 3 หรือ Alloy 174 แต่แข็งแรงใกล้เคียง Alloy 25 พร้อมทนการคลายความเค้นได้ดี จึงเหมาะกับคอนแทคขนาดเล็กที่ต้องการความน่าเชื่อถือสูง",
     en: "C17460 (Materion Alloy 390) is a mill-hardened beryllium copper strip that Materion designed to give the conductivity of Alloy 3 or Alloy 174 with the strength of Alloy 25, plus good stress-relaxation resistance. That makes it a fit for small, high-reliability contacts.",
   },
   description: {
@@ -225,7 +229,7 @@ const c17460: Grade = {
     en: "C17460 beryllium copper (Materion Alloy 390), a mill-hardened strip for small, high-reliability contacts: what it is, uses, and how to request a quote.",
   },
   properties: [],
-  forms: [{ th: "แถบชุบแข็งจากโรงงาน (mill-hardened strip)", en: "Mill-hardened strip" }],
+  forms: [{ th: "แถบบ่มแข็งจากโรงงาน (mill-hardened strip)", en: "Mill-hardened strip" }],
   applications: [
     { th: "คอนแทคสัญญาณและกำลังไฟขนาดเล็ก", en: "Small signal and power interconnects" },
     { th: "คอนเนคเตอร์ที่ใช้งานในสภาพแวดล้อมรุนแรง", en: "Connectors for harsh environments" },
@@ -234,7 +238,7 @@ const c17460: Grade = {
     {
       q: { th: "C17460 ต้องอบบ่มแข็งเองหลังขึ้นรูปไหม?", en: "Does C17460 need heat treatment after forming?" },
       a: {
-        th: "Alloy 390 จำหน่ายเป็นแถบที่ชุบแข็งมาจากโรงงานแล้ว (mill hardened) ตรวจสอบเงื่อนไขการขึ้นรูปของ temper ที่เลือกกับ datasheet ของ Materion",
+        th: "Alloy 390 จำหน่ายเป็นแถบที่บ่มแข็งจากโรงงานแล้ว (mill hardened) ตรวจสอบเงื่อนไขการขึ้นรูปของ temper ที่เลือกกับ datasheet ของ Materion",
         en: "Alloy 390 is supplied as mill-hardened strip, so it arrives already hardened. Check the forming limits of your chosen temper in the Materion datasheet.",
       },
     },
@@ -269,8 +273,8 @@ export const berylliumCopper: ProductFamily = {
       en: "Pick the grade by what the part needs most. For the highest spring force and fatigue life, start with C17200 (Alloy 25). To carry more current or move more heat while keeping useful strength, look at C17510 (Alloy 3). For connector strip there are C17410 (Alloy 174) and C17460 (Alloy 390).",
     },
     {
-      th: "Beryllium Copper ไม่เป็นแม่เหล็กและไม่เกิดประกายไฟเมื่อกระทบ การใช้งานชิ้นงานสำเร็จปกติไม่มีข้อกังวลพิเศษ แต่ฝุ่น ไอ หรือละอองที่เกิดจากการเจียร ขัด เชื่อม หรือกลึงแบบแห้ง ต้องควบคุมตามเอกสารความปลอดภัย (SDS) ของ Materion และกฎหมายที่เกี่ยวข้อง",
-      en: "Beryllium copper is non-magnetic and non-sparking. Finished parts need no special handling, but dust, fumes or mist from grinding, polishing, welding or dry machining must be controlled as Materion's safety data sheet and local regulations require.",
+      th: "Materion ระบุว่า Beryllium Copper ไม่เป็นแม่เหล็ก จึงใช้ในงานที่ต้องอยู่ในสนามแม่เหล็กได้ การใช้งานชิ้นงานสำเร็จปกติไม่มีข้อกังวลพิเศษ แต่ฝุ่น ไอ หรือละอองที่เกิดจากการเจียร ขัด เชื่อม หรือกลึงแบบแห้ง ต้องควบคุมตามเอกสารความปลอดภัย (SDS) ของ Materion และกฎหมายที่เกี่ยวข้อง",
+      en: "Materion describes beryllium copper as nonmagnetic, which is why it is specified for parts that work in magnetic fields. Finished parts need no special handling, but dust, fumes or mist from grinding, polishing, welding or dry machining must be controlled as Materion's safety data sheet and local regulations require.",
     },
   ],
   image: {
@@ -296,7 +300,6 @@ export const berylliumCopper: ProductFamily = {
     { th: "สปริงและคอนแทคไฟฟ้า", en: "Springs and electrical contacts" },
     { th: "คอนเนคเตอร์ยานยนต์และ EV", en: "Automotive and EV connectors" },
     { th: "บูชและแบริ่งรับโหลดสูง", en: "High-load bushings and bearings" },
-    { th: "เครื่องมือ non-sparking", en: "Non-sparking tools" },
     { th: "ชิ้นส่วนอากาศยานและงานขุดเจาะน้ำมัน", en: "Aerospace and oil & gas components" },
   ],
   industries: ["ev", "automotive", "aerospace", "oil-gas"],
@@ -304,8 +307,8 @@ export const berylliumCopper: ProductFamily = {
     {
       q: { th: "Beryllium Copper คืออะไร?", en: "What is beryllium copper?" },
       a: {
-        th: "Beryllium Copper (CuBe/BeCu) คือโลหะผสมทองแดงที่ทำให้แข็งด้วยการบ่มแข็ง ได้ความแข็งแรงสูงพร้อมการนำไฟฟ้าและความร้อนที่ดี ไม่เป็นแม่เหล็กและไม่เกิดประกายไฟ",
-        en: "Beryllium copper (CuBe/BeCu) is a copper alloy hardened by age hardening. It combines high strength with good electrical and thermal conductivity, and it is non-magnetic and non-sparking.",
+        th: "Beryllium Copper (CuBe/BeCu) คือโลหะผสมทองแดงที่ทำให้แข็งด้วยการบ่มแข็ง ได้ความแข็งแรงสูงพร้อมการนำไฟฟ้าและความร้อนที่ดี และ Materion ระบุว่าไม่เป็นแม่เหล็ก",
+        en: "Beryllium copper (CuBe/BeCu) is a copper alloy hardened by age hardening. It combines high strength with good electrical and thermal conductivity, and Materion describes it as nonmagnetic.",
       },
     },
     {

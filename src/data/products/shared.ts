@@ -10,6 +10,8 @@ export const SRC = {
     "https://www.materion.com/en/products/performance-materials/high-performance-alloys/high-strength-copper-beryllium",
   becuHighConductivity:
     "https://www.materion.com/en/products/performance-materials/high-performance-alloys/high-conductivity-copper-beryllium-alloys",
+  becuMagnetic:
+    "https://www.materion.com/en/insights/blog/in-our-element-what-are-the-magnetic-properties-of-copper-beryllium",
   moldmax:
     "https://www.materion.com/en/products/performance-materials/high-performance-alloys/moldmax-alloys",
   toughmet:
@@ -55,7 +57,8 @@ export const L = {
     en: "Ultimate tensile strength (can exceed)",
   },
   yield: { th: "ความต้านทานแรงคราก (Yield strength)", en: "Yield strength" },
-  hardness: { th: "ความแข็ง (Rockwell C)", en: "Hardness (Rockwell C)" },
+  /** Scale not stated by the MoldMAX source, so none is claimed. */
+  rockwell: { th: "ความแข็ง Rockwell", en: "Rockwell hardness" },
   elecCond: { th: "การนำไฟฟ้า", en: "Electrical conductivity" },
   thermCond: { th: "การนำความร้อน", en: "Thermal conductivity" },
   modulus: { th: "โมดูลัสยืดหยุ่น (Elastic modulus)", en: "Elastic modulus" },
