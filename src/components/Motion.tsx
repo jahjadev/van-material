@@ -56,7 +56,8 @@ const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 
 const MAX_FRAME_W = 1280;
 
 /**
- * apple.com-style scroll-driven home hero. The section is ~2.4 screens tall
+ * apple.com-style scroll-driven home hero. The section is ~2.2 screens tall
+ * (~1.9 on portrait phones)
  * and its first screen stays pinned (sticky) while you scroll through it:
  *
  *   0.00–0.35  the headline fades; the rounded video frame grows and moves
@@ -66,10 +67,13 @@ const MAX_FRAME_W = 1280;
  *   0.72–0.95  the frame settles back and `statement` takes the headline's
  *              place, then the page scrolls on
  *
- * The frame never grows past MAX_FRAME_W, so the 2560 px video is never
- * upscaled on a 2x screen (phones get a 1920 px file). Both files have a
- * keyframe every 8 frames so seeking stays smooth, and the shown time eases
- * toward the scroll target. With reduced motion nothing is pinned or
+ * The frame always fills the space under the headline, so the pinned screen
+ * never shows an empty band: on landscape screens it is the largest 16:9
+ * frame that fits (never past MAX_FRAME_W, so the 2560 px video is not
+ * upscaled on a 2x screen); on portrait phones it fills the remaining
+ * height and plays an upright 1080x1920 cut of the clip, then widens to
+ * the full screen width. All files have a keyframe every 8 frames so
+ * seeking stays smooth, and the shown time eases toward the scroll target. With reduced motion nothing is pinned or
  * animated and the poster (the first frame) is shown.
  */
 export function HeroScroll({
@@ -84,6 +88,7 @@ export function HeroScroll({
   const track = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const introBox = useRef<HTMLDivElement>(null);
   const stmt = useRef<HTMLDivElement>(null);
@@ -96,8 +101,11 @@ export function HeroScroll({
     let shown = 0;
     let raf = 0;
     let ready = false;
-    // Frame geometry at rest, measured without transforms.
+    // Landscape: uniform scale + shift. Portrait: the frame's box moves from
+    // its resting rectangle to the whole pinned panel (no scaling, so the
+    // video is never stretched; object-cover just shows more of it).
     let grow = { s: 1, dy: 0 };
+    let rect: { from: number[]; to: number[] } | null = null;
 
     const onMeta = () => {
       ready = true;
@@ -109,16 +117,32 @@ export function HeroScroll({
 
     const measure = () => {
       const f = frame.current;
+      const box = stage.current;
       const pnl = panel.current;
-      if (!f || !pnl) return;
-      const w = f.offsetWidth;
-      const h = f.offsetHeight;
-      const top = f.offsetTop + (f.offsetParent as HTMLElement | null)!.offsetTop;
+      if (!f || !box || !pnl) return;
       const pw = pnl.clientWidth;
       const ph = pnl.clientHeight;
-      const targetW = Math.min(MAX_FRAME_W, pw - (pw < 640 ? 0 : 44), ((ph - 24) * 16) / 9);
-      const s = Math.max(1, targetW / w);
-      grow = { s, dy: (ph - h * s) / 2 - top };
+      f.style.cssText = "";
+      if (window.matchMedia("(orientation: portrait)").matches) {
+        // [top, left, width, height] relative to the panel.
+        rect = { from: [box.offsetTop, 22, pw - 44, box.clientHeight - 22], to: [0, 0, pw, ph] };
+        grow = { s: 1, dy: 0 };
+        return;
+      }
+      rect = null;
+      // Landscape: the largest 16:9 frame that fits the space under the
+      // headline (CSS can't know that height, so it is set here).
+      const availW = box.clientWidth - 44;
+      const availH = box.clientHeight - 22;
+      f.style.width = `${Math.round(Math.max(Math.min(1080, availW, (availH * 16) / 9), Math.min(availW, 320)))}px`;
+      const w = f.offsetWidth;
+      const h = f.offsetHeight;
+      const top = box.offsetTop + f.offsetTop;
+      // Grow to fill the screen, but never past the video's real size
+      // (MAX_FRAME_W) and never taller than the pinned panel.
+      const targetW = Math.min(MAX_FRAME_W, pw - 44, ((ph - 24) * 16) / 9);
+      const sc = Math.max(1, Math.min(targetW / w, ph / h));
+      grow = { s: sc, dy: (ph - h * sc) / 2 - top };
     };
 
     const progress = () => {
@@ -146,10 +170,19 @@ export function HeroScroll({
         stmt.current.style.transform = `translate3d(0,${(24 * (1 - stmtIn)).toFixed(1)}px,0)`;
         stmt.current.style.visibility = stmtIn <= 0 ? "hidden" : "visible";
       }
-      if (frame.current) {
+      const f = frame.current;
+      if (f && rect) {
+        const [t, l, w, h] = rect.from.map((v, i) => v + (rect!.to[i] - v) * m);
+        f.style.position = "absolute";
+        f.style.top = `${t.toFixed(1)}px`;
+        f.style.left = `${l.toFixed(1)}px`;
+        f.style.width = `${w.toFixed(1)}px`;
+        f.style.height = `${h.toFixed(1)}px`;
+        f.style.borderRadius = `${(24 * (1 - m)).toFixed(1)}px`;
+      } else if (f) {
         const s = 1 + (grow.s - 1) * m;
-        frame.current.style.transform = `translate3d(0,${(grow.dy * m).toFixed(1)}px,0) scale(${s.toFixed(4)})`;
-        frame.current.style.borderRadius = `${(28 / s).toFixed(1)}px`;
+        f.style.transform = `translate3d(0,${(grow.dy * m).toFixed(1)}px,0) scale(${s.toFixed(4)})`;
+        f.style.borderRadius = `${(24 / s).toFixed(1)}px`;
       }
       target = span(p, 0.05, 0.85);
     };
@@ -189,7 +222,7 @@ export function HeroScroll({
   }, []);
 
   return (
-    <section ref={track} aria-labelledby="hero-h" className="relative h-[240svh] bg-white motion-reduce:h-auto">
+    <section ref={track} aria-labelledby="hero-h" className="relative h-[220svh] bg-white portrait:h-[190svh] motion-reduce:h-auto">
       <div
         ref={panel}
         className="sticky top-[var(--nav-h)] flex h-[calc(100svh_-_var(--nav-h))] min-h-[600px] flex-col items-center overflow-hidden motion-reduce:static motion-reduce:h-auto motion-reduce:pb-16"
@@ -206,12 +239,15 @@ export function HeroScroll({
             {statement}
           </div>
         </div>
-        <div className="relative z-[1] mt-[clamp(24px,4.5vh,48px)] flex w-full justify-center px-[22px]">
+        <div
+          ref={stage}
+          className="relative z-[1] mt-[clamp(20px,4vh,44px)] flex min-h-0 w-full flex-1 items-start justify-center px-[22px] pb-[22px] portrait:static motion-reduce:flex-none"
+        >
           <div
             ref={frame}
             role="img"
             aria-label={alt}
-            className="relative aspect-video w-[min(1080px,100%,calc((100svh_-_var(--nav-h)_-_330px)*1.7778))] min-w-[min(100%,520px)] origin-top overflow-hidden rounded-[28px] bg-[#f5f5f7] will-change-transform"
+            className="relative aspect-video w-[min(1080px,100%,calc((100svh_-_var(--nav-h)_-_330px)*1.7778))] origin-top overflow-hidden rounded-[24px] bg-[#f5f5f7] will-change-transform portrait:aspect-auto portrait:h-full portrait:w-full motion-reduce:portrait:h-[62svh]"
           >
             <div className="enter absolute inset-0">
               <video
@@ -225,6 +261,7 @@ export function HeroScroll({
                 tabIndex={-1}
                 disablePictureInPicture
               >
+                <source src="/videos/hero-portrait.mp4" type="video/mp4" media="(orientation: portrait)" />
                 <source src="/videos/hero-1080.mp4" type="video/mp4" media="(max-width: 799px)" />
                 <source src="/videos/hero-1440.mp4" type="video/mp4" />
               </video>
