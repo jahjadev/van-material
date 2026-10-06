@@ -42,40 +42,40 @@ export function PropertyTable({
   });
 
   return (
-    <section aria-labelledby="properties-heading" className="mt-14">
-      <h2 id="properties-heading" className="text-xl font-bold text-primary md:text-2xl">
+    <section aria-labelledby="properties-heading" data-reveal="0" className="mt-16">
+      <h2 id="properties-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
         {heading[lang]}
       </h2>
       {note && <p className="mt-2 max-w-3xl text-sm text-secondary">{note[lang]}</p>}
-      <div className="mt-5 overflow-x-auto rounded-xl border border-line bg-surface">
-        <table className="w-full min-w-[520px] border-collapse text-left text-sm">
-          <thead className="bg-background text-xs uppercase tracking-wide text-secondary">
+      <div className="mt-5 overflow-x-auto">
+        <table className="w-full min-w-[560px] border-collapse text-left text-[15px]">
+          <thead className="font-mono text-[11.5px] tracking-[.14em] uppercase text-secondary">
             <tr>
-              {withGrade && <th scope="col" className="px-4 py-3 font-semibold">{en ? "Grade" : "เกรด"}</th>}
-              <th scope="col" className="px-4 py-3 font-semibold">{en ? "Property" : "คุณสมบัติ"}</th>
-              <th scope="col" className="px-4 py-3 font-semibold">{en ? "Value" : "ค่า"}</th>
-              <th scope="col" className="px-4 py-3 font-semibold">{en ? "Source" : "แหล่งข้อมูล"}</th>
+              {withGrade && <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Grade" : "เกรด"}</th>}
+              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Property" : "คุณสมบัติ"}</th>
+              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Value" : "ค่า"}</th>
+              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Source" : "แหล่งข้อมูล"}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={`${r.grade ?? ""}-${r.prop.label.en}`} className="border-t border-line align-top">
+              <tr key={`${r.grade ?? ""}-${r.prop.label.en}`} className="border-b border-line align-top">
                 {withGrade && spans[i] > 0 && (
-                  <th scope="row" rowSpan={spans[i]} className="px-4 py-3 font-semibold text-primary">
+                  <th scope="row" rowSpan={spans[i]} className="py-4 pl-0 pr-3 text-[17px] font-bold text-primary">
                     {r.grade}
                   </th>
                 )}
-                <td className="px-4 py-3 text-secondary">{r.prop.label[lang]}</td>
-                <td className="px-4 py-3 font-medium whitespace-nowrap text-primary">
+                <td className="px-3 py-4 text-secondary">{r.prop.label[lang]}</td>
+                <td className="px-3 py-4 font-semibold whitespace-nowrap text-primary">
                   {r.prop.value}
                   {r.prop.unit ? ` ${r.prop.unit}` : ""}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-4 font-mono text-[13px]">
                   <a
                     href={r.prop.source}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent underline underline-offset-2 hover:text-primary"
+                    className="text-accent underline underline-offset-2 hover:text-accent-hover"
                   >
                     {sourceLabel(r.prop.source)}
                   </a>
