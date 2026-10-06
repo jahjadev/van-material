@@ -30,7 +30,9 @@ const EN_PREFIX = "/en";
 export function localizePath(path: string, lang: Lang): string {
   const p = path === "" ? "/" : path;
   if (lang === "th" || !p.startsWith("/") || p.startsWith("//")) return p;
-  return p === "/" ? EN_PREFIX : `${EN_PREFIX}${p}`;
+  if (p === "/") return EN_PREFIX;
+  // A home-page anchor ("/#applications") → "/en#applications", not "/en/#…".
+  return p.startsWith("/#") ? `${EN_PREFIX}${p.slice(1)}` : `${EN_PREFIX}${p}`;
 }
 
 /**
