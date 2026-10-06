@@ -1,8 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Image from "next/image";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 
 /*
  * The prototype's three scroll effects, kept out of the server components:
@@ -14,9 +13,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
  *    also unveils from the bottom. Content already on screen is never
  *    hidden, and nothing is hidden without JS, so crawlers and no-JS
  *    visitors always see the full page.
- *  - <HeroArt>: the prototype's three copper pieces. They slide in (fade in
- *    on phones; see globals.css), then on desktop drift up and fade a little
- *    as you scroll past, float gently and tilt toward the pointer.
+ *  - <HeroVideo>: the hero's full-bleed copper video (see its own comment).
  */
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -83,19 +80,25 @@ export function Reveal() {
   return null;
 }
 
-/** The three cut-out pieces and where they sit on the 720 x 375 art board. */
-const PIECES = [
-  { key: "plate", src: "/images/design/plate.png", w: 95, h: 310, box: { left: "0%", top: "13.33%", width: "13.19%", height: "82.67%" }, fade: 73 },
-  { key: "block", src: "/images/design/block.png", w: 300, h: 375, box: { left: "12.5%", top: "0%", width: "41.67%", height: "100%" }, fade: 0 },
-  { key: "rod", src: "/images/design/rod.png", w: 330, h: 190, box: { left: "54.17%", top: "21.33%", width: "45.83%", height: "50.67%" }, fade: 147 },
-] as const;
-
-export function HeroArt({ alt, caption }: { alt: string; caption: string }) {
+/**
+ * Background layer of the home hero: a silent looping video of the copper
+ * plate, block and rod, cropped to fill the section. Phones get the 720p
+ * file, wider screens the 1080p one (both re-encoded from the prototype's
+ * 4K clip). On desktop with a fine pointer it pushes in, floats, follows the
+ * pointer a little and drifts down as you scroll; with reduced motion the
+ * video is paused on its first frame (the poster).
+ */
+export function HeroVideo({ alt }: { alt: string }) {
   const scroller = useRef<HTMLDivElement>(null);
   const tilt = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (reducedMotion() || !finePointer() || window.innerWidth < 980) return;
+    if (reducedMotion()) {
+      video.current?.pause();
+      return;
+    }
+    if (!finePointer() || window.innerWidth < 980) return;
     const host = scroller.current?.closest("section");
     let raf = 0;
     const onScroll = () => {
@@ -104,9 +107,8 @@ export function HeroArt({ alt, caption }: { alt: string; caption: string }) {
         raf = 0;
         const el = scroller.current;
         if (!el) return;
-        const k = Math.min(window.scrollY, 700);
-        el.style.transform = `translate3d(0,${(-k * 0.14).toFixed(1)}px,0)`;
-        el.style.opacity = (1 - (k / 700) * 0.35).toFixed(3);
+        const k = Math.min(window.scrollY, 900);
+        el.style.transform = `translate3d(0,${(k * 0.32).toFixed(1)}px,0) scale(${(1 + (k / 900) * 0.06).toFixed(4)})`;
       });
     };
     const onMove = (e: MouseEvent) => {
@@ -114,7 +116,7 @@ export function HeroArt({ alt, caption }: { alt: string; caption: string }) {
       const r = host.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
-      tilt.current.style.transform = `rotateY(${(x * 6).toFixed(2)}deg) rotateX(${(-y * 6).toFixed(2)}deg)`;
+      tilt.current.style.transform = `translate3d(${(-x * 18).toFixed(1)}px,${(-y * 10).toFixed(1)}px,0) rotateY(${(x * 6).toFixed(2)}deg) rotateX(${(-y * 4).toFixed(2)}deg)`;
     };
     const onLeave = () => {
       if (tilt.current) tilt.current.style.transform = "";
@@ -131,37 +133,31 @@ export function HeroArt({ alt, caption }: { alt: string; caption: string }) {
   }, []);
 
   return (
-    <div className="flex w-full flex-col items-center gap-7">
-      <div role="img" aria-label={alt} className="copper-art relative w-full max-w-[640px] [perspective:1400px]">
-        <div
-          aria-hidden
-          className="art-shadow absolute bottom-[-7%] left-[4%] right-[2%] h-[16%] bg-[radial-gradient(ellipse_at_center,rgba(10,23,51,.18),rgba(10,23,51,0)_68%)]"
-        />
-        <div ref={scroller} className="will-change-transform">
-          <div className="float">
-            <div
-              ref={tilt}
-              className="relative aspect-[720/375] transition-transform duration-700 ease-(--ease-out-soft) [transform-style:preserve-3d]"
-            >
-              {PIECES.map((p) => (
-                <div key={p.key} className={`piece ${p.key}`} style={p.box}>
-                  <Image
-                    src={p.src}
-                    width={p.w}
-                    height={p.h}
-                    alt=""
-                    draggable={false}
-                    priority
-                    sizes="(min-width: 980px) 300px, 45vw"
-                    style={{ "--fade-delay": `${p.fade}ms` } as CSSProperties}
-                  />
-                </div>
-              ))}
+    <div role="img" aria-label={alt} className="absolute inset-0 overflow-hidden [perspective:1600px]">
+      <div ref={scroller} className="absolute inset-0 will-change-transform">
+        <div className="float absolute inset-[-4%]">
+          <div ref={tilt} className="absolute inset-0 transition-transform duration-[900ms] ease-(--ease-out-soft)">
+            <div className="enter absolute inset-0">
+              <video
+                ref={video}
+                className="media"
+                poster="/images/design/hero-poster.webp"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-hidden
+                tabIndex={-1}
+                disablePictureInPicture
+              >
+                <source src="/videos/hero-720.mp4" type="video/mp4" media="(max-width: 979px)" />
+                <source src="/videos/hero-1080.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
       </div>
-      <p className="m-0 text-center font-mono text-[11px] tracking-[.28em] text-secondary">{caption}</p>
     </div>
   );
 }
