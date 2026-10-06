@@ -4,7 +4,7 @@ import { FaqList } from "@/components/FaqList";
 import { ArticleCards } from "@/components/ArticlePage";
 import { HeroArt } from "@/components/Motion";
 import { JsonLd, faqPageLd } from "@/components/JsonLd";
-import { Arrow, RfqBand, btnPrimary, h2Class, linkArrow, wrap, type HeroImage } from "@/components/ProductParts";
+import { Arrow, RfqBand, btnPrimary, linkArrow, wrap } from "@/components/ProductParts";
 import { articles } from "@/data/articles";
 import { company } from "@/data/company";
 import { industries } from "@/data/industries";
@@ -29,16 +29,6 @@ export const homeMeta: Record<Lang, { title: string; description: string }> = {
     title: "Materion Distributor Thailand: Copper Alloys",
     description:
       `VAN INTERTRADE (est. ${company.foundedYearCE}), a Materion distributor in Thailand: beryllium copper, MoldMAX and ToughMet for molds and industry, plus contacts and clad metal.`,
-  },
-};
-
-const heroImage: HeroImage = {
-  src: "/images/home-hero.webp",
-  width: 1024,
-  height: 768,
-  alt: {
-    th: "แท่งโลหะผสมทองแดงกลมหลายแท่งลอยอยู่บนพื้นหลังสีขาว",
-    en: "Several round copper alloy rods floating against a white background",
   },
 };
 
@@ -99,60 +89,63 @@ function homeFaqs(): Faq[] {
   ];
 }
 
-const why: { title: Bi; body: Bi }[] = [
+/*
+ * Copy below follows the Claude Design prototype ("VAN Intertrade",
+ * 2026-10-06). Its two headline categories are Beryllium Copper and Mold
+ * Materials (MoldMAX); the other product lines are listed under them so
+ * every family page is still one click from home.
+ */
+const L = {
+  h1: { th: ["ความแม่นยำ", "เริ่มที่วัสดุ"], en: ["Precision", "starts with material"] },
+  sub: { th: "ทองแดงอัลลอยและวัสดุแม่พิมพ์ สำหรับงานอุตสาหกรรม", en: "Copper alloys and mold materials for industrial work" },
+  heroAlt: { th: "แผ่น บล็อก และแท่งทองแดงอัลลอย", en: "Copper alloy plate, block and rod" },
+  choose: { th: ["เลือกวัสดุ", "ให้ตรงกับงาน"], en: ["Choose the material", "that fits the job"] },
+  chooseSub: {
+    th: "ทองแดงอัลลอยและวัสดุแม่พิมพ์ ที่ตอบโจทย์งานอุตสาหกรรมของคุณ",
+    en: "Copper alloys and mold materials for your industrial applications.",
+  },
+  more: { th: "โลหะผสมทองแดงอื่น ๆ", en: "More copper alloys" },
+} satisfies Record<string, Bi | { th: string[]; en: string[] }>;
+
+const featured: { slug: string; img: string; eyebrow: string; name: Bi; alt: Bi }[] = [
   {
-    title: { th: `ก่อตั้งเมื่อ พ.ศ. ${company.foundedYearBE}`, en: `Founded in ${company.foundedYearCE}` },
-    body: {
-      th: `${company.legalNameTh} ก่อตั้งในกรุงเทพฯ เมื่อ พ.ศ. ${company.foundedYearBE}`,
-      en: `${company.legalNameEn} was founded in Bangkok in ${company.foundedYearCE}.`,
-    },
+    slug: "beryllium-copper",
+    img: "/images/design/becu-rods.png",
+    eyebrow: "BERYLLIUM COPPER",
+    name: { th: "ทองแดงเบริลเลียม", en: "Beryllium Copper" },
+    alt: { th: "แท่งทองแดงเบริลเลียม", en: "Beryllium copper rods" },
   },
   {
-    title: { th: "ตัวแทนจำหน่าย Materion", en: "Materion distributor" },
-    body: {
-      th: "จำหน่าย Beryllium Copper, MoldMAX และ ToughMet ของ Materion ในประเทศไทย",
-      en: "Supplies Materion beryllium copper, MoldMAX and ToughMet in Thailand.",
-    },
-  },
-  {
-    title: { th: "ข้อมูลเทคนิคพร้อมแหล่งอ้างอิง", en: "Sourced technical data" },
-    body: {
-      th: "ทุกค่าทางเทคนิคบนเว็บไซต์นี้ลิงก์ไปยังแหล่งที่มาที่เผยแพร่ค่านั้น ค่าที่ไม่มีแหล่งอ้างอิงจะไม่ถูกเผยแพร่",
-      en: "Every property value on this site links to its published source; values without a source are not published.",
-    },
-  },
-  {
-    title: { th: "ราคาตามใบเสนอราคา", en: "Quoted per enquiry" },
-    body: {
-      th: "ราคาขึ้นกับเกรด รูปแบบ ขนาด และจำนวน แจ้งรายละเอียดแล้วทีมงานจะเสนอราคาให้",
-      en: "Prices depend on grade, form, size and quantity. Send the details and we will quote.",
-    },
+    slug: "moldmax",
+    img: "/images/design/mold-plate.png",
+    eyebrow: "MOLD MATERIALS",
+    name: { th: "วัสดุแม่พิมพ์", en: "Mold Materials" },
+    alt: { th: "แผ่นแม่พิมพ์ทองแดงที่ผ่านการกัดขึ้นรูป", en: "Machined copper mold plate" },
   },
 ];
 
-const choose = { th: ["เลือกวัสดุ", "ให้ตรงกับงาน"], en: ["Choose the material", "that fits the job"] };
-
 const strip: { t: Bi; s: Bi; href: string }[] = [
   {
+    t: { th: "วัสดุและเกรด", en: "Materials & grades" },
+    s: { th: "เลือกวัสดุที่เหมาะกับงานของคุณ", en: "Find the material for your job" },
+    href: "/#materials",
+  },
+  {
+    t: { th: "การใช้งาน", en: "Applications" },
+    s: { th: "แนวทางการใช้งานในอุตสาหกรรม", en: "Industrial use guidance" },
+    href: "/#applications",
+  },
+  {
     t: { th: "ความรู้ด้านวัสดุ", en: "Material knowledge" },
-    s: { th: "บทความและข้อมูลที่ควรรู้ก่อนเลือกเกรด", en: "Articles worth reading before you pick a grade" },
+    s: { th: "บทความและข้อมูลที่คุณควรรู้", en: "Articles worth reading" },
     href: "/knowledge",
-  },
-  {
-    t: { th: "เกี่ยวกับเรา", en: "About us" },
-    s: { th: `บริษัทในกรุงเทพฯ ตั้งแต่ พ.ศ. ${company.foundedYearBE}`, en: `A Bangkok company since ${company.foundedYearCE}` },
-    href: "/about",
-  },
-  {
-    t: { th: "ติดต่อเรา", en: "Contact" },
-    s: { th: "โทร LINE อีเมล หรือแบบฟอร์มขอราคา", en: "Phone, LINE, email or the quote form" },
-    href: "/contact",
   },
 ];
 
 export function HomePage({ lang }: { lang: Lang }) {
   const en = lang === "en";
   const faqs = homeFaqs();
+  const others = families.filter((f) => !featured.some((x) => x.slug === f.slug));
 
   return (
     <>
@@ -161,32 +154,23 @@ export function HomePage({ lang }: { lang: Lang }) {
         data={[faqPageLd(faqs.map((f) => ({ q: f.q[lang], a: f.a[lang] })))]}
       />
 
-      {/* Hero. The large display line is the prototype's tagline; the H1
-          under it keeps the page's search wording (homeMeta / SEO skill). */}
-      <section
-        aria-labelledby="hero-h"
-        className="overflow-hidden bg-[linear-gradient(180deg,#FFFFFF_0%,var(--color-tint-2)_100%)]"
-      >
+      {/* Hero */}
+      <section aria-labelledby="hero-h" className="overflow-hidden bg-[linear-gradient(180deg,#FFFFFF_0%,var(--color-tint-2)_100%)]">
         <div
           className={`${wrap} grid grid-cols-[repeat(auto-fit,minmax(min(100%,440px),1fr))] items-center gap-[clamp(36px,5vw,72px)] pb-[clamp(40px,5vw,64px)] pt-[clamp(40px,7vw,96px)]`}
         >
           <div className="flex flex-col gap-[22px]">
             <p className="eyebrow m-0 !tracking-[.32em]">VAN MATERIALS</p>
-            <p
-              aria-hidden
-              className="m-0 text-[clamp(48px,7vw,100px)] leading-[1.16] font-extrabold tracking-[-.01em] text-primary"
-            >
-              <span className="block">{en ? "Precision" : "ความแม่นยำ"}</span>
-              <span className="block">{en ? "starts with material" : "เริ่มที่วัสดุ"}</span>
-            </p>
             <h1
               id="hero-h"
-              className="m-0 max-w-[560px] text-[clamp(18px,1.7vw,22px)] leading-[1.6] font-medium text-secondary [text-wrap:pretty]"
+              className="m-0 text-[clamp(52px,6.6vw,96px)] leading-[1.16] font-extrabold tracking-[-.01em] text-primary"
             >
-              {en
-                ? "Materion Distributor in Thailand: Beryllium Copper, MoldMAX, ToughMet"
-                : "ตัวแทนจำหน่าย Materion ในประเทศไทย: Beryllium Copper, MoldMAX, ToughMet"}
+              <span className="block">{L.h1[lang][0]}</span>
+              <span className="block">{L.h1[lang][1]}</span>
             </h1>
+            <p className="m-0 max-w-[520px] text-[clamp(18px,1.7vw,22px)] leading-[1.6] text-secondary [text-wrap:pretty]">
+              {L.sub[lang]}
+            </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-7 gap-y-3.5">
               <LocaleLink href="/contact#rfq" className={btnPrimary}>
                 {en ? "Request a quote" : "ขอใบเสนอราคา"}
@@ -198,76 +182,80 @@ export function HomePage({ lang }: { lang: Lang }) {
               </a>
             </div>
           </div>
-          <HeroArt caption="COPPER ALLOYS · PRECISION MATERIALS">
-            <Image
-              src={heroImage.src}
-              width={heroImage.width}
-              height={heroImage.height}
-              alt={heroImage.alt[lang]}
-              fetchPriority="high"
-              loading="eager"
-              sizes="(min-width: 1024px) 600px, 100vw"
-              className="aspect-[4/3] w-full rounded-md object-cover"
-            />
-          </HeroArt>
+          <HeroArt alt={L.heroAlt[lang]} caption="COPPER ALLOYS · PRECISION MATERIALS" />
         </div>
       </section>
 
-      {/* Product lines */}
-      <section id="materials" aria-labelledby="choose-h" className="border-y border-line bg-tint">
+      {/* Choose the material */}
+      <section id="materials" aria-labelledby="choose-h" className="scroll-mt-20 border-y border-line bg-tint">
         <div
-          className={`${wrap} grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] items-start gap-x-[clamp(24px,3vw,40px)] gap-y-12 py-[clamp(48px,6vw,80px)]`}
+          className={`${wrap} grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] items-end gap-[clamp(28px,3vw,40px)] pt-[clamp(48px,6vw,80px)]`}
         >
           <div data-reveal="0" className="flex flex-col gap-[18px] self-center">
-            <h2 id="choose-h" className="m-0 text-[clamp(34px,3.8vw,52px)] leading-[1.2] font-extrabold text-primary">
-              <span className="block">{choose[lang][0]}</span>
-              <span className="block">{choose[lang][1]}</span>
+            <h2 id="choose-h" className="m-0 text-[clamp(36px,4.2vw,56px)] leading-[1.2] font-extrabold text-primary">
+              <span className="block">{L.choose[lang][0]}</span>
+              <span className="block">{L.choose[lang][1]}</span>
             </h2>
-            <p className="m-0 max-w-[380px] text-[18px] leading-[1.65] text-secondary">
-              {en
-                ? "Copper alloys and mold materials for molds, welding and electrical work."
-                : "โลหะผสมทองแดงและวัสดุแม่พิมพ์ สำหรับงานแม่พิมพ์ งานเชื่อม และงานไฟฟ้า"}
-            </p>
+            <p className="m-0 max-w-[380px] text-[18px] leading-[1.65] text-secondary [text-wrap:pretty]">{L.chooseSub[lang]}</p>
           </div>
-          {families.map((f, i) => (
+          {featured.map((c, i) => (
             <LocaleLink
-              key={f.slug}
-              href={`/${f.slug}`}
-              data-reveal={(i % 3) + 1}
-              className="zoom-card arrow-link flex flex-col gap-3.5 text-primary"
+              key={c.slug}
+              href={`/${c.slug}`}
+              data-reveal={i + 1}
+              className="zoom-card arrow-link flex flex-col gap-3.5 text-primary hover:text-primary"
             >
               <span className="reveal-frame block aspect-[314/191] overflow-hidden rounded-[4px] bg-[#E4E8EE]">
                 <Image
-                  src={f.image.src}
-                  width={f.image.width}
-                  height={f.image.height}
-                  alt={f.image.alt[lang]}
-                  sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
+                  src={c.img}
+                  width={314}
+                  height={191}
+                  alt={c.alt[lang]}
+                  sizes="(min-width: 1024px) 380px, 100vw"
                   className="zoom size-full object-cover"
                 />
               </span>
-              <span className="font-mono text-[11.5px] tracking-[.24em] uppercase">
-                {f.brand ? `${f.brand} · ${f.keyword}` : f.keyword}
+              <span className="font-mono text-[11.5px] tracking-[.24em]">{c.eyebrow}</span>
+              <span className="-mt-1.5 flex items-center gap-3.5 text-[22px] font-bold">
+                {c.name[lang]}
+                <span aria-hidden className="arrow text-accent">→</span>
               </span>
-              <span className="-mt-1.5 text-[21px] leading-snug font-bold">
-                {f.name[lang]}
-                <span aria-hidden className="arrow ml-3 text-accent">→</span>
-              </span>
-              <span className="-mt-1 text-[15px] leading-[1.6] text-secondary">{f.description[lang]}</span>
             </LocaleLink>
           ))}
+        </div>
+
+        <div className={`${wrap} pb-[clamp(48px,6vw,80px)] pt-12`}>
+          <p className="eyebrow m-0 mb-3">{L.more[lang]}</p>
+          <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-x-8 p-0">
+            {others.map((f, i) => (
+              <li key={f.slug} data-reveal={i % 3} className="border-t border-line-strong">
+                <LocaleLink
+                  href={`/${f.slug}`}
+                  className="arrow-link flex items-center justify-between gap-3 py-[18px] text-primary hover:text-primary"
+                >
+                  <span className="flex flex-col">
+                    <span className="text-[19px] font-bold">{f.name[lang]}</span>
+                    <span className="font-mono text-[12px] text-secondary">
+                      {f.brand ? `${f.brand} · ${f.keyword}` : f.keyword}
+                    </span>
+                  </span>
+                  <span aria-hidden className="arrow text-accent">→</span>
+                </LocaleLink>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* Quick links */}
-      <nav aria-label={en ? "Quick links" : "ลิงก์ด่วน"} className={`${wrap} py-[clamp(28px,3vw,40px)]`}>
+      <nav aria-label={en ? "Main navigation" : "เมนูหลัก"} className={`${wrap} py-[clamp(28px,3vw,40px)]`}>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] [clip-path:inset(0_0_0_1px)]">
           {strip.map((it, i) => (
             <LocaleLink
               key={it.href}
               href={it.href}
               data-reveal={i}
-              className="arrow-link flex items-center justify-between gap-4 border-l border-line px-[clamp(16px,2.6vw,36px)] py-5 text-primary"
+              className="arrow-link flex items-center justify-between gap-4 border-l border-line px-[clamp(16px,2.6vw,36px)] py-5 text-primary hover:text-primary"
             >
               <span className="flex flex-col gap-1">
                 <span className="text-[20px] font-bold">{it.t[lang]}</span>
@@ -279,20 +267,20 @@ export function HomePage({ lang }: { lang: Lang }) {
         </div>
       </nav>
 
-      {/* Industries */}
-      <section id="applications" aria-labelledby="industries-heading" className="border-t border-line">
+      {/* Applications */}
+      <section id="applications" aria-labelledby="apps-h" className="scroll-mt-20 border-t border-line">
         <div
           className={`${wrap} grid grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] gap-[clamp(28px,5vw,72px)] py-[clamp(56px,7vw,96px)]`}
         >
           <div data-reveal="0" className="flex flex-col gap-3.5">
-            <p className="eyebrow m-0">INDUSTRIES</p>
-            <h2 id="industries-heading" className={h2Class}>
-              {en ? "Industries we supply" : "อุตสาหกรรมที่เราจัดหาวัสดุให้"}
+            <p className="eyebrow m-0">APPLICATIONS</p>
+            <h2 id="apps-h" className="m-0 text-[clamp(32px,3.6vw,48px)] leading-[1.2] font-extrabold text-primary">
+              {en ? "Applications" : "การใช้งาน"}
             </h2>
-            <p className="m-0 max-w-[420px] text-[17px] leading-[1.65] text-secondary">
+            <p className="m-0 max-w-[420px] text-[17px] leading-[1.65] text-secondary [text-wrap:pretty]">
               {en
-                ? "Which alloys each industry uses, and why, with the grades to ask about."
-                : "แต่ละอุตสาหกรรมใช้โลหะผสมใด เพราะอะไร และควรสอบถามเกรดไหน"}
+                ? "Industries that use beryllium copper and mold materials, and the grades to ask about."
+                : "อุตสาหกรรมที่ใช้ทองแดงเบริลเลียมและวัสดุแม่พิมพ์ และเกรดที่ควรสอบถาม"}
             </p>
           </div>
           <ul className="m-0 list-none border-b border-line p-0">
@@ -300,10 +288,10 @@ export function HomePage({ lang }: { lang: Lang }) {
               <li key={ind.slug} data-reveal={i} className="border-t border-line">
                 <LocaleLink
                   href={`/industries/${ind.slug}`}
-                  className="arrow-link flex items-center justify-between gap-4 py-5 text-primary"
+                  className="arrow-link flex items-center justify-between gap-4 py-5 text-primary hover:text-primary"
                 >
                   <span className="text-[18px] font-semibold">{ind.name[lang]}</span>
-                  <span className="flex items-center gap-3 text-right text-[14px] text-secondary">
+                  <span className="flex items-center gap-3 whitespace-nowrap text-[14px] text-secondary">
                     <span className="hidden sm:inline">
                       {ind.fits
                         .slice(0, 2)
@@ -320,42 +308,55 @@ export function HomePage({ lang }: { lang: Lang }) {
         </div>
       </section>
 
-      {/* Who we are + FAQ */}
-      <section aria-labelledby="why-heading" className="border-y border-line bg-tint">
+      {/* Supplier + FAQ */}
+      <section aria-labelledby="seo-h" className="border-y border-line bg-tint">
         <div
           className={`${wrap} grid grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))] gap-[clamp(32px,5vw,72px)] py-[clamp(56px,7vw,96px)]`}
         >
           <div data-reveal="0" className="flex flex-col gap-5">
-            <p className="eyebrow m-0">MATERION DISTRIBUTOR THAILAND</p>
-            <h2 id="why-heading" className={`${h2Class} [text-wrap:balance]`}>
-              {en ? "Why VAN INTERTRADE" : "ทำไมต้อง แวน อินเตอร์เทรด"}
-            </h2>
-            <p className="m-0 text-[17px] leading-[1.75] text-body">
+            <p className="eyebrow m-0">BERYLLIUM COPPER SUPPLIER THAILAND</p>
+            <h2 id="seo-h" className="m-0 text-[clamp(30px,3.4vw,44px)] leading-[1.25] font-extrabold text-primary [text-wrap:balance]">
               {en
-                ? "VAN INTERTRADE is a Materion distributor in Thailand. We supply beryllium copper, MoldMAX mold alloys and ToughMet, along with chrome copper, clad metal, Longsun electrical contacts and standard copper alloys, for mold making and manufacturing. Prices are by quotation."
-                : "แวน อินเตอร์เทรด เป็นตัวแทนจำหน่าย Materion ในประเทศไทย จัดหา Beryllium Copper, MoldMAX สำหรับแม่พิมพ์ และ ToughMet รวมถึงทองแดงโครเมียม โลหะประกบ หน้าสัมผัสไฟฟ้า Longsun และโลหะผสมทองแดงมาตรฐาน สำหรับงานแม่พิมพ์และอุตสาหกรรมการผลิต ราคาตามใบเสนอราคา"}
+                ? "Beryllium copper (BeCu) supplier in Thailand"
+                : "ขาย Beryllium Copper (BeCu) สำหรับงานอุตสาหกรรมในประเทศไทย"}
+            </h2>
+            <p className="m-0 text-[17px] leading-[1.75] text-body [text-wrap:pretty]">
+              {en
+                ? "VAN INTERTRADE sells beryllium copper and copper alloy materials for molds and industrial components. Browse BeCu grades such as C17200 and C17510, then send your job details for a quotation."
+                : "แวน อินเตอร์เทรด ขาย Beryllium Copper และวัสดุทองแดงอัลลอยสำหรับงานแม่พิมพ์และชิ้นส่วนอุตสาหกรรม ดูเกรด BeCu เช่น C17200 และ C17510 แล้วส่งรายละเอียดงานเพื่อขอใบเสนอราคา"}
             </p>
-            <dl className="m-0 grid gap-x-8 sm:grid-cols-2">
-              {why.map((w) => (
-                <div key={w.title.en} className="border-t border-line-strong py-4">
-                  <dt className="text-[17px] font-bold text-primary">{w.title[lang]}</dt>
-                  <dd className="m-0 mt-1.5 text-[15px] leading-[1.65] text-body">{w.body[lang]}</dd>
-                </div>
-              ))}
-            </dl>
-            <LocaleLink href="/about" className={linkArrow}>
-              {en ? "About VAN INTERTRADE" : "เกี่ยวกับเรา"}
-              <Arrow />
-            </LocaleLink>
+            <p className="m-0 text-[17px] leading-[1.75] text-body [text-wrap:pretty]">
+              {en
+                ? "Beryllium copper price depends on grade, form, dimensions and quantity. We quote based on the details you send."
+                : "ราคา Beryllium Copper ขึ้นอยู่กับเกรด รูปทรง ขนาด และจำนวนที่ต้องการ ทีมงานจะเสนอราคาตามข้อมูลที่คุณส่งมา"}
+            </p>
+            <div className="flex flex-col gap-1.5 border-t border-line-strong pt-[18px]">
+              <h3 className="m-0 text-[18px] font-bold text-primary">{en ? "Materion distributor" : "ตัวแทนจำหน่าย Materion"}</h3>
+              <p className="m-0 text-[16px] leading-[1.7] text-body [text-wrap:pretty]">
+                {en
+                  ? `VAN INTERTRADE, a Bangkok company founded in ${company.foundedYearCE}, is a Materion distributor in Thailand for beryllium copper, MoldMAX and ToughMet. It also supplies chrome copper, clad metal, Longsun electrical contacts and standard copper alloys.`
+                  : `แวน อินเตอร์เทรด บริษัทในกรุงเทพฯ ก่อตั้งเมื่อ พ.ศ. ${company.foundedYearBE} เป็นตัวแทนจำหน่าย Materion ในประเทศไทย สำหรับ Beryllium Copper, MoldMAX และ ToughMet และยังจัดหาทองแดงโครเมียม โลหะประกบ หน้าสัมผัสไฟฟ้า Longsun และโลหะผสมทองแดงมาตรฐาน`}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-x-7 gap-y-2">
+              <LocaleLink href="/beryllium-copper" className={linkArrow}>
+                {en ? "View beryllium copper grades" : "ดูเกรดทองแดงเบริลเลียม"}
+                <Arrow />
+              </LocaleLink>
+              <LocaleLink href="/about" className={linkArrow}>
+                {en ? "About VAN INTERTRADE" : "เกี่ยวกับเรา"}
+                <Arrow />
+              </LocaleLink>
+            </div>
           </div>
-          <FaqList faqs={faqs} lang={lang} className="" />
+          <FaqList faqs={faqs} lang={lang} className="" heading={en ? "FAQ" : "คำถามที่พบบ่อย"} />
         </div>
       </section>
 
       {/* Knowledge */}
       <section aria-labelledby="art-h" className={`${wrap} pt-[clamp(56px,7vw,96px)]`}>
         <div data-reveal="0" className="flex flex-wrap items-end justify-between gap-5">
-          <h2 id="art-h" className={h2Class}>
+          <h2 id="art-h" className="m-0 text-[clamp(32px,3.6vw,48px)] leading-[1.2] font-extrabold text-primary">
             {en ? "Material knowledge" : "ความรู้ด้านวัสดุ"}
           </h2>
           <LocaleLink href="/knowledge" className={linkArrow}>
@@ -363,7 +364,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             <Arrow />
           </LocaleLink>
         </div>
-        <ArticleCards items={articles.slice(0, 4)} lang={lang} />
+        <ArticleCards items={articles.slice(0, 3)} lang={lang} />
       </section>
 
       <div className={`${wrap} pb-[clamp(56px,7vw,96px)]`}>
@@ -372,11 +373,7 @@ export function HomePage({ lang }: { lang: Lang }) {
           lang={lang}
           subject=""
           title={en ? "Ready for your next job" : "พร้อมสำหรับงานถัดไปของคุณ"}
-          body={
-            en
-              ? "Tell us the product, grade, form, size and quantity, and we will send a quotation."
-              : "แจ้งสินค้า เกรด รูปแบบ ขนาด และจำนวนที่ต้องการ แล้วเราจะส่งใบเสนอราคาให้"
-          }
+          body={en ? "Let us help you choose the right material." : "ให้เราช่วยแนะนำวัสดุที่เหมาะสมกับงานของคุณ"}
         />
       </div>
     </>

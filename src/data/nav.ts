@@ -86,30 +86,34 @@ export const industryLinks: NavLink[] = INDUSTRY_NAV_SLUGS.map((slug) => ({
   labelEn: industryLabels[slug].en,
 }));
 
+/**
+ * Top nav, worded as in the Claude Design prototype: Materials (the product
+ * lines), Applications (the home page's industry list), Knowledge, Contact.
+ * Industry pages and About are reached from the home page and the footer.
+ */
 export const mainNav: NavGroup[] = [
-  { label: "สินค้า", labelEn: "Products", children: productLinks },
-  { label: "อุตสาหกรรม", labelEn: "Industries", children: industryLinks },
-  { label: "คลังความรู้", labelEn: "Knowledge", href: "/knowledge" },
-  { label: "เกี่ยวกับเรา", labelEn: "About", href: "/about" },
+  { label: "วัสดุ", labelEn: "Materials", children: productLinks },
+  { label: "การใช้งาน", labelEn: "Applications", href: "/#applications" },
+  { label: "ความรู้", labelEn: "Knowledge", href: "/knowledge" },
   { label: "ติดต่อเรา", labelEn: "Contact", href: "/contact" },
 ];
 
 export const footerGroups: { title: string; titleEn: string; links: NavLink[] }[] = [
   {
-    title: "สินค้า",
-    titleEn: "Products",
+    title: "วัสดุ",
+    titleEn: "Materials",
     links: productLinks,
   },
   {
-    title: "อุตสาหกรรม",
-    titleEn: "Industries",
+    title: "การใช้งาน",
+    titleEn: "Applications",
     links: industryLinks,
   },
   {
     title: "บริษัท",
     titleEn: "Company",
     links: [
-      { href: "/knowledge", label: "คลังความรู้", labelEn: "Knowledge" },
+      { href: "/knowledge", label: "ความรู้ด้านวัสดุ", labelEn: "Material knowledge" },
       { href: "/about", label: "เกี่ยวกับเรา", labelEn: "About" },
       { href: "/contact", label: "ติดต่อเรา", labelEn: "Contact" },
     ],
