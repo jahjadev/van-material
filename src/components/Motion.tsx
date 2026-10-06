@@ -93,8 +93,11 @@ const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 
  *   0.50–0.66  the wash returns and `statement` fades in
  *   0.86–1.00  the statement fades out as the next section arrives
  *
- * The video has a keyframe every 4 frames so seeking stays smooth, and the
- * shown time eases toward the scroll target instead of jumping. With
+ * Two cuts of the 4K source, both with a keyframe every 8 frames so seeking
+ * stays smooth: 2560x1440 for landscape screens, and a 1080x1920 portrait
+ * crop for phones (a phone shows only a narrow slice of a landscape frame,
+ * which would otherwise be blown up ~3x). The shown time eases toward the
+ * scroll target instead of jumping. With
  * reduced motion the section is one screen tall, nothing is pinned or
  * animated, and the poster (the first frame) is shown.
  */
@@ -220,8 +223,8 @@ export function HeroScroll({
               tabIndex={-1}
               disablePictureInPicture
             >
-              <source src="/videos/hero-scrub-720.mp4" type="video/mp4" media="(max-width: 979px)" />
-              <source src="/videos/hero-scrub-1080.mp4" type="video/mp4" />
+              <source src="/videos/hero-portrait.mp4" type="video/mp4" media="(orientation: portrait)" />
+              <source src="/videos/hero-1440.mp4" type="video/mp4" />
             </video>
             </div>
           </div>
