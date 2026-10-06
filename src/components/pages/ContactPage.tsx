@@ -63,7 +63,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <div className="grid gap-8 md:grid-cols-2">
           <section aria-labelledby="nap-heading" className="min-w-0">
-            <h2 id="nap-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="nap-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? company.legalNameEn : company.legalNameTh}
             </h2>
             <dl className="mt-5 divide-y divide-line border-y border-line">
@@ -98,7 +98,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
           </section>
 
           <section aria-labelledby="map-heading" className="min-w-0">
-            <h2 id="map-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="map-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? "Map" : "แผนที่"}
             </h2>
             <ClickToLoadMap
@@ -123,7 +123,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
         </div>
 
         <section id="rfq" aria-labelledby="rfq-heading" className="mt-16 scroll-mt-24">
-          <h2 id="rfq-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+          <h2 id="rfq-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
             {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </h2>
           <div className="mt-5">

@@ -22,7 +22,7 @@ export function FaqList({
   if (faqs.length === 0) return null;
   return (
     <section aria-labelledby="faq-heading" data-reveal="0" className={`faq ${className}`}>
-      <h2 id="faq-heading" className="m-0 mb-3 text-[clamp(24px,2.6vw,30px)] font-extrabold text-primary">
+      <h2 id="faq-heading" className="m-0 mb-3 text-[clamp(24px,2.6vw,30px)] font-semibold text-primary">
         {heading ?? (lang === "en" ? "Frequently asked questions" : "คำถามที่พบบ่อย")}
       </h2>
       <div className="max-w-3xl border-b border-line-strong">

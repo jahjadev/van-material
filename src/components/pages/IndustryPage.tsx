@@ -57,7 +57,7 @@ export function IndustryPage({ industry: ind, lang }: { industry: Industry; lang
         <div className="max-w-3xl space-y-12">
           {ind.sections.map((s) => (
             <section key={s.heading.en}>
-              <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">{s.heading[lang]}</h2>
+              <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">{s.heading[lang]}</h2>
               <div className="mt-4 space-y-4 leading-relaxed text-secondary">
                 {s.paras.map((p) => (
                   <p key={p.en}>{p[lang]}</p>
@@ -73,7 +73,7 @@ export function IndustryPage({ industry: ind, lang }: { industry: Industry; lang
         </div>
 
         <section aria-labelledby="fits-heading" data-reveal="0" className="mt-16">
-          <h2 id="fits-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+          <h2 id="fits-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
             {en ? `Materials for ${ind.name.en.toLowerCase()}` : `วัสดุสำหรับงาน${ind.name.th}`}
           </h2>
           <ul className="mt-5 grid gap-4 md:grid-cols-2">

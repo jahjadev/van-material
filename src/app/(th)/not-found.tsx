@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function ThaiNotFound() {
   return (
     <div className="mx-auto flex max-w-[880px] flex-col items-start gap-[18px] px-[clamp(20px,4vw,48px)] py-[120px]">
-      <h1 className="m-0 text-[48px] font-extrabold text-primary">ไม่พบหน้านี้</h1>
+      <h1 className="m-0 text-[48px] font-semibold text-primary">ไม่พบหน้านี้</h1>
       <p className="m-0 text-[17px] text-secondary">
         ขออภัย ไม่พบหน้าที่คุณค้นหา กรุณาตรวจสอบลิงก์ หรือกลับไปหน้าแรก
       </p>

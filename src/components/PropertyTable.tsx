@@ -43,18 +43,18 @@ export function PropertyTable({
 
   return (
     <section aria-labelledby="properties-heading" data-reveal="0" className="mt-16">
-      <h2 id="properties-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+      <h2 id="properties-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
         {heading[lang]}
       </h2>
       {note && <p className="mt-2 max-w-3xl text-sm text-secondary">{note[lang]}</p>}
       <div className="mt-5 overflow-x-auto">
         <table className="w-full min-w-[560px] border-collapse text-left text-[15px]">
-          <thead className="font-mono text-[11.5px] tracking-[.14em] uppercase text-secondary">
+          <thead className="text-[12px] font-semibold text-secondary">
             <tr>
-              {withGrade && <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Grade" : "เกรด"}</th>}
-              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Property" : "คุณสมบัติ"}</th>
-              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Value" : "ค่า"}</th>
-              <th scope="col" className="border-b border-primary px-3 py-3 font-medium">{en ? "Source" : "แหล่งข้อมูล"}</th>
+              {withGrade && <th scope="col" className="border-b border-line px-3 py-3 font-medium">{en ? "Grade" : "เกรด"}</th>}
+              <th scope="col" className="border-b border-line px-3 py-3 font-medium">{en ? "Property" : "คุณสมบัติ"}</th>
+              <th scope="col" className="border-b border-line px-3 py-3 font-medium">{en ? "Value" : "ค่า"}</th>
+              <th scope="col" className="border-b border-line px-3 py-3 font-medium">{en ? "Source" : "แหล่งข้อมูล"}</th>
             </tr>
           </thead>
           <tbody>
@@ -70,12 +70,12 @@ export function PropertyTable({
                   {r.prop.value}
                   {r.prop.unit ? ` ${r.prop.unit}` : ""}
                 </td>
-                <td className="px-3 py-4 font-mono text-[13px]">
+                <td className="px-3 py-4 text-[14px]">
                   <a
                     href={r.prop.source}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent underline underline-offset-2 hover:text-accent-hover"
+                    className="text-link hover:underline"
                   >
                     {sourceLabel(r.prop.source)}
                   </a>

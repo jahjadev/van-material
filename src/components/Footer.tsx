@@ -1,88 +1,87 @@
 import { LocaleLink } from "@/components/LocaleLink";
-import { Wordmark } from "@/components/Logo";
 import { footerGroups } from "@/data/nav";
 import { company } from "@/data/company";
 import type { Lang } from "@/lib/locale";
 
 /**
- * Plain server component: `lang` is passed down from whichever route-group
- * root layout rendered — no interactivity here, so no client context read
- * (see ruling #6).
+ * apple.com-style footer: light grey, 12px type, a short note, link columns,
+ * then the legal line. Plain server component: `lang` is passed down from
+ * whichever route-group root layout rendered — no interactivity here, so no
+ * client context read (see ruling #6).
  */
 export function Footer({ lang }: { lang: Lang }) {
   const { contact } = company;
   const en = lang === "en";
   const year = new Date().getFullYear();
-  const heading = "m-0 mb-1 font-mono text-[11.5px] font-medium tracking-[.22em] uppercase text-secondary";
+  const link = "text-secondary hover:text-primary hover:underline";
 
   return (
-    <footer id="site-footer" className="border-t border-line bg-footer">
-      <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-9 px-[clamp(20px,4vw,48px)] pb-7 pt-14">
-        <div className="flex flex-col gap-3.5">
-          <Wordmark size="sm" />
-          <p className="m-0 max-w-[280px] text-[14.5px] leading-[1.65] text-secondary">
-            {en
-              ? `${company.legalNameEn}: copper alloys and mold materials for Thai industry. Founded in ${company.foundedYearCE}.`
-              : `${company.legalNameTh} ผู้จัดจำหน่ายโลหะผสมทองแดงและวัสดุแม่พิมพ์ สำหรับอุตสาหกรรมไทย ก่อตั้งเมื่อ พ.ศ. ${company.foundedYearBE}`}
-          </p>
-          <address className="flex flex-col gap-2 font-mono text-[13px] not-italic leading-relaxed text-body">
-            <span>{en ? contact.addressEn : contact.addressTh}</span>
-            <span className="flex flex-wrap gap-x-2">
-              <a href={`tel:${contact.tels[0]}`} className="hover:text-accent">
+    <footer id="site-footer" className="bg-footer text-[12px] leading-[1.5] text-secondary">
+      <div className="mx-auto max-w-[1024px] px-[22px] pb-5 pt-[17px]">
+        <p className="m-0 border-b border-line pb-4">
+          {en
+            ? `${company.legalNameEn} is a Materion distributor in Thailand, founded in Bangkok in ${company.foundedYearCE}. Property values on this site link to their published sources; prices are quoted per enquiry.`
+            : `${company.legalNameTh} ตัวแทนจำหน่าย Materion ในประเทศไทย ก่อตั้งในกรุงเทพฯ เมื่อ พ.ศ. ${company.foundedYearBE} ค่าทางเทคนิคบนเว็บไซต์นี้ลิงก์ไปยังแหล่งที่มาที่เผยแพร่ และราคาเสนอตามใบเสนอราคาแต่ละครั้ง`}
+        </p>
+
+        <div className="grid grid-cols-2 gap-x-6 gap-y-6 pt-5 md:grid-cols-4">
+          {footerGroups.map((group) => (
+            <nav key={group.titleEn} aria-label={en ? group.titleEn : group.title}>
+              <h2 className="m-0 mb-2.5 text-[12px] font-semibold text-primary">{en ? group.titleEn : group.title}</h2>
+              <ul className="m-0 flex list-none flex-col gap-2 p-0">
+                {group.links.map((l) => (
+                  <li key={l.href}>
+                    <LocaleLink href={l.href} className={link}>
+                      {en ? l.labelEn : l.label}
+                    </LocaleLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+          <div>
+            <h2 className="m-0 mb-2.5 text-[12px] font-semibold text-primary">{en ? "Contact" : "ติดต่อ"}</h2>
+            <address className="flex flex-col gap-2 not-italic">
+              <span>{en ? contact.addressEn : contact.addressTh}</span>
+              <a href={`tel:${contact.tels[0]}`} className={link}>
                 {contact.telsDisplay[0]}
               </a>
-              <span aria-hidden>·</span>
-              <a href={`tel:${contact.tels[1]}`} className="hover:text-accent">
+              <a href={`tel:${contact.tels[1]}`} className={link}>
                 {contact.telsDisplay[1]}
               </a>
-            </span>
-            <a href={`mailto:${contact.email}`} className="hover:text-accent">
-              {contact.email}
-            </a>
-            <a href={contact.lineUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
-              LINE {contact.lineId}
-            </a>
-          </address>
+              <a href={`mailto:${contact.email}`} className={link}>
+                {contact.email}
+              </a>
+              <a href={contact.lineUrl} target="_blank" rel="noopener noreferrer" className={link}>
+                LINE {contact.lineId}
+              </a>
+              <span>{en ? contact.hoursEn : contact.hoursTh}</span>
+            </address>
+          </div>
         </div>
 
-        {footerGroups.map((group) => (
-          <nav key={group.titleEn} aria-label={en ? group.titleEn : group.title} className="flex flex-col gap-2.5">
-            <h2 className={heading}>{en ? group.titleEn : group.title}</h2>
-            {group.links.map((l) => (
-              <LocaleLink key={l.href} href={l.href} className="text-[15px] text-primary hover:text-accent">
-                {en ? l.labelEn : l.label}
-              </LocaleLink>
-            ))}
-            {group.titleEn === "Company" && (
-              <LocaleLink
-                href="/contact#rfq"
-                className="arrow-link mt-1.5 inline-flex gap-2 text-[15px] font-semibold text-accent hover:text-accent-hover"
-              >
-                {en ? "Request a quote" : "ขอใบเสนอราคา"}
-                <span aria-hidden className="arrow">→</span>
-              </LocaleLink>
-            )}
-          </nav>
-        ))}
-      </div>
-
-      <div className="mx-auto flex max-w-[1240px] flex-col items-center gap-3.5 px-[clamp(20px,4vw,48px)] pb-8 pt-5">
-        <div className="flex w-full max-w-[240px] items-center gap-4">
-          <span className="h-px flex-1 bg-[#C9D0DB]" />
-          <span className="whitespace-nowrap font-mono text-[10.5px] tracking-[.28em] text-secondary">VAN INTERTRADE</span>
-          <span className="h-px flex-1 bg-[#C9D0DB]" />
-        </div>
-        <p className="m-0 max-w-[720px] text-center text-[12.5px] leading-relaxed text-muted">
-          © {year} {company.legalNameEn}. {en ? "All rights reserved." : "สงวนลิขสิทธิ์"} ·{" "}
-          {en ? contact.hoursEn : contact.hoursTh} ·{" "}
-          <LocaleLink href="/privacy" className="underline underline-offset-2 hover:text-accent">
-            {en ? "Privacy notice" : "นโยบายความเป็นส่วนตัว"}
+        <p className="m-0 mt-8 border-t border-line pt-4">
+          {en ? "Need a price? " : "ต้องการราคา? "}
+          <LocaleLink href="/contact#rfq" className="text-link hover:underline">
+            {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </LocaleLink>{" "}
-          ·{" "}
-          <a href={company.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-accent">
-            {en ? "VAN INTERTRADE audio-visual systems (vaninter.com)" : "VAN INTERTRADE ระบบเสียงและภาพ (vaninter.com)"}
-          </a>
+          {en ? `or call ${contact.telsDisplay[0]}.` : `หรือโทร ${contact.telsDisplay[0]}`}
         </p>
+
+        <div className="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <p className="m-0">
+            Copyright © {year} {company.legalNameEn}. {en ? "All rights reserved." : "สงวนลิขสิทธิ์"}
+          </p>
+          <p className="m-0 flex flex-wrap items-center gap-x-3">
+            <LocaleLink href="/privacy" className={link}>
+              {en ? "Privacy notice" : "นโยบายความเป็นส่วนตัว"}
+            </LocaleLink>
+            <span aria-hidden className="text-line">|</span>
+            <a href={company.url} target="_blank" rel="noopener noreferrer" className={link}>
+              {en ? "VAN INTERTRADE audio-visual (vaninter.com)" : "VAN INTERTRADE ระบบเสียงและภาพ (vaninter.com)"}
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

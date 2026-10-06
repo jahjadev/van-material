@@ -1,27 +1,30 @@
 @import "tailwindcss";
 
 /*
- * Light theme only. Palette and type follow the "VAN Intertrade" Claude
- * Design prototype (2026-10-06): deep navy ink, one electric-blue accent,
- * cool grey surfaces, Noto Sans Thai for text and IBM Plex Mono for the
- * small uppercase labels. Copper comes from the photography, not the UI.
+ * Light theme only, in the style of apple.com: near-black text (#1d1d1f),
+ * grey secondary text, light grey tiles (#f5f5f7) between white sections,
+ * one blue for buttons (#0071e3) and links (#0066cc). Copper comes from the
+ * photography and the small eyebrow labels, not from the UI chrome.
  */
 :root {
-  --color-primary: #0a1733; /* ink */
-  --color-secondary: #556079; /* muted text */
-  --color-body: #3e485c; /* long-form body text */
-  --color-muted: #8a93a6;
-  --color-accent: #1446f0;
-  --color-accent-hover: #0e36c8;
-  --color-accent-tint: #f4f7ff;
+  --color-primary: #1d1d1f; /* text */
+  --color-secondary: #6e6e73; /* secondary text */
+  --color-body: #1d1d1f; /* long-form body text */
+  --color-muted: #86868b;
+  --color-accent: #0071e3; /* buttons */
+  --color-accent-hover: #0077ed;
+  --color-accent-tint: #f5f5f7;
+  --color-link: #0066cc;
+  --color-copper: #b4532a; /* eyebrow labels */
   --color-background: #ffffff;
   --color-surface: #ffffff;
-  --color-tint: #f0f3f7; /* banded sections */
-  --color-tint-2: #f4f6fa; /* hero gradient end */
-  --color-footer: #fafbfd;
-  --color-line: #e1e5ec;
-  --color-line-strong: #d5dbe4;
-  --color-danger: #b42318;
+  --color-tint: #f5f5f7; /* tiles and banded sections */
+  --color-tint-2: #fbfbfd;
+  --color-footer: #f5f5f7;
+  --color-line: #d2d2d7;
+  --color-line-strong: #d2d2d7;
+  --color-danger: #e30000;
+  --nav-h: 48px;
 }
 
 @theme inline {
@@ -32,6 +35,8 @@
   --color-accent: var(--color-accent);
   --color-accent-hover: var(--color-accent-hover);
   --color-accent-tint: var(--color-accent-tint);
+  --color-link: var(--color-link);
+  --color-copper: var(--color-copper);
   --color-background: var(--color-background);
   --color-surface: var(--color-surface);
   --color-tint: var(--color-tint);
@@ -41,20 +46,22 @@
   --color-line-strong: var(--color-line-strong);
   --color-danger: var(--color-danger);
 
-  --font-sans: var(--font-thai), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  /* SF Pro / SF Thai on Apple devices, Noto Sans Thai everywhere else. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", var(--font-thai),
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 html {
   color-scheme: light;
-  scroll-padding-top: 88px;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
 }
 
 body {
   background: var(--color-background);
   color: var(--color-primary);
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -65,13 +72,12 @@ body {
   border-radius: 6px;
 }
 
-/* Small uppercase mono label used above headings ("VAN MATERIALS"). */
+/* Small copper label above headings, like apple.com's "New". */
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--color-copper);
 }
 
 /* Arrow that nudges right when its link is hovered or focused. */
@@ -124,39 +130,15 @@ body {
 }
 
 /*
- * Full-bleed hero video (Claude Design "VAN Intertrade v2"). The text sits
- * on a white wash: left-to-right on desktop, bottom-up on phones, where the
- * text moves to the bottom of the hero. Phones and touch screens get a
- * short fade-in; a desktop with a fine pointer gets the slow push-in. The
- * scroll-driven part is in <HeroScroll>. Reduced motion turns all of it off.
+ * Home hero video frame (<HeroScroll>): a short fade-in on phones and touch
+ * screens, the slow push-in on a desktop with a fine pointer. Reduced
+ * motion turns both off (rule below).
  */
-.hero-video .media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 58% 22%;
-  display: block;
-}
-.hero-video .enter {
+.enter {
   animation: van-fade 900ms var(--ease-out-soft) both;
 }
-.hero-video .wash {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.88) 46%, #ffffff 60%);
-}
-.hero-video .content {
-  justify-content: flex-end;
-}
-@media (min-width: 980px) {
-  .hero-video .media { object-position: 68% 50%; }
-  .hero-video .wash {
-    background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 30%, rgba(255, 255, 255, 0.55) 46%, rgba(255, 255, 255, 0) 62%);
-  }
-  .hero-video .content { justify-content: center; }
-}
 @media (hover: hover) and (pointer: fine) and (min-width: 980px) {
-  .hero-video .enter { animation: van-push 2600ms var(--ease-out-soft) both; }
+  .enter { animation: van-push 2200ms var(--ease-out-soft) both; }
 }
 
 /* FAQ disclosure marker. */

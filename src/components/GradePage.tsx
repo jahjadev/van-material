@@ -73,7 +73,7 @@ export function GradePage({
         <FormsAndApplications forms={grade.forms} applications={grade.applications} lang={lang} />
 
         <section aria-labelledby="related-heading" data-reveal="0" className="mt-16">
-          <h2 id="related-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+          <h2 id="related-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
             {en ? `Other ${family.keyword} grades` : `เกรด ${family.keyword} อื่น ๆ`}
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2.5">

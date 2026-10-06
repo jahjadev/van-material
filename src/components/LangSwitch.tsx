@@ -34,7 +34,7 @@ export function LangSwitch({ className }: { className?: string }) {
 
   return (
     <div
-      className={cn("flex items-center gap-1.5 font-mono text-[12px] tracking-[.08em]", className)}
+      className={cn("flex items-center gap-1.5 text-[12px]", className)}
       role="group"
       aria-label={lang === "en" ? "Change language" : "เปลี่ยนภาษา"}
     >
