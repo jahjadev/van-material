@@ -11,7 +11,7 @@ import { SITE_URL } from "./site";
  * that re-exports it. The layout, palette, and font loading live here so
  * the cards stay one visual system instead of dozens of diverging copies.
  * Modelled on `VAN/src/lib/ogCard.tsx` (sibling production site), recoloured
- * to this site's copper accent (see `src/app/globals.css`).
+ * to this site's navy and blue palette (see `src/app/globals.css`).
  *
  * FONTS — the reason a TTF is committed to the repo. `next/og` (Satori) only
  * embeds glyphs from fonts you hand it, and its bundled default (Geist) is
@@ -25,9 +25,9 @@ import { SITE_URL } from "./site";
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 
-// Brand tokens, mirroring src/app/globals.css's --color-accent / --color-near-black.
-const ACCENT = "#a6530f";
-const INK = "#1c1a18";
+// Brand tokens, mirroring src/app/globals.css's --color-accent / --color-primary.
+const ACCENT = "#1446f0";
+const INK = "#0a1733";
 const TEXT = "#ffffff";
 const TEXT_DIM = "#ededed";
 const META = "#a6a6ab";

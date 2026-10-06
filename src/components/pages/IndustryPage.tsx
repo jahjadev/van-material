@@ -50,14 +50,14 @@ export function IndustryPage({ industry: ind, lang }: { industry: Industry; lang
         rfqHref={rfqHref}
         image={ind.image}
       >
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">{ind.summary[lang]}</p>
+        <p>{ind.summary[lang]}</p>
       </PageHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <div className="max-w-3xl space-y-12">
           {ind.sections.map((s) => (
             <section key={s.heading.en}>
-              <h2 className="text-xl font-bold text-primary md:text-2xl">{s.heading[lang]}</h2>
+              <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">{s.heading[lang]}</h2>
               <div className="mt-4 space-y-4 leading-relaxed text-secondary">
                 {s.paras.map((p) => (
                   <p key={p.en}>{p[lang]}</p>
@@ -72,15 +72,15 @@ export function IndustryPage({ industry: ind, lang }: { industry: Industry; lang
           ))}
         </div>
 
-        <section aria-labelledby="fits-heading" className="mt-14">
-          <h2 id="fits-heading" className="text-xl font-bold text-primary md:text-2xl">
+        <section aria-labelledby="fits-heading" data-reveal="0" className="mt-16">
+          <h2 id="fits-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
             {en ? `Materials for ${ind.name.en.toLowerCase()}` : `วัสดุสำหรับงาน${ind.name.th}`}
           </h2>
           <ul className="mt-5 grid gap-4 md:grid-cols-2">
             {ind.fits.map((fit) => {
               const fam = getFamily(fit.family)!;
               return (
-                <li key={fit.family} className="flex flex-col rounded-xl border border-line bg-surface p-5">
+                <li key={fit.family} className="flex flex-col border-t border-line-strong pt-5 pb-2">
                   <LocaleLink
                     href={`/${fam.slug}`}
                     className="inline-flex items-center gap-1.5 text-lg font-bold text-primary hover:text-accent"

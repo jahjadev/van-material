@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
 import { PropertyTable } from "@/components/PropertyTable";
@@ -100,12 +99,12 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         h1={family.h1[lang]}
         rfqHref={rfqHref}
       >
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">{family.summary[lang]}</p>
+        <p>{family.summary[lang]}</p>
       </ProductHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         {family.body.length > 0 && (
-          <div className="max-w-3xl space-y-4 leading-relaxed text-secondary">
+          <div className="max-w-3xl space-y-4 text-[17px] leading-[1.75] text-body">
             {family.body.map((p) => (
               <p key={p.en}>{p[lang]}</p>
             ))}
@@ -113,25 +112,29 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         )}
 
         {family.grades.length > 0 && (
-          <section aria-labelledby="grades-heading" className="mt-14">
-            <h2 id="grades-heading" className="text-xl font-bold text-primary md:text-2xl">
+          <section aria-labelledby="grades-heading" data-reveal="0" className="mt-16">
+            <h2 id="grades-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? `${family.keyword} grades` : `เกรด ${family.keyword}`}
             </h2>
-            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-              {family.grades.map((g) => (
-                <li key={g.slug}>
+            <ul className="mt-5 border-b border-line">
+              {family.grades.map((g, i) => (
+                <li key={g.slug} data-reveal={i} className="border-t border-line">
                   <LocaleLink
                     href={`/${family.slug}/${g.slug}`}
-                    className="group flex h-full flex-col rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
+                    aria-label={en ? `View ${g.code}` : `ดู ${g.code}`}
+                    className="arrow-link grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-2 py-6 text-primary md:grid-cols-[minmax(140px,220px)_minmax(0,1fr)_auto]"
                   >
-                    <span className="text-lg font-bold text-primary group-hover:text-accent">{g.code}</span>
-                    {g.aliases.length > 0 && (
-                      <span className="mt-0.5 text-[13px] text-secondary">{g.aliases.slice(0, 2).join(" · ")}</span>
-                    )}
-                    <span className="mt-3 leading-relaxed text-secondary">{g.tagline[lang]}</span>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-                      {en ? `View ${g.code}` : `ดู ${g.code}`}
-                      <ArrowRight className="size-4" aria-hidden />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="text-[24px] font-extrabold">{g.code}</span>
+                      {g.aliases.length > 0 && (
+                        <span className="font-mono text-[12.5px] text-secondary">{g.aliases.slice(0, 2).join(" · ")}</span>
+                      )}
+                    </span>
+                    <span className="col-start-1 row-start-2 text-[16px] leading-[1.6] text-body md:col-start-2 md:row-start-1">
+                      {g.tagline[lang]}
+                    </span>
+                    <span aria-hidden className="arrow col-start-2 row-span-2 row-start-1 text-[22px] text-accent md:col-start-3 md:row-span-1">
+                      →
                     </span>
                   </LocaleLink>
                 </li>
@@ -141,13 +144,13 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         )}
 
         {family.variants.length > 0 && (
-          <section aria-labelledby="variants-heading" className="mt-14">
-            <h2 id="variants-heading" className="text-xl font-bold text-primary md:text-2xl">
+          <section aria-labelledby="variants-heading" data-reveal="0" className="mt-16">
+            <h2 id="variants-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? "Types and materials" : "ชนิดและวัสดุ"}
             </h2>
             <dl className="mt-5 grid gap-4 sm:grid-cols-2">
               {family.variants.map((v) => (
-                <div key={v.name.en} className="rounded-xl border border-line bg-surface p-5">
+                <div key={v.name.en} className="border-t border-line-strong pt-5 pb-2">
                   <dt className="font-semibold text-primary">{v.name[lang]}</dt>
                   <dd className="mt-2 leading-relaxed text-secondary">{v.desc[lang]}</dd>
                 </div>
@@ -169,8 +172,8 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
         <FormsAndApplications forms={family.forms} applications={family.applications} lang={lang} />
 
         {family.industries.length > 0 && (
-          <section aria-labelledby="industries-heading" className="mt-14">
-            <h2 id="industries-heading" className="text-xl font-bold text-primary md:text-2xl">
+          <section aria-labelledby="industries-heading" data-reveal="0" className="mt-16">
+            <h2 id="industries-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? "Industries" : "อุตสาหกรรมที่ใช้"}
             </h2>
             <ul className="mt-4 flex flex-wrap gap-2.5">

@@ -13,7 +13,7 @@ import { LocaleLink } from "@/components/LocaleLink";
 import type { Lang } from "@/lib/locale";
 
 const fieldBase =
-  "w-full rounded-md border border-line bg-surface px-4 py-3 text-[15px] text-primary placeholder:text-secondary/70 focus-visible:border-accent focus-visible:outline-none";
+  "w-full min-h-[50px] rounded-[10px] border border-line-strong bg-white px-3.5 py-3 text-[16px] text-primary outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted focus-visible:border-accent focus-visible:shadow-[0_0_0_3px_rgba(20,70,240,.15)] focus-visible:outline-none aria-[invalid=true]:border-danger";
 
 type Status = "idle" | "sending" | "ok" | "undelivered" | "rateLimited";
 
@@ -42,7 +42,7 @@ function Label({
   required?: boolean;
 }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-primary">
+    <label htmlFor={htmlFor} className="mb-2 block text-[14px] font-semibold text-primary">
       {children}
       {required && <span className="text-accent"> *</span>}
     </label>
@@ -52,7 +52,7 @@ function Label({
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
-    <p id={id} className="mt-1 text-[13px] text-accent">
+    <p id={id} className="mt-1.5 text-[13.5px] text-danger">
       {message}
     </p>
   );
@@ -106,13 +106,13 @@ function SuccessPanel({
   const en = lang === "en";
   const c = company.contact;
   return (
-    <div className="rounded-2xl border border-line bg-surface p-6 text-center md:p-8">
+    <div className="border-t border-line pt-7 text-center">
       <CheckCircle2 className="mx-auto size-10 text-accent" aria-hidden />
       {/* tabIndex=-1 lets this take focus programmatically (below) without
           joining the normal Tab order. Moving focus here is what reliably
           announces the outcome to assistive tech — more reliable than
           hoping a newly-inserted live region gets picked up. */}
-      <h3 ref={headingRef} tabIndex={-1} className="mt-4 text-lg font-bold text-primary outline-none">
+      <h3 ref={headingRef} tabIndex={-1} className="mt-4 text-[28px] font-extrabold text-primary outline-none">
         {en ? "We've received your request" : "ได้รับคำขอของคุณแล้ว"}
       </h3>
       <p className="mx-auto mt-2 max-w-md leading-relaxed text-secondary">
@@ -123,7 +123,7 @@ function SuccessPanel({
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a
           href={`tel:${c.tels[0]}`}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
+          className="inline-flex min-h-11 items-center gap-2 rounded-[10px] border border-line bg-white px-5 text-sm font-semibold text-primary hover:border-accent hover:bg-accent-tint"
         >
           <Phone className="size-4" aria-hidden />
           {c.telsDisplay[0]}
@@ -132,7 +132,7 @@ function SuccessPanel({
           href={c.lineUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-semibold text-primary hover:border-accent"
+          className="inline-flex min-h-11 items-center gap-2 rounded-[10px] border border-line bg-white px-5 text-sm font-semibold text-primary hover:border-accent hover:bg-accent-tint"
         >
           <MessageCircle className="size-4" aria-hidden />
           LINE {c.lineId}
@@ -401,7 +401,7 @@ function RfqFormFields({
         <button
           type="submit"
           disabled={isSubmitting || status === "sending"}
-          className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-full bg-accent px-6 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+          className="inline-flex min-h-[50px] items-center justify-center gap-2.5 whitespace-nowrap rounded-[10px] bg-accent px-6 text-[16px] font-semibold text-white transition-colors duration-200 hover:bg-accent-hover disabled:opacity-60"
         >
           {status === "sending" ? (en ? "Sending…" : "กำลังส่ง…") : en ? "Send quote request" : "ส่งคำขอใบเสนอราคา"}
         </button>
@@ -419,7 +419,7 @@ function RfqFormFields({
 
       <p className="text-sm text-secondary">
         {en ? "How we handle the details you send: " : "การจัดการข้อมูลที่คุณส่งมา: "}
-        <LocaleLink href="/privacy" className="font-medium text-accent underline underline-offset-2 hover:text-primary">
+        <LocaleLink href="/privacy" className="font-medium text-accent underline underline-offset-2 hover:text-accent-hover">
           {en ? "privacy notice" : "นโยบายความเป็นส่วนตัว"}
         </LocaleLink>
       </p>
@@ -466,14 +466,14 @@ export function RfqForm({ lang, products }: { lang: Lang; products: RfqProductOp
           the whole subtree it used to live in got replaced. */}
       <div aria-live="polite" role="status">
         {status === "rateLimited" && (
-          <p className="mb-5 rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
+          <p className="mb-5 rounded-[10px] border border-dashed border-[#E2B36B] bg-[#FFF6E8] px-4 py-3 text-sm text-[#8A4B00]">
             {en
               ? `You've sent several requests in a short time. Please wait a moment and try again, or contact us directly: call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
               : `คุณส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่ หรือติดต่อโดยตรง โทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
           </p>
         )}
         {status === "undelivered" && (
-          <p className="mb-5 rounded-md bg-accent/5 px-4 py-3 text-sm text-accent">
+          <p className="mb-5 rounded-[10px] border border-dashed border-[#E2B36B] bg-[#FFF6E8] px-4 py-3 text-sm text-[#8A4B00]">
             {en
               ? `Your request was NOT sent. Please call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
               : `คำขอของคุณยังไม่ถูกส่ง กรุณาโทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}

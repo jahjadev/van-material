@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
-import { Inter, IBM_Plex_Sans_Thai } from "next/font/google";
+import { IBM_Plex_Mono, Noto_Sans_Thai } from "next/font/google";
 import "@/app/globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { Reveal } from "@/components/Motion";
 import { JsonLd, organizationLd, websiteLd } from "@/components/JsonLd";
 import { LangProvider } from "@/lib/prefs";
 import type { Lang } from "@/lib/locale";
+import { searchIndex } from "@/lib/searchIndex";
 
 /**
  * The document shell shared by both root layouts.
@@ -18,16 +20,17 @@ import type { Lang } from "@/lib/locale";
  * twice.
  */
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const notoThai = Noto_Sans_Thai({
+  variable: "--font-thai",
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const plexThai = IBM_Plex_Sans_Thai({
-  variable: "--font-thai",
-  subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700"],
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -41,7 +44,7 @@ export function RootShell({
   return (
     <html
       lang={lang}
-      className={`${inter.variable} ${plexThai.variable} h-full antialiased`}
+      className={`${notoThai.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
         {/* Site-wide entity graph: the one Organization (ORG_ID, shared with
@@ -49,10 +52,11 @@ export function RootShell({
             (Product, Article, BreadcrumbList…) reference these by @id. */}
         <JsonLd data={[organizationLd(lang), websiteLd()]} />
         <LangProvider lang={lang}>
-          <Nav />
-          <main id="main" className="flex-1">
+          <Nav search={searchIndex(lang)} />
+          <main id="main" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </main>
+          <Reveal />
           <Footer lang={lang} />
         </LangProvider>
       </body>

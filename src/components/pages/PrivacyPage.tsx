@@ -135,18 +135,18 @@ export function PrivacyPage({ lang }: { lang: Lang }) {
         eyebrow={en ? "Privacy" : "ความเป็นส่วนตัว"}
         h1={en ? "Privacy Notice for Quote Requests" : "นโยบายความเป็นส่วนตัวสำหรับการขอใบเสนอราคา"}
       >
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">
+        <p>
           {en
             ? "This notice explains how we handle the personal data you give us when you request a quotation."
             : "ประกาศนี้อธิบายวิธีที่เราจัดการข้อมูลส่วนบุคคลที่คุณให้ไว้เมื่อขอใบเสนอราคา"}
         </p>
-        <p className="mt-3 text-sm text-secondary">
+        <p className="!text-[15px] text-secondary">
           {en ? "Last updated: " : "ปรับปรุงล่าสุด: "}
           <time dateTime={PRIVACY_UPDATED}>{PRIVACY_UPDATED}</time>
         </p>
       </PageHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <div className="max-w-3xl space-y-10">
           {sections().map((s) => (
             <section key={s.h.en}>

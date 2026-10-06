@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
 import { PropertyTable } from "@/components/PropertyTable";
@@ -31,7 +30,7 @@ function rich(text: string): ReactNode[] {
       <LocaleLink
         key={i}
         href={m[2]}
-        className="font-medium text-accent underline underline-offset-2 hover:text-primary"
+        className="font-medium text-accent underline underline-offset-2 hover:text-accent-hover"
       >
         {m[1]}
       </LocaleLink>,
@@ -47,7 +46,7 @@ const cell = (c: string | Bi, lang: Lang) => (typeof c === "string" ? c : c[lang
 function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
   switch (b.t) {
     case "h2":
-      return <h2 className="pt-6 text-xl font-bold text-primary md:text-2xl">{b.text[lang]}</h2>;
+      return <h2 className="pt-6 text-[clamp(22px,2.2vw,26px)] leading-[1.35] font-bold text-primary">{b.text[lang]}</h2>;
     case "p":
       return <p>{rich(b.text[lang])}</p>;
     case "ul":
@@ -55,7 +54,7 @@ function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
         <ul className="space-y-2.5">
           {b.items.map((it) => (
             <li key={it.en} className="flex gap-3">
-              <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" />
+              <span aria-hidden className="mt-3.5 h-px w-3 shrink-0 bg-accent" />
               <span>{rich(it[lang])}</span>
             </li>
           ))}
@@ -64,12 +63,12 @@ function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
     case "table":
       return (
         <figure>
-          <div className="overflow-x-auto rounded-xl border border-line bg-surface">
-            <table className="w-full min-w-[520px] border-collapse text-left text-sm">
-              <thead className="bg-background text-xs uppercase tracking-wide text-secondary">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[520px] border-collapse text-left text-[15px] leading-normal">
+              <thead className="font-mono text-[11.5px] tracking-[.14em] uppercase text-secondary">
                 <tr>
                   {b.head.map((h) => (
-                    <th key={h.en} scope="col" className="px-4 py-3 font-semibold">
+                    <th key={h.en} scope="col" className="border-b border-primary px-3 py-3 font-medium first:pl-0">
                       {h[lang]}
                     </th>
                   ))}
@@ -77,14 +76,14 @@ function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
               </thead>
               <tbody>
                 {b.rows.map((row, ri) => (
-                  <tr key={ri} className="border-t border-line align-top">
+                  <tr key={ri} className="border-b border-line align-top">
                     {row.map((c, ci) =>
                       ci === 0 ? (
-                        <th key={ci} scope="row" className="px-4 py-3 font-semibold text-primary">
+                        <th key={ci} scope="row" className="py-3.5 pl-0 pr-3 font-bold text-primary">
                           {cell(c, lang)}
                         </th>
                       ) : (
-                        <td key={ci} className="px-4 py-3 text-primary">
+                        <td key={ci} className="px-3 py-3.5 text-primary">
                           {cell(c, lang)}
                         </td>
                       ),
@@ -109,7 +108,7 @@ function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
 
 function ArticleBody({ article, lang }: { article: Article; lang: Lang }) {
   return (
-    <div className="max-w-3xl space-y-4 leading-relaxed text-secondary">
+    <div className="max-w-3xl space-y-5 text-[18px] leading-[1.85] text-body">
       {article.body.map((b, i) => (
         <BodyBlock key={i} block={b} lang={lang} />
       ))}
@@ -136,23 +135,22 @@ export function articleCrumbs(a: Article, lang: Lang): Crumb[] {
   ];
 }
 
-/** Card list of articles (index page and "Related articles"). */
+/** Row list of articles (index page, home page and "Related articles"). */
 export function ArticleCards({ items, lang, headingLevel = "h3" }: { items: Article[]; lang: Lang; headingLevel?: "h2" | "h3" }) {
   const H = headingLevel;
   return (
-    <ul className="mt-5 grid gap-4 md:grid-cols-2">
-      {items.map((a) => (
-        <li key={a.slug}>
+    <ul className="mt-6 border-b border-line">
+      {items.map((a, i) => (
+        <li key={a.slug} data-reveal={i} className="border-t border-line">
           <LocaleLink
             href={`/knowledge/${a.slug}`}
-            className="group flex h-full flex-col rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent"
+            className="arrow-link grid grid-cols-[minmax(0,1fr)_auto] items-center gap-6 py-6 text-primary"
           >
-            <H className="text-lg leading-snug font-bold text-primary group-hover:text-accent">{a.title[lang]}</H>
-            <span className="mt-2 leading-relaxed text-secondary">{a.description[lang]}</span>
-            <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-              {lang === "en" ? "Read the article" : "อ่านบทความ"}
-              <ArrowRight className="size-4" aria-hidden />
+            <span className="flex flex-col gap-1.5">
+              <H className="m-0 text-[clamp(19px,1.8vw,23px)] font-bold [text-wrap:pretty]">{a.title[lang]}</H>
+              <span className="text-[15.5px] text-secondary [text-wrap:pretty]">{a.description[lang]}</span>
             </span>
+            <span aria-hidden className="arrow text-[22px] text-accent">→</span>
           </LocaleLink>
         </li>
       ))}
@@ -167,8 +165,8 @@ export function ArticleCards({ items, lang, headingLevel = "h3" }: { items: Arti
 export function RelatedArticles({ items, lang }: { items: Article[]; lang: Lang }) {
   if (items.length === 0) return null;
   return (
-    <section aria-labelledby="related-articles-heading" className="mt-14">
-      <h2 id="related-articles-heading" className="text-xl font-bold text-primary md:text-2xl">
+    <section aria-labelledby="related-articles-heading" data-reveal="0" className="mt-16">
+      <h2 id="related-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
         {lang === "en" ? "Related articles" : "บทความที่เกี่ยวข้อง"}
       </h2>
       <ArticleCards items={items} lang={lang} />
@@ -205,7 +203,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
         ]}
       />
       <PageHero lang={lang} crumbs={crumbs} eyebrow={KNOWLEDGE[lang]} h1={a.h1[lang]}>
-        <p className="mt-3 text-sm text-secondary">
+        <p className="!text-[15px] text-secondary">
           {en ? "VAN INTERTRADE · Published " : "แวน อินเตอร์เทรด · เผยแพร่ "}
           <time dateTime={a.date}>{formatDate(a.date, lang)}</time>
           {lastmod !== a.date && (
@@ -215,10 +213,10 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
             </>
           )}
         </p>
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">{a.intro[lang]}</p>
+        <p>{a.intro[lang]}</p>
       </PageHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <article>
           <ArticleBody article={a} lang={lang} />
 
@@ -226,7 +224,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
             <FaqList faqs={a.faqs} lang={lang} />
 
             <section aria-labelledby="refs-heading" className="mt-14">
-              <h2 id="refs-heading" className="text-xl font-bold text-primary md:text-2xl">
+              <h2 id="refs-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
                 {en ? "References" : "แหล่งอ้างอิง"}
               </h2>
               <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-secondary">
@@ -236,7 +234,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="break-words text-accent underline underline-offset-2 hover:text-primary"
+                      className="break-words text-accent underline underline-offset-2 hover:text-accent-hover"
                     >
                       {r.title}
                     </a>
@@ -254,7 +252,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
 
         {related.length > 0 && (
           <section aria-labelledby="more-articles-heading" className="mt-14">
-            <h2 id="more-articles-heading" className="text-xl font-bold text-primary md:text-2xl">
+            <h2 id="more-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? "Related articles" : "บทความที่เกี่ยวข้อง"}
             </h2>
             <ArticleCards items={related} lang={lang} />
@@ -277,9 +275,9 @@ export function KnowledgeIndexPage({ lang }: { lang: Lang }) {
     <>
       <JsonLd data={breadcrumbLd(crumbs, lang)} />
       <PageHero lang={lang} crumbs={crumbs} eyebrow={KNOWLEDGE[lang]} h1={m.h1}>
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">{m.intro}</p>
+        <p>{m.intro}</p>
       </PageHero>
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <section aria-label={lang === "en" ? "All articles" : "บทความทั้งหมด"}>
           <ArticleCards items={articles} lang={lang} headingLevel="h2" />
         </section>

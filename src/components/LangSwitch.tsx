@@ -7,7 +7,7 @@ import { localizePath, splitLocale } from "@/lib/locale";
 import { cn } from "@/lib/cn";
 
 /**
- * TH / EN language control.
+ * TH | EN language control.
  *
  * Rendered as two real `<a>` links, not buttons: language is part of the
  * URL now (`/about` vs `/en/about`), so switching means navigating to the
@@ -26,37 +26,25 @@ export function LangSwitch({ className }: { className?: string }) {
   const thHref = localizePath(path, "th");
   const enHref = localizePath(path, "en");
 
-  const segBtn = (active: boolean) =>
+  const link = (active: boolean) =>
     cn(
-      "inline-flex min-h-9 items-center justify-center px-3 text-[12px] font-semibold tracking-wide rounded-full transition-colors",
-      active
-        ? "bg-accent text-white"
-        : "text-secondary hover:text-primary",
+      "inline-flex min-h-9 items-center px-1 font-semibold transition-colors",
+      active ? "text-primary" : "text-muted hover:text-primary",
     );
 
   return (
     <div
-      className={cn(
-        "inline-flex items-center rounded-full border border-line",
-        className,
-      )}
+      className={cn("flex items-center gap-1.5 font-mono text-[12px] tracking-[.08em]", className)}
       role="group"
       aria-label={lang === "en" ? "Change language" : "เปลี่ยนภาษา"}
     >
-      <NextLink
-        href={thHref}
-        hrefLang="th"
-        className={segBtn(lang === "th")}
-        aria-current={lang === "th" ? "true" : undefined}
-      >
+      <NextLink href={thHref} hrefLang="th" className={link(lang === "th")} aria-current={lang === "th" ? "true" : undefined}>
         TH
       </NextLink>
-      <NextLink
-        href={enHref}
-        hrefLang="en"
-        className={segBtn(lang === "en")}
-        aria-current={lang === "en" ? "true" : undefined}
-      >
+      <span aria-hidden className="text-[#C5CBD6]">
+        |
+      </span>
+      <NextLink href={enHref} hrefLang="en" className={link(lang === "en")} aria-current={lang === "en" ? "true" : undefined}>
         EN
       </NextLink>
     </div>

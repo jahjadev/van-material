@@ -54,15 +54,15 @@ export function GradePage({
         rfqHref={rfqHref}
       >
         {grade.aliases.length > 0 && (
-          <p className="mt-3 text-sm text-secondary">
+          <p className="!text-[15px] text-secondary">
             {en ? "Also known as " : "ชื่อเรียกอื่น: "}
             <span className="font-medium text-primary">{grade.aliases.join(", ")}</span>
           </p>
         )}
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">{grade.summary[lang]}</p>
+        <p>{grade.summary[lang]}</p>
       </ProductHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <PropertyTable
           rows={grade.properties.map((prop) => ({ prop }))}
           lang={lang}
@@ -72,8 +72,8 @@ export function GradePage({
 
         <FormsAndApplications forms={grade.forms} applications={grade.applications} lang={lang} />
 
-        <section aria-labelledby="related-heading" className="mt-14">
-          <h2 id="related-heading" className="text-xl font-bold text-primary md:text-2xl">
+        <section aria-labelledby="related-heading" data-reveal="0" className="mt-16">
+          <h2 id="related-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
             {en ? `Other ${family.keyword} grades` : `เกรด ${family.keyword} อื่น ๆ`}
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2.5">
@@ -91,7 +91,7 @@ export function GradePage({
           </ul>
           <LocaleLink
             href={`/${family.slug}`}
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary"
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-hover"
           >
             <ArrowLeft className="size-4" aria-hidden />
             {en ? `All ${family.name.en}` : `${family.name.th} ทั้งหมด`}

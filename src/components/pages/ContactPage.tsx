@@ -53,20 +53,20 @@ export function ContactPage({ lang }: { lang: Lang }) {
         eyebrow={en ? "Contact" : "ติดต่อเรา"}
         h1={en ? "Contact VAN INTERTRADE and Request a Quote" : "ติดต่อ แวน อินเตอร์เทรด และขอใบเสนอราคา"}
       >
-        <p className="mt-5 text-[17px] leading-relaxed text-secondary">
+        <p>
           {en
             ? "Call, message us on LINE or email for prices, grades and forms. Our office is in Saphan Sung, Bangkok."
             : "โทร LINE หรืออีเมลหาเราเพื่อสอบถามราคา เกรด และรูปแบบวัสดุ สำนักงานของเราอยู่ที่เขตสะพานสูง กรุงเทพฯ"}
         </p>
       </PageHero>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <div className="grid gap-8 md:grid-cols-2">
           <section aria-labelledby="nap-heading" className="min-w-0">
-            <h2 id="nap-heading" className="text-xl font-bold text-primary md:text-2xl">
+            <h2 id="nap-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? company.legalNameEn : company.legalNameTh}
             </h2>
-            <dl className="mt-5 divide-y divide-line rounded-xl border border-line bg-surface">
+            <dl className="mt-5 divide-y divide-line border-y border-line">
               <Row icon={<MapPin className={ic} aria-hidden />} label={en ? "Address" : "ที่อยู่"}>
                 <address className="not-italic">
                   {(en ? c.addressLinesEn : c.addressLinesTh).map((l) => (
@@ -98,7 +98,7 @@ export function ContactPage({ lang }: { lang: Lang }) {
           </section>
 
           <section aria-labelledby="map-heading" className="min-w-0">
-            <h2 id="map-heading" className="text-xl font-bold text-primary md:text-2xl">
+            <h2 id="map-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
               {en ? "Map" : "แผนที่"}
             </h2>
             <ClickToLoadMap
@@ -115,15 +115,15 @@ export function ContactPage({ lang }: { lang: Lang }) {
               href={`https://www.google.com/maps?q=${c.geo.lat},${c.geo.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block text-sm font-semibold text-accent hover:text-primary"
+              className="mt-3 inline-block text-sm font-semibold text-accent hover:text-accent-hover"
             >
               {en ? "Open in Google Maps" : "เปิดใน Google Maps"}
             </a>
           </section>
         </div>
 
-        <section id="rfq" aria-labelledby="rfq-heading" className="mt-14 scroll-mt-20">
-          <h2 id="rfq-heading" className="text-xl font-bold text-primary md:text-2xl">
+        <section id="rfq" aria-labelledby="rfq-heading" className="mt-16 scroll-mt-24">
+          <h2 id="rfq-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
             {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </h2>
           <div className="mt-5">

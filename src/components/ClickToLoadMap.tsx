@@ -34,7 +34,7 @@ export function ClickToLoadMap({
   }
 
   return (
-    <div className="mt-5 flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-xl border border-line bg-surface p-6 text-center">
+    <div className="mt-5 flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-lg border border-line bg-surface p-6 text-center">
       <button
         type="button"
         onClick={() => setShow(true)}
