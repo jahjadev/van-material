@@ -127,9 +127,8 @@ body {
  * Full-bleed hero video (Claude Design "VAN Intertrade v2"). The text sits
  * on a white wash: left-to-right on desktop, bottom-up on phones, where the
  * text moves to the bottom of the hero. Phones and touch screens get a
- * short fade-in; a desktop with a fine pointer gets the slow push-in and
- * float (the scroll parallax and pointer tilt are in <HeroVideo>). Reduced
- * motion turns all of it off and <HeroVideo> pauses the video.
+ * short fade-in; a desktop with a fine pointer gets the slow push-in. The
+ * scroll-driven part is in <HeroScroll>. Reduced motion turns all of it off.
  */
 .hero-video .media {
   position: absolute;
@@ -158,7 +157,6 @@ body {
 }
 @media (hover: hover) and (pointer: fine) and (min-width: 980px) {
   .hero-video .enter { animation: van-push 2600ms var(--ease-out-soft) both; }
-  .hero-video .float { animation: van-float 10s ease-in-out 2.6s infinite; }
 }
 
 /* FAQ disclosure marker. */

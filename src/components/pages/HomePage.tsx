@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LocaleLink } from "@/components/LocaleLink";
 import { FaqList } from "@/components/FaqList";
 import { ArticleCards } from "@/components/ArticlePage";
-import { HeroVideo } from "@/components/Motion";
+import { HeroScroll } from "@/components/Motion";
 import { JsonLd, faqPageLd } from "@/components/JsonLd";
 import { Arrow, RfqBand, btnPrimary, linkArrow, wrap } from "@/components/ProductParts";
 import { articles } from "@/data/articles";
@@ -99,6 +99,7 @@ const L = {
   h1: { th: ["ความแม่นยำ", "เริ่มที่วัสดุ"], en: ["Precision", "starts with material"] },
   sub: { th: "ทองแดงอัลลอยและวัสดุแม่พิมพ์ สำหรับงานอุตสาหกรรม", en: "Copper alloys and mold materials for industrial work" },
   heroAlt: { th: "แผ่น บล็อก และแท่งทองแดงอัลลอย", en: "Copper alloy plate, block and rod" },
+  statement: { th: ["ตัวแทนจำหน่าย Materion", "ในประเทศไทย"], en: ["Materion distributor", "in Thailand"] },
   choose: { th: ["เลือกวัสดุ", "ให้ตรงกับงาน"], en: ["Choose the material", "that fits the job"] },
   chooseSub: {
     th: "ทองแดงอัลลอยและวัสดุแม่พิมพ์ ที่ตอบโจทย์งานอุตสาหกรรมของคุณ",
@@ -154,22 +155,10 @@ export function HomePage({ lang }: { lang: Lang }) {
         data={[faqPageLd(faqs.map((f) => ({ q: f.q[lang], a: f.a[lang] })))]}
       />
 
-      {/* Hero: full-bleed video with the text on a white wash (prototype v2). */}
-      <section
-        aria-labelledby="hero-h"
-        className="hero-video relative isolate flex min-h-[clamp(600px,calc(100svh_-_72px),940px)] overflow-hidden bg-[#F4F5F8]"
-      >
-        <div className="absolute inset-0 z-0">
-          <HeroVideo alt={L.heroAlt[lang]} />
-        </div>
-        <div aria-hidden className="wash pointer-events-none absolute inset-0 z-[1]" />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[120px] bg-[linear-gradient(180deg,rgba(240,243,247,0),#F0F3F7)]"
-        />
-        <div
-          className={`${wrap} content relative z-[2] flex w-full flex-col pb-[clamp(64px,7vw,104px)] pt-[clamp(40px,7vw,96px)]`}
-        >
+      {/* Hero: scroll-driven video (prototype v2 + Apple-style scrubbing). */}
+      <HeroScroll
+        alt={L.heroAlt[lang]}
+        intro={
           <div className="flex max-w-[620px] flex-col gap-[22px]">
             <p className="m-0 font-mono text-[12px] tracking-[.32em] text-body">VAN MATERIALS</p>
             <h1
@@ -193,8 +182,18 @@ export function HomePage({ lang }: { lang: Lang }) {
               </a>
             </div>
           </div>
-        </div>
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-7 z-[2] hidden sm:block">
+        }
+        statement={
+          <div className="flex max-w-[640px] flex-col gap-5">
+            <p className="m-0 font-mono text-[12px] tracking-[.32em] text-body">MATERION DISTRIBUTOR THAILAND</p>
+            <p className="m-0 text-[clamp(40px,5.4vw,80px)] leading-[1.15] font-extrabold tracking-[-.01em] text-primary">
+              <span className="block">{L.statement[lang][0]}</span>
+              <span className="block">{L.statement[lang][1]}</span>
+            </p>
+            <p className="m-0 font-mono text-[13px] tracking-[.14em] text-body">BERYLLIUM COPPER · MOLDMAX · TOUGHMET</p>
+          </div>
+        }
+        captions={
           <div className={`${wrap} flex items-center justify-between gap-4 font-mono text-[11px] tracking-[.28em] text-body`}>
             <span className="flex items-center gap-3">
               <span className="h-7 w-px bg-primary opacity-50" />
@@ -202,8 +201,8 @@ export function HomePage({ lang }: { lang: Lang }) {
             </span>
             <span>COPPER ALLOYS · PRECISION MATERIALS</span>
           </div>
-        </div>
-      </section>
+        }
+      />
 
       {/* Choose the material */}
       <section id="materials" aria-labelledby="choose-h" className="scroll-mt-20 border-y border-line bg-tint">
