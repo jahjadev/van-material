@@ -112,7 +112,7 @@ function SuccessPanel({
           joining the normal Tab order. Moving focus here is what reliably
           announces the outcome to assistive tech — more reliable than
           hoping a newly-inserted live region gets picked up. */}
-      <h3 ref={headingRef} tabIndex={-1} className="mt-4 text-[28px] font-extrabold text-primary outline-none">
+      <h3 ref={headingRef} tabIndex={-1} className="mt-4 text-[28px] font-semibold text-primary outline-none">
         {en ? "We've received your request" : "ได้รับคำขอของคุณแล้ว"}
       </h3>
       <p className="mx-auto mt-2 max-w-md leading-relaxed text-secondary">
@@ -419,7 +419,7 @@ function RfqFormFields({
 
       <p className="text-sm text-secondary">
         {en ? "How we handle the details you send: " : "การจัดการข้อมูลที่คุณส่งมา: "}
-        <LocaleLink href="/privacy" className="font-medium text-accent underline underline-offset-2 hover:text-accent-hover">
+        <LocaleLink href="/privacy" className="font-medium text-link hover:underline">
           {en ? "privacy notice" : "นโยบายความเป็นส่วนตัว"}
         </LocaleLink>
       </p>

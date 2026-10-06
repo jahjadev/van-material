@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { IBM_Plex_Mono, Noto_Sans_Thai } from "next/font/google";
+import { Noto_Sans_Thai } from "next/font/google";
 import "@/app/globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -23,14 +23,7 @@ import { searchIndex } from "@/lib/searchIndex";
 const notoThai = Noto_Sans_Thai({
   variable: "--font-thai",
   subsets: ["thai", "latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -44,7 +37,7 @@ export function RootShell({
   return (
     <html
       lang={lang}
-      className={`${notoThai.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${notoThai.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
         {/* Site-wide entity graph: the one Organization (ORG_ID, shared with

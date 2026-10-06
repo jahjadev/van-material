@@ -102,7 +102,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)] py-[clamp(48px,6vw,80px)]">
         <div className="grid gap-10 md:grid-cols-2">
           <section>
-            <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">{en ? "Our mission" : "พันธกิจ"}</h2>
+            <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">{en ? "Our mission" : "พันธกิจ"}</h2>
             <p className="mt-4 leading-relaxed text-secondary">
               {en
                 ? "To connect Thai manufacturers with high-performance materials from Materion and our other producers, together with the technical information needed to choose the right grade and form for each part."
@@ -110,7 +110,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
             </p>
           </section>
           <section>
-            <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">{en ? "Our vision" : "วิสัยทัศน์"}</h2>
+            <h2 className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">{en ? "Our vision" : "วิสัยทัศน์"}</h2>
             <p className="mt-4 leading-relaxed text-secondary">
               {en
                 ? "To be a dependable, technically informed source of copper alloys and mold materials for industry in Thailand, including the EV, aerospace and energy sectors."
@@ -120,7 +120,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
         </div>
 
         <section aria-labelledby="partners-heading" data-reveal="0" className="mt-16">
-          <h2 id="partners-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+          <h2 id="partners-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
             {en ? "Producers we represent" : "ผู้ผลิตที่เราเป็นตัวแทน"}
           </h2>
           <dl className="mt-5 grid gap-4 md:grid-cols-2">
@@ -158,7 +158,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
         </section>
 
         <section aria-labelledby="facts-heading" data-reveal="0" className="mt-16">
-          <h2 id="facts-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+          <h2 id="facts-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
             {en ? "Company details" : "ข้อมูลบริษัท"}
           </h2>
           <dl className="mt-5 divide-y divide-line border-y border-line">
@@ -177,7 +177,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
               href={company.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-accent underline underline-offset-2 hover:text-accent-hover"
+              className="font-medium text-link hover:underline"
             >
               {new URL(company.url).hostname.replace(/^www\./, "")}
             </a>

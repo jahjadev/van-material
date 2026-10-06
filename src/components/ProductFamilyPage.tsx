@@ -113,7 +113,7 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
 
         {family.grades.length > 0 && (
           <section aria-labelledby="grades-heading" data-reveal="0" className="mt-16">
-            <h2 id="grades-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="grades-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? `${family.keyword} grades` : `เกรด ${family.keyword}`}
             </h2>
             <ul className="mt-5 border-b border-line">
@@ -125,16 +125,16 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
                     className="arrow-link grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-2 py-6 text-primary md:grid-cols-[minmax(140px,220px)_minmax(0,1fr)_auto]"
                   >
                     <span className="flex flex-col gap-0.5">
-                      <span className="text-[24px] font-extrabold">{g.code}</span>
+                      <span className="text-[24px] font-semibold">{g.code}</span>
                       {g.aliases.length > 0 && (
-                        <span className="font-mono text-[12.5px] text-secondary">{g.aliases.slice(0, 2).join(" · ")}</span>
+                        <span className="text-[14px] text-secondary">{g.aliases.slice(0, 2).join(" · ")}</span>
                       )}
                     </span>
                     <span className="col-start-1 row-start-2 text-[16px] leading-[1.6] text-body md:col-start-2 md:row-start-1">
                       {g.tagline[lang]}
                     </span>
                     <span aria-hidden className="arrow col-start-2 row-span-2 row-start-1 text-[22px] text-accent md:col-start-3 md:row-span-1">
-                      →
+                      ›
                     </span>
                   </LocaleLink>
                 </li>
@@ -145,7 +145,7 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
 
         {family.variants.length > 0 && (
           <section aria-labelledby="variants-heading" data-reveal="0" className="mt-16">
-            <h2 id="variants-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="variants-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? "Types and materials" : "ชนิดและวัสดุ"}
             </h2>
             <dl className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -173,7 +173,7 @@ export function ProductFamilyPage({ family, lang }: { family: ProductFamily; lan
 
         {family.industries.length > 0 && (
           <section aria-labelledby="industries-heading" data-reveal="0" className="mt-16">
-            <h2 id="industries-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="industries-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? "Industries" : "อุตสาหกรรมที่ใช้"}
             </h2>
             <ul className="mt-4 flex flex-wrap gap-2.5">

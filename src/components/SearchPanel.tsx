@@ -92,7 +92,7 @@ export function SearchPanel({
           </button>
         </div>
 
-        <p id="search-status" aria-live="polite" className="eyebrow m-0 !tracking-[.14em]">
+        <p id="search-status" aria-live="polite" className="m-0 text-[12px] text-secondary">
           {!query ? t("ลองค้นหา", "Try searching") : `${results.length} ${t("ผลลัพธ์", "results")}`}
         </p>
 
@@ -123,14 +123,14 @@ export function SearchPanel({
                   onClick={() => onClose(false)}
                   className="arrow-link grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-1 py-4 text-primary hover:bg-[#F7F9FC] sm:grid-cols-[110px_minmax(0,1fr)_auto]"
                 >
-                  <span className="hidden font-mono text-[11px] tracking-[.14em] uppercase text-secondary sm:block">
+                  <span className="hidden text-[12px] font-semibold text-secondary sm:block">
                     {KIND[r.kind][lang]}
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5">
                     <span className="text-[17px] font-semibold">{r.title}</span>
                     <span className="text-[14px] text-secondary">{r.sub}</span>
                   </span>
-                  <span aria-hidden className="arrow text-[18px] text-accent">→</span>
+                  <span aria-hidden className="arrow text-[18px] text-accent">›</span>
                 </LocaleLink>
               </li>
             ))}
@@ -155,7 +155,7 @@ export function SearchPanel({
                 className="arrow-link inline-flex items-center gap-2.5 rounded-[10px] bg-accent px-[18px] py-[11px] text-[15px] font-semibold text-white hover:bg-accent-hover"
               >
                 {t("สอบถามวัสดุนี้", "Ask about this material")}
-                <span aria-hidden className="arrow">→</span>
+                <span aria-hidden className="arrow">›</span>
               </LocaleLink>
             </div>
           </div>

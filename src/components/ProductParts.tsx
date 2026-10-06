@@ -22,18 +22,21 @@ export type HeroImage = { src: string; width: number; height: number; alt: Bi };
 
 /** Solid accent button, the prototype's one call-to-action style. */
 export const btnPrimary =
-  "arrow-link inline-flex items-center gap-2.5 rounded-[10px] bg-accent px-6 py-3.5 text-[16px] font-semibold text-white transition-colors duration-200 hover:bg-accent-hover hover:text-white";
-/** Text link with a trailing arrow. */
-export const linkArrow = "arrow-link inline-flex items-center gap-2.5 text-[16px] font-semibold text-accent hover:text-accent-hover";
+  "arrow-link inline-flex items-center justify-center gap-1 rounded-full bg-accent px-[22px] py-[11px] text-[17px] leading-none text-white transition-colors duration-200 hover:bg-accent-hover hover:text-white";
+/** Outlined pill, the second button in an apple.com pair. */
+export const btnSecondary =
+  "arrow-link inline-flex items-center justify-center gap-1 rounded-full border border-accent px-[21px] py-[10px] text-[17px] leading-none text-accent transition-colors duration-200 hover:bg-accent hover:text-white";
+/** Text link with a trailing chevron ("Learn more ›"). */
+export const linkArrow = "arrow-link inline-flex items-center gap-1 text-[17px] text-link hover:underline";
 /** Shared page gutter + max width. */
 export const wrap = "mx-auto max-w-[1240px] px-[clamp(20px,4vw,48px)]";
 /** Section heading (h2) size used below the hero. */
-export const h2Class = "m-0 text-[clamp(28px,3vw,40px)] leading-[1.2] font-extrabold text-primary";
+export const h2Class = "m-0 text-[clamp(28px,3.4vw,48px)] leading-[1.1] font-semibold tracking-[-.015em] text-primary";
 
 export function Arrow() {
   return (
     <span aria-hidden className="arrow">
-      →
+      ›
     </span>
   );
 }
@@ -41,7 +44,7 @@ export function Arrow() {
 /** Visible breadcrumb; the same items feed `breadcrumbLd`. */
 export function Breadcrumbs({ items, lang }: { items: Crumb[]; lang: Lang }) {
   return (
-    <nav aria-label={lang === "en" ? "Breadcrumb" : "เส้นทางนำทาง"} className="font-mono text-[12px] tracking-[.14em] text-secondary">
+    <nav aria-label={lang === "en" ? "Breadcrumb" : "เส้นทางนำทาง"} className="text-[12px] text-secondary">
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {items.map((c, i) => (
           <li key={c.path} className="flex items-center gap-2">
@@ -95,7 +98,7 @@ export function PageHero({
         >
           <div className="flex min-w-0 flex-col gap-[18px]">
             <p className="eyebrow m-0">{eyebrow}</p>
-            <h1 className="m-0 text-[clamp(34px,4.4vw,58px)] leading-[1.18] font-extrabold text-primary [text-wrap:balance]">
+            <h1 className="m-0 text-[clamp(34px,4.4vw,58px)] leading-[1.18] font-semibold text-primary [text-wrap:balance]">
               {h1}
             </h1>
             <div className="max-w-[580px] text-[18px] leading-[1.7] text-body [&>p]:m-0 [&>p+p]:mt-3">{children}</div>
@@ -171,7 +174,7 @@ export function BulletSection({ title, items, lang }: { title: Bi; items: Bi[]; 
   if (items.length === 0) return null;
   return (
     <section className="min-w-0">
-      <h2 className="m-0 text-[clamp(24px,2.6vw,30px)] font-extrabold text-primary">{title[lang]}</h2>
+      <h2 className="m-0 text-[clamp(24px,2.6vw,30px)] font-semibold text-primary">{title[lang]}</h2>
       <ul className="mt-4 border-b border-line">
         {items.map((it) => (
           <li key={it.en} className="border-t border-line py-3.5 text-[17px] leading-relaxed text-body">
@@ -234,7 +237,7 @@ export function RfqBand({
   return (
     <section data-reveal="0" className="mt-20 border-t border-line pt-[clamp(56px,7vw,96px)]">
       <div className="mx-auto flex max-w-[820px] flex-col items-center gap-3.5 text-center">
-        <h2 className="m-0 text-[clamp(30px,3.6vw,46px)] leading-[1.25] font-extrabold text-primary [text-wrap:balance]">
+        <h2 className="m-0 text-[clamp(30px,3.6vw,46px)] leading-[1.25] font-semibold text-primary [text-wrap:balance]">
           {title ?? (en ? `Need a price for ${subject}?` : `ต้องการราคา ${subject}?`)}
         </h2>
         <p className="m-0 max-w-2xl text-[18px] text-secondary">

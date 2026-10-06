@@ -30,7 +30,7 @@ function rich(text: string): ReactNode[] {
       <LocaleLink
         key={i}
         href={m[2]}
-        className="font-medium text-accent underline underline-offset-2 hover:text-accent-hover"
+        className="font-medium text-link hover:underline"
       >
         {m[1]}
       </LocaleLink>,
@@ -65,10 +65,10 @@ function BodyBlock({ block: b, lang }: { block: Block; lang: Lang }) {
         <figure>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px] border-collapse text-left text-[15px] leading-normal">
-              <thead className="font-mono text-[11.5px] tracking-[.14em] uppercase text-secondary">
+              <thead className="text-[12px] font-semibold text-secondary">
                 <tr>
                   {b.head.map((h) => (
-                    <th key={h.en} scope="col" className="border-b border-primary px-3 py-3 font-medium first:pl-0">
+                    <th key={h.en} scope="col" className="border-b border-line px-3 py-3 font-medium first:pl-0">
                       {h[lang]}
                     </th>
                   ))}
@@ -150,7 +150,7 @@ export function ArticleCards({ items, lang, headingLevel = "h3" }: { items: Arti
               <H className="m-0 text-[clamp(19px,1.8vw,23px)] font-bold [text-wrap:pretty]">{a.title[lang]}</H>
               <span className="text-[15.5px] text-secondary [text-wrap:pretty]">{a.description[lang]}</span>
             </span>
-            <span aria-hidden className="arrow text-[22px] text-accent">→</span>
+            <span aria-hidden className="arrow text-[22px] text-accent">›</span>
           </LocaleLink>
         </li>
       ))}
@@ -166,7 +166,7 @@ export function RelatedArticles({ items, lang }: { items: Article[]; lang: Lang 
   if (items.length === 0) return null;
   return (
     <section aria-labelledby="related-articles-heading" data-reveal="0" className="mt-16">
-      <h2 id="related-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+      <h2 id="related-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
         {lang === "en" ? "Related articles" : "บทความที่เกี่ยวข้อง"}
       </h2>
       <ArticleCards items={items} lang={lang} />
@@ -224,7 +224,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
             <FaqList faqs={a.faqs} lang={lang} />
 
             <section aria-labelledby="refs-heading" className="mt-14">
-              <h2 id="refs-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+              <h2 id="refs-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
                 {en ? "References" : "แหล่งอ้างอิง"}
               </h2>
               <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-secondary">
@@ -234,7 +234,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="break-words text-accent underline underline-offset-2 hover:text-accent-hover"
+                      className="break-words text-link hover:underline"
                     >
                       {r.title}
                     </a>
@@ -252,7 +252,7 @@ export function ArticlePage({ article: a, lang }: { article: Article; lang: Lang
 
         {related.length > 0 && (
           <section aria-labelledby="more-articles-heading" className="mt-14">
-            <h2 id="more-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-extrabold text-primary">
+            <h2 id="more-articles-heading" className="text-[clamp(26px,2.8vw,36px)] leading-[1.2] font-semibold text-primary">
               {en ? "Related articles" : "บทความที่เกี่ยวข้อง"}
             </h2>
             <ArticleCards items={related} lang={lang} />

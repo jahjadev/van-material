@@ -4,10 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, type ReactNode } from "react";
 
 /*
- * The prototype's three scroll effects, kept out of the server components:
- *  - <ScrollProgress>: a thin accent line under the header that fills as the
- *    page scrolls (runs even with reduced motion — it's a position readout,
- *    not an animation).
+ * Scroll effects, kept out of the server components:
  *  - <Reveal>: elements marked `data-reveal="<n>"` that start below the fold
  *    fade/slide in once, staggered by n × 80 ms; a `.reveal-frame` inside
  *    also unveils from the bottom. Content already on screen is never
@@ -17,34 +14,6 @@ import { useEffect, useRef, type ReactNode } from "react";
  */
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-export function ScrollProgress() {
-  const bar = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      if (bar.current) bar.current.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px h-0.5">
-      <div ref={bar} className="h-full origin-left scale-x-0 bg-accent will-change-transform" />
-    </div>
-  );
-}
 
 export function Reveal() {
   const pathname = usePathname();
@@ -83,43 +52,41 @@ export function Reveal() {
 const span = (p: number, a: number, b: number) => Math.min(1, Math.max(0, (p - a) / (b - a)));
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
+/** Widest the video is ever shown, in CSS px: the 2560 px file at 2x DPR. */
+const MAX_FRAME_W = 1280;
+
 /**
- * Apple-style scroll-driven home hero. The section is ~2.5 screens tall and
- * its first screen stays pinned (sticky) while you scroll through it:
+ * apple.com-style scroll-driven home hero. The section is ~2.4 screens tall
+ * and its first screen stays pinned (sticky) while you scroll through it:
  *
- *   0.00–0.30  the headline drifts up and fades; the white wash clears
- *   0.00–0.90  the video plays forward with the scroll (the rod slides into
+ *   0.00–0.35  the headline fades; the rounded video frame grows and moves
+ *              to the middle of the screen
+ *   0.05–0.85  the video plays forward with the scroll (the rod slides into
  *              the block) and backward when you scroll up
- *   0.50–0.66  the wash returns and `statement` fades in
- *   0.86–1.00  the statement fades out as the next section arrives
+ *   0.72–0.95  the frame settles back and `statement` takes the headline's
+ *              place, then the page scrolls on
  *
- * Two cuts of the 4K source, both with a keyframe every 8 frames so seeking
- * stays smooth: 2560x1440 for landscape screens, and a 1080x1920 portrait
- * crop for phones (a phone shows only a narrow slice of a landscape frame,
- * which would otherwise be blown up ~3x). The shown time eases toward the
- * scroll target instead of jumping. With
- * reduced motion the section is one screen tall, nothing is pinned or
- * animated, and the poster (the first frame) is shown.
+ * The frame never grows past MAX_FRAME_W, so the 2560 px video is never
+ * upscaled on a 2x screen (phones get a 1920 px file). Both files have a
+ * keyframe every 8 frames so seeking stays smooth, and the shown time eases
+ * toward the scroll target. With reduced motion nothing is pinned or
+ * animated and the poster (the first frame) is shown.
  */
 export function HeroScroll({
   alt,
   intro,
   statement,
-  captions,
 }: {
   alt: string;
   intro: ReactNode;
   statement: ReactNode;
-  captions: ReactNode;
 }) {
   const track = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
-  const media = useRef<HTMLDivElement>(null);
-  const wash = useRef<HTMLDivElement>(null);
   const introBox = useRef<HTMLDivElement>(null);
   const stmt = useRef<HTMLDivElement>(null);
-  const caps = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const v = video.current;
@@ -129,6 +96,8 @@ export function HeroScroll({
     let shown = 0;
     let raf = 0;
     let ready = false;
+    // Frame geometry at rest, measured without transforms.
+    let grow = { s: 1, dy: 0 };
 
     const onMeta = () => {
       ready = true;
@@ -138,36 +107,51 @@ export function HeroScroll({
     if (v.readyState >= 1) onMeta();
     else v.addEventListener("loadedmetadata", onMeta, { once: true });
 
+    const measure = () => {
+      const f = frame.current;
+      const pnl = panel.current;
+      if (!f || !pnl) return;
+      const w = f.offsetWidth;
+      const h = f.offsetHeight;
+      const top = f.offsetTop + (f.offsetParent as HTMLElement | null)!.offsetTop;
+      const pw = pnl.clientWidth;
+      const ph = pnl.clientHeight;
+      const targetW = Math.min(MAX_FRAME_W, pw - (pw < 640 ? 0 : 44), ((ph - 24) * 16) / 9);
+      const s = Math.max(1, targetW / w);
+      grow = { s, dy: (ph - h * s) / 2 - top };
+    };
+
     const progress = () => {
       const t = track.current;
       const pnl = panel.current;
       if (!t || !pnl) return 0;
       const r = t.getBoundingClientRect();
-      // The sticky `top` (header height). Not offsetTop: that grows while stuck.
+      // The sticky `top` (nav height). Not offsetTop: that grows while stuck.
       const top = parseFloat(getComputedStyle(pnl).top) || 0;
       const room = r.height - pnl.offsetHeight;
       return room > 0 ? Math.min(1, Math.max(0, (top - r.top) / room)) : 0;
     };
 
     const paint = (p: number) => {
-      const out = easeInOut(span(p, 0, 0.3));
-      const statementIn = easeInOut(span(p, 0.5, 0.66));
-      const statementOut = easeInOut(span(p, 0.86, 1));
+      const m = easeInOut(span(p, 0, 0.35)) - easeInOut(span(p, 0.72, 0.95));
+      const introOut = easeInOut(span(p, 0, 0.25));
+      const stmtIn = easeInOut(span(p, 0.8, 0.95));
       if (introBox.current) {
-        introBox.current.style.opacity = String(1 - out);
-        introBox.current.style.transform = `translate3d(0,${(-70 * out).toFixed(1)}px,0)`;
-        introBox.current.style.visibility = out >= 1 ? "hidden" : "visible";
+        introBox.current.style.opacity = String(1 - introOut);
+        introBox.current.style.transform = `translate3d(0,${(-30 * introOut).toFixed(1)}px,0)`;
+        introBox.current.style.visibility = introOut >= 1 ? "hidden" : "visible";
       }
-      if (wash.current) wash.current.style.opacity = String(Math.max(1 - out, statementIn * (1 - statementOut)));
       if (stmt.current) {
-        const o = statementIn * (1 - statementOut);
-        stmt.current.style.opacity = String(o);
-        stmt.current.style.transform = `translate3d(0,${(40 * (1 - statementIn) - 40 * statementOut).toFixed(1)}px,0)`;
-        stmt.current.style.visibility = o <= 0 ? "hidden" : "visible";
+        stmt.current.style.opacity = String(stmtIn);
+        stmt.current.style.transform = `translate3d(0,${(24 * (1 - stmtIn)).toFixed(1)}px,0)`;
+        stmt.current.style.visibility = stmtIn <= 0 ? "hidden" : "visible";
       }
-      if (caps.current) caps.current.style.opacity = String(1 - span(p, 0, 0.12));
-      if (media.current) media.current.style.transform = `scale(${(1 + 0.05 * p).toFixed(4)})`;
-      target = span(p, 0, 0.9);
+      if (frame.current) {
+        const s = 1 + (grow.s - 1) * m;
+        frame.current.style.transform = `translate3d(0,${(grow.dy * m).toFixed(1)}px,0) scale(${s.toFixed(4)})`;
+        frame.current.style.borderRadius = `${(28 / s).toFixed(1)}px`;
+      }
+      target = span(p, 0.05, 0.85);
     };
 
     const tick = () => {
@@ -187,69 +171,65 @@ export function HeroScroll({
       paint(progress());
       if (!raf) raf = requestAnimationFrame(tick);
     };
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
 
+    measure();
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
       v.removeEventListener("loadedmetadata", onMeta);
       cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
-    <section
-      ref={track}
-      aria-labelledby="hero-h"
-      className="hero-video relative h-[250svh] bg-[#F0F3F7] motion-reduce:h-auto"
-    >
+    <section ref={track} aria-labelledby="hero-h" className="relative h-[240svh] bg-white motion-reduce:h-auto">
       <div
         ref={panel}
-        className="sticky top-[72px] isolate flex h-[calc(100svh_-_72px)] min-h-[560px] overflow-hidden bg-[#F4F5F8] motion-reduce:static"
+        className="sticky top-[var(--nav-h)] flex h-[calc(100svh_-_var(--nav-h))] min-h-[600px] flex-col items-center overflow-hidden motion-reduce:static motion-reduce:h-auto motion-reduce:pb-16"
       >
-        <div role="img" aria-label={alt} className="absolute inset-0 z-0 overflow-hidden">
-          <div ref={media} className="absolute inset-0 will-change-transform">
+        <div className="relative z-[2] grid w-full px-[22px] pt-[clamp(28px,6vh,72px)] text-center">
+          <div ref={introBox} className="col-start-1 row-start-1 will-change-transform">
+            {intro}
+          </div>
+          <div
+            ref={stmt}
+            aria-hidden
+            className="invisible col-start-1 row-start-1 self-center opacity-0 will-change-transform motion-reduce:hidden"
+          >
+            {statement}
+          </div>
+        </div>
+        <div className="relative z-[1] mt-[clamp(24px,4.5vh,48px)] flex w-full justify-center px-[22px]">
+          <div
+            ref={frame}
+            role="img"
+            aria-label={alt}
+            className="relative aspect-video w-[min(1080px,100%,calc((100svh_-_var(--nav-h)_-_330px)*1.7778))] min-w-[min(100%,520px)] origin-top overflow-hidden rounded-[28px] bg-[#f5f5f7] will-change-transform"
+          >
             <div className="enter absolute inset-0">
-            <video
-              ref={video}
-              className="media"
-              poster="/images/design/hero-poster.webp"
-              muted
-              playsInline
-              preload="auto"
-              aria-hidden
-              tabIndex={-1}
-              disablePictureInPicture
-            >
-              <source src="/videos/hero-portrait.mp4" type="video/mp4" media="(orientation: portrait)" />
-              <source src="/videos/hero-1440.mp4" type="video/mp4" />
-            </video>
+              <video
+                ref={video}
+                className="absolute inset-0 size-full object-cover"
+                poster="/images/design/hero-poster.webp"
+                muted
+                playsInline
+                preload="auto"
+                aria-hidden
+                tabIndex={-1}
+                disablePictureInPicture
+              >
+                <source src="/videos/hero-1080.mp4" type="video/mp4" media="(max-width: 799px)" />
+                <source src="/videos/hero-1440.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
-        </div>
-        <div ref={wash} aria-hidden className="wash pointer-events-none absolute inset-0 z-[1]" />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[120px] bg-[linear-gradient(180deg,rgba(240,243,247,0),#F0F3F7)]"
-        />
-        <div className="content relative z-[2] mx-auto flex w-full max-w-[1240px] flex-col px-[clamp(20px,4vw,48px)] pb-[clamp(64px,7vw,104px)] pt-[clamp(40px,7vw,96px)]">
-          <div className="grid">
-            <div ref={introBox} className="col-start-1 row-start-1 will-change-transform">
-              {intro}
-            </div>
-            <div
-              ref={stmt}
-              aria-hidden
-              className="invisible col-start-1 row-start-1 self-end opacity-0 lg:self-center will-change-transform motion-reduce:hidden"
-            >
-              {statement}
-            </div>
-          </div>
-        </div>
-        <div ref={caps} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-7 z-[2] hidden sm:block">
-          {captions}
         </div>
       </div>
     </section>
