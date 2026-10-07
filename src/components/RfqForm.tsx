@@ -2,12 +2,13 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useForm, type UseFormReturn, type UseFormSetValue } from "react-hook-form";
+import { useForm, useWatch, type Control, type UseFormReturn, type UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, MessageCircle, Phone } from "lucide-react";
+import { CheckCircle2, Copy, Mail, MessageCircle, Phone } from "lucide-react";
 import { createRfqSchema, type RfqInput } from "@/lib/rfqSchema";
 import type { RfqProductOption } from "@/lib/rfqOptions";
 import { classifyRfqResponse } from "@/lib/rfqOutcome";
+import { rfqEmailBody, rfqEmailSubject, rfqMailto } from "@/lib/rfqMailto";
 import { company } from "@/data/company";
 import { LocaleLink } from "@/components/LocaleLink";
 import type { Lang } from "@/lib/locale";
@@ -141,6 +142,92 @@ function SuccessPanel({
       <button type="button" className="mt-6 text-sm font-medium text-accent hover:underline" onClick={onReset}>
         {en ? "Send another request" : "ส่งคำขอใหม่อีกครั้ง"}
       </button>
+    </div>
+  );
+}
+
+/**
+ * Shown when the website couldn't deliver the request (no SMTP configured,
+ * a send failure, or a network error). Instead of a dead end, it hands the
+ * visitor the same request as an email draft to the sales inbox — the
+ * `mailto:` route vaninter.com has always used — plus a copy button for
+ * people whose browser has no mail app wired up (webmail users), and the
+ * phone/LINE options. The form keeps every input, so nothing is re-typed.
+ */
+function EmailFallback({
+  lang,
+  products,
+  control,
+  headingRef,
+}: {
+  lang: Lang;
+  products: RfqProductOption[];
+  control: Control<RfqInput>;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+}) {
+  // Live values, so a fix made after a failed send is carried into the email.
+  const data: RfqInput = { ...EMPTY_VALUES, ...useWatch({ control }) };
+  const en = lang === "en";
+  const c = company.contact;
+  const [copied, setCopied] = useState(false);
+  const mailto = rfqMailto(c.email, data, products, lang);
+  const btn =
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] px-5 text-sm font-semibold transition-colors duration-200";
+  const outline = `${btn} border border-line bg-white text-primary hover:border-accent hover:bg-accent-tint`;
+
+  async function copy() {
+    const text = `To: ${c.email}\nSubject: ${rfqEmailSubject(data, products)}\n\n${rfqEmailBody(data, products)}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <div className="mb-6 rounded-[14px] border border-line bg-accent-tint px-5 py-5">
+      {/* tabIndex=-1 so it can take focus (and scroll into view) the moment
+          it appears — the visitor is down at the Send button. */}
+      <h3 ref={headingRef} tabIndex={-1} className="m-0 text-[19px] font-semibold text-primary outline-none">
+        {en ? "One more step: send it by email" : "อีกหนึ่งขั้นตอน: ส่งคำขอทางอีเมล"}
+      </h3>
+      <p className="m-0 mt-1.5 text-[15px] leading-relaxed text-secondary">
+        {en
+          ? `The website couldn't send your request by itself. Press the button below to open it as an email to ${c.email} — everything you typed is already filled in, so just press Send. Or call or message us on LINE.`
+          : `เว็บไซต์ยังส่งคำขอของคุณเองไม่ได้ กดปุ่มด้านล่างเพื่อเปิดเป็นอีเมลถึง ${c.email} โดยข้อมูลที่คุณกรอกไว้ใส่ให้ครบแล้ว เพียงกดส่ง หรือโทรหรือทักไลน์หาเราได้เลย`}
+      </p>
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <a href={mailto.href} className={`${btn} bg-accent text-white hover:bg-accent-hover`}>
+          <Mail className="size-4" aria-hidden />
+          {en ? "Send by email" : "ส่งทางอีเมล"}
+        </a>
+        <button type="button" onClick={copy} className={outline}>
+          <Copy className="size-4" aria-hidden />
+          {copied ? (en ? "Copied" : "คัดลอกแล้ว") : en ? "Copy request" : "คัดลอกคำขอ"}
+        </button>
+        <a href={`tel:${c.tels[0]}`} className={outline}>
+          <Phone className="size-4" aria-hidden />
+          {c.telsDisplay[0]}
+        </a>
+        <a href={c.lineUrl} target="_blank" rel="noopener noreferrer" className={outline}>
+          <MessageCircle className="size-4" aria-hidden />
+          LINE {c.lineId}
+        </a>
+      </div>
+      {mailto.shortened && (
+        <p className="m-0 mt-3 text-[13px] text-secondary">
+          {en
+            ? "Your message is long, so the email holds its first part. To send all of it, use Copy request and paste it into the email instead."
+            : "ข้อความของคุณยาว อีเมลจึงมีเฉพาะส่วนแรก หากต้องการส่งทั้งหมด ให้กด คัดลอกคำขอ แล้ววางลงในอีเมลแทน"}
+        </p>
+      )}
+      <p aria-live="polite" className="m-0 mt-3 text-[13px] text-secondary">
+        {copied &&
+          (en
+            ? `Copied. Paste it into a new email to ${c.email}.`
+            : `คัดลอกแล้ว วางลงในอีเมลใหม่ถึง ${c.email}`)}
+      </p>
     </div>
   );
 }
@@ -445,12 +532,14 @@ export function RfqForm({ lang, products }: { lang: Lang; products: RfqProductOp
   });
   const [status, setStatus] = useState<Status>("idle");
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const fallbackHeadingRef = useRef<HTMLHeadingElement>(null);
 
   // Moving focus to the success heading is the reliable way to get
   // assistive tech to announce the outcome — more reliable than hoping a
   // newly-inserted live region gets picked up.
   useEffect(() => {
     if (status === "ok") successHeadingRef.current?.focus();
+    if (status === "undelivered") fallbackHeadingRef.current?.focus();
   }, [status]);
 
   return (
@@ -472,14 +561,13 @@ export function RfqForm({ lang, products }: { lang: Lang; products: RfqProductOp
               : `คุณส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่ หรือติดต่อโดยตรง โทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
           </p>
         )}
-        {status === "undelivered" && (
-          <p className="mb-5 rounded-[10px] border border-dashed border-[#E2B36B] bg-[#FFF6E8] px-4 py-3 text-sm text-[#8A4B00]">
-            {en
-              ? `Your request was NOT sent. Please call ${c.telsDisplay[0]} or LINE ${c.lineId}.`
-              : `คำขอของคุณยังไม่ถูกส่ง กรุณาโทร ${c.telsDisplay[0]} หรือ LINE ${c.lineId}`}
-          </p>
-        )}
       </div>
+
+      {/* Not in the live region: focusing its heading (above) announces it,
+          and a live region shouldn't hold interactive controls. */}
+      {status === "undelivered" && (
+        <EmailFallback lang={lang} products={products} control={form.control} headingRef={fallbackHeadingRef} />
+      )}
 
       {status === "ok" ? (
         <SuccessPanel lang={lang} headingRef={successHeadingRef} onReset={() => setStatus("idle")} />
