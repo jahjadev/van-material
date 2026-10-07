@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Noto_Sans_Thai } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "@/app/globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -27,6 +28,9 @@ const notoThai = Noto_Sans_Thai({
   display: "swap",
 });
 
+/** Google Analytics 4 measurement ID (the "VAN-MATERIAL" web stream). */
+const GA_ID = "G-4X6TQ9T0LB";
+
 export function RootShell({
   lang,
   children,
@@ -53,6 +57,9 @@ export function RootShell({
           <Footer lang={lang} />
         </LangProvider>
       </body>
+      {/* GA4. Loads after hydration, so it never competes with the LCP image.
+          Its origins are allowlisted in the CSP in next.config.ts. */}
+      <GoogleAnalytics gaId={GA_ID} />
     </html>
   );
 }
