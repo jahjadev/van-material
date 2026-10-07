@@ -121,15 +121,19 @@ const TAG: Record<string, Bi> = {
 
 const FEATURED = ["beryllium-copper", "moldmax"];
 
-function TileButtons({ slug, lang }: { slug: string; lang: Lang }) {
+/** `name` is read only by screen readers and crawlers, so each link's text
+ * says where it goes ("Learn more about MoldMAX") instead of a bare repeat. */
+function TileButtons({ slug, name, lang }: { slug: string; name: string; lang: Lang }) {
   const en = lang === "en";
   return (
     <div className="mt-4 flex flex-wrap items-center justify-center gap-3.5">
       <LocaleLink href={`/${slug}`} className={btnPrimary}>
         {en ? "Learn more" : "ดูรายละเอียด"}
+        <span className="sr-only">{en ? ` about ${name}` : ` ${name}`}</span>
       </LocaleLink>
       <LocaleLink href={`/contact?product=${slug}#rfq`} className={btnSecondary}>
         {en ? "Get a quote" : "ขอใบเสนอราคา"}
+        <span className="sr-only">{en ? ` for ${name}` : ` ${name}`}</span>
       </LocaleLink>
     </div>
   );
@@ -200,7 +204,7 @@ export function HomePage({ lang }: { lang: Lang }) {
               <p className="m-0 mt-1.5 text-[clamp(19px,2.2vw,28px)] leading-[1.2] tracking-[-.01em] text-primary">
                 {TAG[f.slug][lang]}
               </p>
-              <TileButtons slug={f.slug} lang={lang} />
+              <TileButtons slug={f.slug} name={f.name[lang]} lang={lang} />
               <div className="mx-auto mt-10 max-w-[760px]">
                 <Image
                   src={f.image.src}
@@ -226,7 +230,7 @@ export function HomePage({ lang }: { lang: Lang }) {
                   {f.name.en}
                 </h3>
                 <p className="m-0 mt-1.5 text-[clamp(17px,1.6vw,21px)] leading-[1.3] text-primary">{TAG[f.slug][lang]}</p>
-                <TileButtons slug={f.slug} lang={lang} />
+                <TileButtons slug={f.slug} name={f.name[lang]} lang={lang} />
                 <div className="mx-auto mt-auto w-full max-w-[520px] pt-8">
                   <Image
                     src={f.image.src}

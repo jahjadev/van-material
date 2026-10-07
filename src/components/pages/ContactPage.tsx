@@ -23,12 +23,13 @@ export const contactMeta: Record<Lang, { title: string; description: string }> =
 
 function Row({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
   return (
-    <div className="flex gap-3 px-5 py-4">
-      <span className="mt-0.5 shrink-0 text-accent">{icon}</span>
-      <div className="min-w-0">
-        <dt className="text-sm font-semibold text-primary">{label}</dt>
-        <dd className="mt-1 break-words text-secondary">{children}</dd>
-      </div>
+    <div className="relative min-w-0 py-4 pl-[52px] pr-5">
+      {/* The icon lives inside the <dt>: a <dl> group may only hold dt/dd. */}
+      <dt className="text-sm font-semibold text-primary">
+        <span className="absolute left-5 top-[18px] text-accent">{icon}</span>
+        {label}
+      </dt>
+      <dd className="mt-1 break-words text-secondary">{children}</dd>
     </div>
   );
 }

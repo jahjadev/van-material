@@ -407,11 +407,11 @@ function RfqFormFields({
         </button>
         <p id="rfq-fallback" className="text-[13px] text-secondary">
           {en ? "Or reach us directly: call " : "หรือติดต่อด่วน: โทร "}
-          <a className="text-accent hover:underline" href={`tel:${c.tels[0]}`}>
+          <a className="text-accent underline underline-offset-[3px]" href={`tel:${c.tels[0]}`}>
             {c.telsDisplay[0]}
           </a>{" "}
           · LINE{" "}
-          <a className="text-accent hover:underline" href={c.lineUrl} target="_blank" rel="noopener noreferrer">
+          <a className="text-accent underline underline-offset-[3px]" href={c.lineUrl} target="_blank" rel="noopener noreferrer">
             {c.lineId}
           </a>
         </p>
@@ -419,7 +419,7 @@ function RfqFormFields({
 
       <p className="text-sm text-secondary">
         {en ? "How we handle the details you send: " : "การจัดการข้อมูลที่คุณส่งมา: "}
-        <LocaleLink href="/privacy" className="font-medium text-link hover:underline">
+        <LocaleLink href="/privacy" className="font-medium text-link underline underline-offset-[3px]">
           {en ? "privacy notice" : "นโยบายความเป็นส่วนตัว"}
         </LocaleLink>
       </p>

@@ -25,7 +25,7 @@ export const btnPrimary =
   "arrow-link inline-flex items-center justify-center gap-1 rounded-full bg-accent px-[22px] py-[11px] text-[17px] leading-none text-white transition-colors duration-200 hover:bg-accent-hover hover:text-white";
 /** Outlined pill, the second button in an apple.com pair. */
 export const btnSecondary =
-  "arrow-link inline-flex items-center justify-center gap-1 rounded-full border border-accent px-[21px] py-[10px] text-[17px] leading-none text-accent transition-colors duration-200 hover:bg-accent hover:text-white";
+  "arrow-link inline-flex items-center justify-center gap-1 rounded-full border border-accent px-[21px] py-[10px] text-[17px] leading-none text-link transition-colors duration-200 hover:bg-accent hover:text-white";
 /** Text link with a trailing chevron ("Learn more ›"). */
 export const linkArrow = "arrow-link inline-flex items-center gap-1 text-[17px] text-link hover:underline";
 /** Shared page gutter + max width. */

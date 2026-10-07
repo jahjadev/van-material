@@ -13,7 +13,8 @@ export function Footer({ lang }: { lang: Lang }) {
   const { contact } = company;
   const en = lang === "en";
   const year = new Date().getFullYear();
-  const link = "text-secondary hover:text-primary hover:underline";
+  // py/-my grows each hit area to 24px (WCAG 2.5.8) without changing the layout.
+  const link = "-my-[3px] inline-block py-[3px] text-secondary hover:text-primary hover:underline";
 
   return (
     <footer id="site-footer" className="bg-footer text-[12px] leading-[1.5] text-secondary">
@@ -62,7 +63,7 @@ export function Footer({ lang }: { lang: Lang }) {
 
         <p className="m-0 mt-8 border-t border-line pt-4">
           {en ? "Need a price? " : "ต้องการราคา? "}
-          <LocaleLink href="/contact#rfq" className="text-link hover:underline">
+          <LocaleLink href="/contact#rfq" className="text-link underline underline-offset-[3px]">
             {en ? "Request a quote" : "ขอใบเสนอราคา"}
           </LocaleLink>{" "}
           {en ? `or call ${contact.telsDisplay[0]}.` : `หรือโทร ${contact.telsDisplay[0]}`}
@@ -70,9 +71,9 @@ export function Footer({ lang }: { lang: Lang }) {
 
         <div className="mt-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <p className="m-0">
-            Copyright © {year} {company.legalNameEn}. {en ? "All rights reserved." : "สงวนลิขสิทธิ์"}
+            Copyright © {year} {company.legalNameEn} {en ? "All rights reserved." : "สงวนลิขสิทธิ์"}
           </p>
-          <p className="m-0 flex flex-wrap items-center gap-x-3">
+          <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-2">
             <LocaleLink href="/privacy" className={link}>
               {en ? "Privacy notice" : "นโยบายความเป็นส่วนตัว"}
             </LocaleLink>
