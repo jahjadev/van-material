@@ -30,7 +30,7 @@ function rich(text: string): ReactNode[] {
       <LocaleLink
         key={i}
         href={m[2]}
-        className="font-medium text-link hover:underline"
+        className="font-medium text-link underline underline-offset-[3px]"
       >
         {m[1]}
       </LocaleLink>,

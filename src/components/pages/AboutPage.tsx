@@ -177,7 +177,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
               href={company.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-link hover:underline"
+              className="font-medium text-link underline underline-offset-[3px]"
             >
               {new URL(company.url).hostname.replace(/^www\./, "")}
             </a>

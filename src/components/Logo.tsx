@@ -13,7 +13,7 @@ import { pickLang, type Lang } from "@/lib/locale";
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-baseline gap-1.5 leading-none text-primary", className)}>
-      <span className="text-[18px] font-semibold tracking-[-.01em]">VAN</span>
+      <span className="text-[18px] font-semibold tracking-[-.01em]">VAN</span>{" "}
       <span className="text-[10px] font-medium tracking-[.2em]">INTERTRADE</span>
     </span>
   );
@@ -23,7 +23,7 @@ export function Logo({ lang, className }: { lang: Lang; className?: string }) {
   return (
     <LocaleLink
       href="/"
-      aria-label={pickLang(lang, "แวน อินเตอร์เทรด หน้าแรก", "VAN INTERTRADE home")}
+      aria-label={pickLang(lang, "VAN INTERTRADE หน้าแรก", "VAN INTERTRADE home")}
       className={cn("shrink-0 opacity-90 transition-opacity hover:opacity-100", className)}
     >
       <Wordmark />
