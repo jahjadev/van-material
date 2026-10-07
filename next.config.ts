@@ -23,7 +23,8 @@ const isDev = process.env.NODE_ENV === "development";
  * it does buy is real but narrower: no plugins (`object-src`), no `<base>`
  * hijack (`base-uri`), no exfiltration by retargeting a form (`form-action`),
  * no framing by third parties, and a closed allowlist of the only external
- * origin the site talks to — the Google Maps embed on `/contact`.
+ * origins the site talks to — Google Analytics 4 (gtag.js, loaded from
+ * RootShell) and the Google Maps embed on `/contact`.
  *
  * DO NOT add a hash or nonce to `script-src` alongside `'unsafe-inline'`:
  * browsers ignore `'unsafe-inline'` as soon as either is present, which would
@@ -37,17 +38,19 @@ const csp = [
   "frame-ancestors 'self'",
   "form-action 'self'",
   // 'unsafe-eval' is React's dev-only error-stack reconstruction; never shipped.
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${isDev ? " 'unsafe-eval'" : ""}`,
   // next/font injects an inline <style>, and React style={{…}} props are style
   // attributes; both need 'unsafe-inline'. Stylesheets themselves are 'self'.
   "style-src 'self' 'unsafe-inline'",
   // data: covers inline SVG/blur placeholders; blob: covers the OG card
-  // ImageResponse pipeline. All bitmaps are same-origin (next.config
-  // declares no remote image patterns).
-  "img-src 'self' data: blob:",
+  // ImageResponse pipeline. All site bitmaps are same-origin (next.config
+  // declares no remote image patterns); the two Google origins are GA4's
+  // fallback pixel hits.
+  "img-src 'self' data: blob: https://*.google-analytics.com https://*.googletagmanager.com",
   // next/font/google self-hosts at build time, so no Google Fonts origin.
   "font-src 'self'",
-  "connect-src 'self'",
+  // GA4 sends its hits here (Google's documented CSP for gtag.js).
+  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
   // The contact-page Google Maps embed is the only iframe on the site.
   "frame-src https://www.google.com",
   "upgrade-insecure-requests",

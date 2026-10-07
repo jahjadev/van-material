@@ -27,7 +27,7 @@ export const privacyMeta: Record<Lang, { title: string; description: string }> =
   },
 };
 
-export const PRIVACY_UPDATED = "2026-10-05";
+export const PRIVACY_UPDATED = "2026-10-07";
 
 type Section = { h: Bi; p: Bi[]; list?: Bi[] };
 
@@ -63,8 +63,8 @@ const sections = (): Section[] => [
     h: { th: "ข้อมูลทางเทคนิคเมื่อคุณใช้เว็บไซต์", en: "Technical data when you use the site" },
     p: [
       {
-        th: "เว็บไซต์นี้ให้บริการผ่านผู้ให้บริการโฮสติ้ง Vercel ซึ่งประมวลผลทุกคำขอที่เบราว์เซอร์ของคุณส่งมา รวมถึงหมายเลข IP และข้อมูลเบราว์เซอร์หรืออุปกรณ์ที่ส่งมาพร้อมคำขอ เพื่อส่งหน้าเว็บให้คุณ ตามนโยบายความเป็นส่วนตัวของ Vercel เว็บไซต์นี้ไม่ใช้คุกกี้ ไม่ใช้เครื่องมือวิเคราะห์ และไม่ใช้โฆษณาติดตามผู้ใช้",
-        en: "The site is served by our hosting provider, Vercel, which processes every request your browser makes, including your IP address and the browser or device details sent with it, in order to deliver the pages, under Vercel's own privacy policy. This site sets no cookies and uses no analytics or advertising trackers.",
+        th: "เว็บไซต์นี้ให้บริการผ่านผู้ให้บริการโฮสติ้ง Vercel ซึ่งประมวลผลทุกคำขอที่เบราว์เซอร์ของคุณส่งมา รวมถึงหมายเลข IP และข้อมูลเบราว์เซอร์หรืออุปกรณ์ที่ส่งมาพร้อมคำขอ เพื่อส่งหน้าเว็บให้คุณ ตามนโยบายความเป็นส่วนตัวของ Vercel เว็บไซต์นี้ใช้ Google Analytics 4 ของ Google เพื่อวัดจำนวนผู้เข้าชมและหน้าที่มีการเปิดอ่าน Google Analytics ตั้งคุกกี้ของตนเอง (ชื่อขึ้นต้นด้วย _ga) และได้รับหมายเลข IP ข้อมูลเบราว์เซอร์หรืออุปกรณ์ หน้าที่คุณเปิด และเว็บไซต์ที่พาคุณมา ตามนโยบายความเป็นส่วนตัวของ Google เราใช้ข้อมูลนี้ในรูปแบบรายงานสถิติรวมเท่านั้น คุณบล็อกได้ด้วยการตั้งค่าคุกกี้ของเบราว์เซอร์ หรือส่วนเสริม Google Analytics Opt-out เว็บไซต์นี้ไม่ใช้โฆษณาติดตามผู้ใช้",
+        en: "The site is served by our hosting provider, Vercel, which processes every request your browser makes, including your IP address and the browser or device details sent with it, in order to deliver the pages, under Vercel's own privacy policy. This site uses Google Analytics 4 to count visits and see which pages are read. Google Analytics sets its own cookies (names starting with _ga) and receives your IP address, browser or device details, the pages you open and the site that referred you, under Google's own privacy policy. We use this only as aggregate statistics. You can block it with your browser's cookie settings or Google's Analytics Opt-out browser add-on. The site uses no advertising trackers.",
       },
       {
         th: "เมื่อคุณส่งแบบฟอร์มขอใบเสนอราคา เซิร์ฟเวอร์ใช้หมายเลข IP ของคุณชั่วคราวเพื่อจำกัดการส่งซ้ำ (ไม่เกิน 5 ครั้งต่อ 15 นาทีต่อ IP) และป้องกันการใช้งานในทางที่ผิด หมายเลข IP นี้อยู่ในหน่วยความจำของเซิร์ฟเวอร์เท่านั้น ใช้เฉพาะในช่วง 15 นาทีนั้น แล้วถือว่าหมดอายุและถูกล้างออกเมื่อเซิร์ฟเวอร์ทำความสะอาดหน่วยความจำหรือเริ่มทำงานใหม่ ไม่ถูกบันทึกลงฐานข้อมูลหรือบันทึกการทำงาน และไม่ถูกแนบไปกับอีเมลคำขอของคุณ",
