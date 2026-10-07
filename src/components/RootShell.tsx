@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Noto_Sans_Thai } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import "@/app/globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -56,10 +56,18 @@ export function RootShell({
           <Reveal />
           <Footer lang={lang} />
         </LangProvider>
+        {/* GA4, loaded only once the page has finished loading and the
+            browser is idle. @next/third-parties' GoogleAnalytics fetched the
+            175 KB gtag.js at high priority right after the HTML, and on slow
+            phones it sometimes ran before first paint (Lighthouse mobile
+            swung 96 → 73, LCP 2.8 s → 5.3 s). Page views on client-side
+            navigation are still recorded by GA4's enhanced measurement
+            (history changes). Origins are allowlisted in next.config.ts. */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
+        <Script id="ga4" strategy="lazyOnload">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+        </Script>
       </body>
-      {/* GA4. Loads after hydration, so it never competes with the LCP image.
-          Its origins are allowlisted in the CSP in next.config.ts. */}
-      <GoogleAnalytics gaId={GA_ID} />
     </html>
   );
 }
