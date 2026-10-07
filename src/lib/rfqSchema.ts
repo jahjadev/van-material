@@ -20,6 +20,13 @@ import { z } from "zod";
 import type { RfqProductOption } from "@/lib/rfqOptions";
 import type { Lang } from "@/lib/locale";
 
+// zod v4 probes `new Function` once to decide whether to JIT its object
+// parsers. Our CSP has no 'unsafe-eval', so that probe is blocked — harmless
+// (zod falls back) but Chrome still logs a CSP violation on every page with
+// the RFQ form, which costs Lighthouse best-practices points. jitless skips
+// the probe; these schemas are tiny, so the JIT never mattered.
+z.config({ jitless: true });
+
 const CRLF = /[\r\n]/;
 
 /** Defense in depth for any string that reaches the email Subject header. */
